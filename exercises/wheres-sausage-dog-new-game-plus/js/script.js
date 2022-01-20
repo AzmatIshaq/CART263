@@ -144,27 +144,35 @@ function titleState() {
 
 }
 
+// Animation state function to organize animation functions and code together
+
 function animationState() {
 
-  // updateAnimals()
-  // Calls the update() method for all animals
-  function updateAnimals() {
-    // Loop through all animals
-    for (let i = 0; i < animals.length; i++) {
-      // Update the current animal
-      animals[i].update();
-    }
-  }
-
-  // updateSausageDog()
-  // Calls the update() method of the sausage dog
-  function updateSausageDog() {
-    sausageDog.update();
-  }
+updateAnimals();
+updateSausageDog();
 
 
 
 } //End of animationState
+
+
+// updateAnimals()
+// Calls the update() method for all animals
+function updateAnimals() {
+  // Loop through all animals
+  for (let i = 0; i < animals.length; i++) {
+    // Update the current animal
+    animals[i].update();
+  }
+}
+
+// updateSausageDog()
+// Calls the update() method of the sausage dog
+function updateSausageDog() {
+  sausageDog.update();
+}
+
+
 
 function endState() {}
 
@@ -174,7 +182,9 @@ function keyPressed() {
 
   // Go from title state to animation state by pressing enter
   if (state === `title` && key === "Enter") {
+
     state = `animation`;
+
   }
 
 }
