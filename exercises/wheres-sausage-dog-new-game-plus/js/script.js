@@ -1,76 +1,180 @@
-/**
-Where's Sausage Dog?
-Azmat Ishaq
-
-
-*/
-
 "use strict";
 
+/*****************
+Where's Sausage Dog New Game Plus!
+By Azmat Ishaq
+Expanded on original code from Pippin Barr Sausage Dog Activitiy on Github:
+https://github.com/pippinbarr/cart263/tree/main/examples/p5js/wheres-sausage-dog
+
+Find the Sausage Dog!
+This code displays a bunch of animals on screen. The players needs to find the
+Sausage Dog animal in order to win!
+
+Added multiple effects in the New Game Plus! version such as multiple game states!
+
+
+******************/
+
+
+
+// Constant to set the number of animal images
 const NUM_ANIMAL_IMAGES = 10;
 
+// Constants for image loading
+const ANIMAL_IMAGE_PREFIX = `assets/images/animal`;
+const SAUSAGE_DOG_IMAGE = `assets/images/sausage-dog.png`;
+
+// Number of images to display
 const NUM_ANIMALS = 100;
 
+// Array of the loaded animal images
 let animalImages = [];
-
+// Array of animal objects
 let animals = [];
+// Loaded sausage dog image
+let sausageDogImage;
+// Sausage dog object
+let sausageDog;
 
-let sausageDogImage = undefined;
-let sausageDog = undefined;
+// Add a border to canvas
+let canvasBorder = 0.90
 
-/**
-Description of preload
-*/
+// Setting the starting state
+
+let state = `title`
+
+// preload()
+// Loads all the animal images and the sausage dog image
 function preload() {
-
-for(let i = 0; i < NUM_ANIMAL_IMAGES; i++) {
-    let animalImage = loadImage(`assets/images/animal${i}.png`);
-      animalImages.push(animalImage);
+  // Loop once for each animal image, starting from 0
+  for (let i = 0; i < NUM_ANIMAL_IMAGES; i++) {
+    // Load the image with the current number (starting from 0)
+    let animalImage = loadImage(`${ANIMAL_IMAGE_PREFIX}${i}.png`);
+    // Add the image to the array for use later when randomly selecting
+    animalImages.push(animalImage);
   }
 
-  sausageDogImage = loadImage(`assets/images/sausage-dog.png`);
+  // Load the sausage dog image
+  sausageDogImage = loadImage(`${SAUSAGE_DOG_IMAGE}`);
+}
 
-} // End of Preload
 
-
-/**
-Description of setup
-*/
+// setup()
+// Creates all the animal objects and a sausage dog object
 function setup() {
-  createCanvas (1000,1000);
+  createCanvas(windowWidth * canvasBorder, windowHeight * canvasBorder);
 
-  // Create the animals
-  for(let i = 0; i < NUM_ANIMALS; i++) {
-      let x = random(0, width);
-      let y = random(0, height);
-      let animalImage = random(animalImages);
-      let animal = new Animal(x, y, animalImage);
+  createAnimals();
+  createSausageDog();
+}
 
-      animals.push(animal);
+// createAnimals()
+// Creates all the animals at random positions with random animal images
+function createAnimals() {
+  // Create the correct number of animals
+  for (let i = 0; i < NUM_ANIMALS; i++) {
+    // Create one random animal
+    let animal = createRandomAnimal();
+    // Add it to the animals array
+    animals.push(animal);
   }
+}
 
-let x = random(0, width);
-let y = random(0, height);
-sausageDog = new SausageDog(x, y, sausageDogImage);
+// createRandomAnimal()
+// Create an animal object at a random position with a random image
+// then return that created animal
+function createRandomAnimal() {
+  let x = random(0, width);
+  let y = random(0, height);
+  let animalImage = random(animalImages);
+  let animal = new Animal(x, y, animalImage);
+  return animal;
+}
 
-} // End of setup
+// createSausageDog()
+// Creates a sausage dog at a random position
+function createSausageDog() {
+  let x = random(0, width);
+  let y = random(0, height);
+  sausageDog = new SausageDog(x, y, sausageDogImage);
+}
 
-
-/**
-Description of draw()
-*/
+// draw()
+// Draws the background then updates all animals and the sausage dog
 function draw() {
   background(0);
 
-  for(let i = 0; i < animals.length; i ++) {
-    animals[i].update();
+  // If statements to alternate between game states
+  if (state === `title`) {
+    titleState();
+}
+  if (state === `animation`) {
+    animationState();
   }
 
-  sausageDog.update();
 
-} // End of draw
+} // End of draw function
 
+
+// mousePressed()
+// Automatically called by p5 when the mouse is pressed.
+// Call the sausage dog's mousePressed() method so it knows
+// the mouse was clicked.
 
 function mousePressed() {
   sausageDog.mousePressed();
+}
+
+
+// Game states
+
+function titleState() {
+
+  // Display end winning text
+  push();
+  fill(255);
+  textSize(44);
+  textAlign(CENTER, CENTER);
+  text(`Find Sausage Dog!`, width / 2, height / 2.8);
+  text(`Press Enter to Start`, width / 2, height / 2);
+  pop();
+
+  //
+
+
+}
+
+function animationState() {
+
+  // updateAnimals()
+  // Calls the update() method for all animals
+  function updateAnimals() {
+    // Loop through all animals
+    for (let i = 0; i < animals.length; i++) {
+      // Update the current animal
+      animals[i].update();
+    }
+  }
+
+  // updateSausageDog()
+  // Calls the update() method of the sausage dog
+  function updateSausageDog() {
+    sausageDog.update();
+  }
+
+
+
+} //End of animationState
+
+function endState() {}
+
+function keyPressed() {
+
+  // Change between states based on keyPressed
+
+  // Go from title state to animation state by pressing enter
+  if (state === `title` && key === "Enter") {
+    state = `animation`;
+  }
+
 }
