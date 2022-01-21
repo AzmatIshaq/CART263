@@ -36,29 +36,24 @@ class SausageDog extends Animal {
       this.vx = 0;
       // Stretching effect of Sausage Dog when you click on it
       this.imageWidth += 15;
-
     }
 
     // If the timer is lower than 10 seconds sausage dog starts running really fast
     if (timer.countdown < 10) {
      this.vx = 30;
    }
-  }
+ } // End of move function
 
   // mousePressed()
   // Checks if this sausage dog was clicked and remembers it was found if so
   mousePressed() {
     if (!this.found && this.overlap(mouseX, mouseY)) {
       this.found = true;
-
+      barkSFX.play();
       // Added a delay before the ending win state shows up
       setTimeout( function() {
         state = `endWin`
       },3000 )
     }
-
-
-  }
-
-
-}
+  } // End of mousPressed function
+} // End of Animal class

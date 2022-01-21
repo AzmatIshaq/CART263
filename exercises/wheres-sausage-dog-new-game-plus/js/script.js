@@ -49,7 +49,7 @@ let fadeOut = true;
 
 // Timer variable for countdown timer
 let timer = {
-  countdown: 60,
+  countdown: 30,
   x: 60,
   y: 60
 
