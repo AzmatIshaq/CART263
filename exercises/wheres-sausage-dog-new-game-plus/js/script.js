@@ -28,7 +28,7 @@ const ANIMAL_IMAGE_PREFIX = `assets/images/animal`;
 const SAUSAGE_DOG_IMAGE = `assets/images/sausage-dog.png`;
 
 // Number of images to display
-const NUM_ANIMALS = 100;
+const NUM_ANIMALS = 70;
 
 // Array of the loaded animal images
 let animalImages = [];
@@ -46,6 +46,9 @@ let canvasBorder = 0.90;
 // Set title text values to create fade effect
 let startTextAlpha = 255;
 let fadeOut = true;
+
+// Variable for text font size
+let textFont = 34;
 
 // Timer variable for countdown timer
 let timer = {
@@ -191,7 +194,7 @@ function titleState() {
   // Display end winning text
   push();
   fill(255,255,255, startTextAlpha);
-  textSize(44);
+  textSize(textFont);
   textAlign(CENTER, CENTER);
   text(`Find Sausage Dog Before the Timer Runs Out!`, width / gameText.introWidth1, height / gameText.introHeight1);
   text(`Press Enter to Start`, width / gameText.introWidth2, height / gameText.introHeight2);
@@ -254,7 +257,7 @@ function endWinState() {
   // Display end winning text
   push();
   fill(255);
-  textSize(44);
+  textSize(textFont);
   textAlign(CENTER, CENTER);
   text(`Congratulations You Found Sausage Dog!`, width / gameText.endWidth1, height / gameText.endHeight1);
   text(`Refresh the Page to Try Again`, width / gameText.endWidth2, height / gameText.endHeight2);
@@ -268,7 +271,7 @@ function endLoseState() {
   // Display end winning text
   push();
   fill(255);
-  textSize(44);
+  textSize(textFont);
   textAlign(CENTER, CENTER);
   text(`The Timer Ran Out!`, width / gameText.endWidth1, height / gameText.endHeight1);
   text(`Refresh the Page to Try Again`, width / gameText.endWidth2, height / gameText.endHeight2);
