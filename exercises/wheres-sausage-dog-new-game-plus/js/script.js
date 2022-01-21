@@ -28,7 +28,7 @@ const ANIMAL_IMAGE_PREFIX = `assets/images/animal`;
 const SAUSAGE_DOG_IMAGE = `assets/images/sausage-dog.png`;
 
 // Number of images to display
-const NUM_ANIMALS = 50;
+const NUM_ANIMALS = 100;
 
 // Array of the loaded animal images
 let animalImages = [];

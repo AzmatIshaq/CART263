@@ -12,8 +12,8 @@ class Animal {
     this.vy = 0;
     this.size = 100;
     this.image = image;
-    this.imageWidth = 0;
-    this.imageHeight = 0;
+    this.imageWidth = 80;
+    this.imageHeight = 80;
     this.startingPosition = 0;
     this.angle = 0;
     // flip variable to flip animals when clicked
