@@ -1,3 +1,15 @@
-# Template p5 project
+# Exercise 1 - Where is Sausage Dog New Game Plus!
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+By Azmat Ishaq
+Expanded on original code from Pippin Barr Sausage Dog Activitiy on Github:
+https://github.com/pippinbarr/cart263/tree/main/examples/p5js/wheres-sausage-dog
+
+Find the Sausage Dog!
+This code displays a bunch of animals on screen. The players needs to find the
+Sausage Dog animal in order to win!
+
+Added multiple effects in the New Game Plus! version such as multiple game states,!
+
+The effects for the rain is based on this p5 code: https://editor.p5js.org/kelsierose94/sketches/MU2Y21aG0
+
+The countdown timer is based on this p5 code: https://editor.p5js.org/marynotari/sketches/S1T2ZTMp-
