@@ -13,7 +13,7 @@ Sausage Dog animal in order to win!
 The code uses a state system for different stages of the game. For loops and arrays are used to
 load and display the objects (animals).
 
-Added multiple effects in the New Game Plus! version such as multiple game states, sounds, movement, visual effects, etc!
+I added multiple effects in the New Game Plus! version such as multiple game states, sounds, movement, visual effects, etc!
 
 
 ******************/
@@ -28,7 +28,7 @@ const ANIMAL_IMAGE_PREFIX = `assets/images/animal`;
 const SAUSAGE_DOG_IMAGE = `assets/images/sausage-dog.png`;
 
 // Number of images to display
-const NUM_ANIMALS = 70;
+const NUM_ANIMALS = 50;
 
 // Array of the loaded animal images
 let animalImages = [];
@@ -48,14 +48,14 @@ let startTextAlpha = 255;
 let fadeOut = true;
 
 // Variable for text font size
-let textFont = 34;
+let textFont = 24;
 
 // Timer variable for countdown timer
 let timer = {
   countdown: 30,
-  x: 60,
-  y: 60,
-  textFont: 100
+  x: 40,
+  y: 40,
+  textFont: 60
 }
 
 // Variable for barking sound
@@ -317,7 +317,7 @@ function countdownTimer() {
   push();
   fill(0);
   rectMode(CENTER);
-  rect(timer.x, timer.y, 130, 100);
+  rect(timer.x, timer.y, 90, 70);
   pop();
 
 
