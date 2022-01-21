@@ -57,6 +57,8 @@ let timer = {
 
 // Variable for barking sound
 let barkSFX = undefined;
+// Vaiable for incorrect! sound
+let incorrectSFX = undefined;
 
 // Setting the starting state
 let state = `title`;
@@ -98,6 +100,7 @@ function preload() {
   sausageDogImage = loadImage(`${SAUSAGE_DOG_IMAGE}`);
 
   barkSFX = loadSound(`assets/sounds/bark.wav`);
+  incorrectSFX = loadSound(`assets/sounds/incorrect!.wav`);
 
 } // End of preload function
 

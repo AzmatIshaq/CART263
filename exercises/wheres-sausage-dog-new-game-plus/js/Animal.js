@@ -74,9 +74,12 @@ class Animal {
 
 
   mousePressed() {
+
     // Animals rotate effect when they are clicked on
     if (this.overlap(mouseX, mouseY) && state ===`animation`){
         this.angle += 1;
+        // Trigger incorrect! sound effect when an animal is clicked
+        incorrectSFX.play();
     }
 
 
