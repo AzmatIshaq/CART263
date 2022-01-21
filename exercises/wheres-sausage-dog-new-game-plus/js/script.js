@@ -13,7 +13,7 @@ Sausage Dog animal in order to win!
 The code uses a state system for different stages of the game. For loops and arrays are used to
 load and display the objects (animals).
 
-I added multiple effects in the New Game Plus! version such as multiple game states, animal movement, a countdown timer, a background image, and oscillator sound effects.
+Added multiple effects in the New Game Plus! version such as multiple game states, sounds, movement, visual effects, etc!
 
 
 ******************/
@@ -54,8 +54,8 @@ let textFont = 34;
 let timer = {
   countdown: 30,
   x: 60,
-  y: 60
-
+  y: 60,
+  textFont: 100
 }
 
 // Variable for barking sound
@@ -112,7 +112,7 @@ function preload() {
 // Creates all the animal objects and a sausage dog object
 function setup() {
   createCanvas(windowWidth * canvasBorder, windowHeight * canvasBorder);
-
+  // See the setup level function for all the elements necessary to setup the game level
   setupLevel();
 
 }
@@ -181,6 +181,8 @@ function draw() {
 
 function mousePressed() {
   sausageDog.mousePressed();
+
+  // For loop in order to have functionally mouse pressed interaction with the area elements
   for (let i = 0; i < animals.length; i++) {
     animals[i].mousePressed();
   }
@@ -188,12 +190,12 @@ function mousePressed() {
 
 
 // Game states
-
+// Title state of the game
 function titleState() {
 
   // Display end winning text
   push();
-  fill(255,255,255, startTextAlpha);
+  fill(255, 255, 255, startTextAlpha);
   textSize(textFont);
   textAlign(CENTER, CENTER);
   text(`Find Sausage Dog Before the Timer Runs Out!`, width / gameText.introWidth1, height / gameText.introHeight1);
@@ -212,24 +214,24 @@ function titleState() {
 
 
   // Sausage dog image
-  image(sausageDogImage, width / 2 , height / 1.5);
+  image(sausageDogImage, width / 2, height / 1.5);
 
 }
 
-// Animation state function to organize animation functions and code together
+// Animation state to organize animation based functions, and code, together
 
 function animationState() {
 
-updateAnimals();
-updateSausageDog();
-countdownTimer();
+  updateAnimals();
+  updateSausageDog();
+  countdownTimer();
 
-// Rain effect
+  // Rain effect
 
-for(var i = 0; i < 200; i++) {
-drop[i].show();
-drop[i].update();
-}
+  for (var i = 0; i < 200; i++) {
+    drop[i].show();
+    drop[i].update();
+  }
 
 } //End of animationState
 
@@ -288,21 +290,20 @@ function keyPressed() {
   if (state === `title` && key === "Enter") {
 
     state = `animation`;
+    // Oscialltor sound effect to play when you start the animation state
     playOscillator();
 
   }
-
-
-
-}
+} // End of keyPressed function
 
 // Level setup function to setup all the necessary elements
 function setupLevel() {
+  //functions to setup animals and Sausage dog before displaying them
   createAnimals();
   createSausageDog();
 
   // Rain effect setup
-  for(var i = 0; i < 200; i++) {
+  for (var i = 0; i < 200; i++) {
     drop[i] = new Drop();
   }
 }
@@ -324,15 +325,13 @@ function countdownTimer() {
   push();
   fill(255);
   textAlign(CENTER, CENTER);
-  textSize(100);
+  textSize(timer.textFont);
   text(timer.countdown, timer.x, timer.y);
   pop();
 
-
-
   // Logic to make the countdown timer operate based on famecount.
   if (frameCount % 60 == 0 && timer.countdown > 0) {
-    timer.countdown --;
+    timer.countdown--;
   }
 
   // Game over text when countdown reaches 0
@@ -341,21 +340,20 @@ function countdownTimer() {
   }
 }
 
-// Oscillator function to generator sounds for game
+// Oscillator function to generate sounds for game
 
 // Sound for checkpoint interaction
 function playOscillator() {
-    osc.start();
-    osc.amp(5);
+  osc.start();
+  osc.amp(5);
 
-// Starts at 700Hz
-    osc.freq(700);
+  // Starts at 700Hz
+  osc.freq(700);
 
-// Ramps to 10Hz over 0.7 seconds
-    osc.freq(10, 0.7);
-    osc.amp(0, 0.1, 0.7);
-  }
-
+  // Ramps to 10Hz over 0.7 seconds
+  osc.freq(10, 0.7);
+  osc.amp(0, 0.1, 0.7);
+}
 
 // Function to simulate rain effect based on p5 sample code, see README for more information
 // I adjusted some of the values to improve the rain effect
@@ -368,7 +366,7 @@ function Drop() {
   // Using anonymous function to display rain drop
   this.show = function() {
     noStroke();
-    fill(255,255,22);
+    fill(255, 255, 22);
     ellipse(this.x, this.y, random(5, 10), random(5, 10));
   }
 
@@ -376,12 +374,12 @@ function Drop() {
   this.update = function() {
     this.speed = random(5, 10);
     this.gravity = 1.05;
-    this.y = this.y + this.speed*this.gravity;
+    this.y = this.y + this.speed * this.gravity;
 
-  // Resetting the raindrops to fall continuously
+    // Resetting the raindrops to fall continuously
     if (this.y > height) {
       this.y = random(0, -height);
       this.gravity = 0;
     }
   }
-}
+} // End of Drop function

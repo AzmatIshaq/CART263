@@ -9,7 +9,7 @@ Find the Sausage Dog!
 This code displays a bunch of animals on screen. The players needs to find the
 Sausage Dog animal in order to win!
 
-Added multiple effects in the New Game Plus! version such as multiple game states, sounds, movement, effects, etc!
+Added multiple effects in the New Game Plus! version such as multiple game states, sounds, movement, visual effects, etc!
 
 The effect for the rain is based on this p5 code: https://editor.p5js.org/kelsierose94/sketches/MU2Y21aG0
 

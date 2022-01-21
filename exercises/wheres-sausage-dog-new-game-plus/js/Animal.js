@@ -8,7 +8,7 @@ class Animal {
   constructor(x, y, image) {
     this.x = x;
     this.y = y;
-    this.vx = random(1,3);
+    this.vx = random(1, 3);
     this.vy = 0;
     this.size = 100;
     this.image = image;
@@ -18,7 +18,7 @@ class Animal {
     this.angle = 0;
     // flip variable to flip animals when clicked
 
-  }
+  } // End of constructor
 
   // update()
   // Calls the display method
@@ -37,18 +37,16 @@ class Animal {
     rotate(this.angle);
     image(this.image, 0, 0, this.imageWidth, this.imageHeight);
     pop();
-}
+  }
   // Movement function in order to move the herd of animals
-    move () {
-      this.x = this.x + this.vx;
-      this.y = this.y + this.vy;
-
-       if (this.x > width + this.size) {
-         this.x = this.startingPosition;
-       }
-
-
+  move() {
+    this.x = this.x + this.vx;
+    this.y = this.y + this.vy;
+    // Reset animals to starting position when they reach the end of the canvas
+    if (this.x > width + this.size) {
+      this.x = this.startingPosition;
     }
+  } // End of move function
 
 
   // overlap(x,y)
@@ -64,25 +62,21 @@ class Animal {
       y > this.y - this.image.height / 2 &&
       y < this.y + this.image.height) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
-  // mousePressed()
 
-
+  // Mouse pressed function in order to trigger effects with animals
   mousePressed() {
 
     // Animals rotate effect when they are clicked on
-    if (this.overlap(mouseX, mouseY) && state ===`animation`){
-        this.angle += 1;
-        // Trigger incorrect! sound effect when an animal is clicked
-        incorrectSFX.play();
+    if (this.overlap(mouseX, mouseY) && state === `animation`) {
+      this.angle += 1;
+      // Trigger incorrect! sound effect when an animal is clicked
+      incorrectSFX.play();
     }
-
-
-  }
+  } // End of mousePressed function
 
 } // End of Animal class
