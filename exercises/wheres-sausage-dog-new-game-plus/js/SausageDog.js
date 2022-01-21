@@ -14,6 +14,7 @@ class SausageDog extends Animal {
     this.rotationSpeed = 0.25;
     this.vx = 2;
     this.vy = 0;
+
   }
 
   // update()
@@ -32,12 +33,15 @@ class SausageDog extends Animal {
     super.move();
     if (this.found) {
       this.angle += this.rotationSpeed;
+      this.vx = 0;
+      // Stretching effect of Sausage Dog when you click on it
+      this.imageWidth += 15;
+
     }
 
     // If the timer is lower than 10 seconds sausage dog starts running really fast
     if (timer.countdown < 10) {
      this.vx = 30;
-
    }
   }
 

@@ -12,10 +12,12 @@ class Animal {
     this.vy = 0;
     this.size = 100;
     this.image = image;
+    this.imageWidth = 0;
+    this.imageHeight = 0;
     this.startingPosition = 0;
     this.angle = 0;
     // flip variable to flip animals when clicked
-    this.flip = false;
+
   }
 
   // update()
@@ -29,28 +31,13 @@ class Animal {
   // display()
   // Displays this animal's image on the canvas at its position and rotation
   display() {
-
-
-    if (this.flip) {
-    push();
-    scale(-1, 1)
-    imageMode(CENTER);
-    translate(this.x, this.y);
-    rotate(this.angle);
-    image(this.image, -0, 0);
-    pop();
-
-  } else {
     push();
     imageMode(CENTER);
     translate(this.x, this.y);
     rotate(this.angle);
-    image(this.image, 0, 0);
+    image(this.image, 0, 0, this.imageWidth, this.imageHeight);
     pop();
-  }
-
-    }
-
+}
   // Movement function in order to move the herd of animals
     move () {
       this.x = this.x + this.vx;
@@ -85,9 +72,11 @@ class Animal {
 
   // mousePressed()
 
+
   mousePressed() {
-    if (this.overlap(mouseX, mouseY)){
-          this.flip = !this.flip;
+    // Animals rotate effect when they are clicked on
+    if (this.overlap(mouseX, mouseY) && state ===`animation`){
+        this.angle += 1;
     }
 
 

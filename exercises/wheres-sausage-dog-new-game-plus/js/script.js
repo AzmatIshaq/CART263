@@ -49,11 +49,14 @@ let fadeOut = true;
 
 // Timer variable for countdown timer
 let timer = {
-  countdown: 13,
+  countdown: 60,
   x: 60,
   y: 60
 
 }
+
+// Variable for barking sound
+let barkSFX = undefined;
 
 // Setting the starting state
 let state = `title`;
@@ -81,7 +84,7 @@ let drop = [];
 
 
 // preload()
-// Loads all the animal images and the sausage dog image
+// Loads all the animal images and the sausage dog image as well as the sounds for the dog, animal
 function preload() {
   // Loop once for each animal image, starting from 0
   for (let i = 0; i < NUM_ANIMAL_IMAGES; i++) {
@@ -93,7 +96,10 @@ function preload() {
 
   // Load the sausage dog image
   sausageDogImage = loadImage(`${SAUSAGE_DOG_IMAGE}`);
-}
+
+  barkSFX = loadSound(`assets/sounds/bark.wav`);
+
+} // End of preload function
 
 
 // setup()
