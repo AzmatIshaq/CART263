@@ -160,6 +160,11 @@ let currentAnswer = `Click to begin.`;
 let currentAnimal = ``;
 
 
+// Happy and sad images variable
+
+let imgHappy = undefined;
+let imgSad = undefined;
+
 
                                 /* END OF VARIABLES */
 
@@ -168,6 +173,10 @@ let currentAnimal = ``;
 
 function preload() {
 
+
+  imgHappy = loadImage('assets/images/happy_birthday.png'); // Load the happy image
+
+  imgSad = loadImage('assets/images/sad_birthday.png'); // Load the sad image
 
 }
 
@@ -194,6 +203,9 @@ function setup() {
   textSize(102);
   textStyle(BOLD);
   textAlign(CENTER);
+
+  // Setting default image mode
+  imageMode(CENTER);
 }
 
 
@@ -204,6 +216,8 @@ function draw() {
   background(0);
 
   displayAnswer();
+
+  characterAnimation()
 }
 
 /**
@@ -267,4 +281,16 @@ When the user clicks, go to the next question
 */
 function mousePressed() {
   nextQuestion();
+}
+
+/**
+function to display character and reaction
+*/
+
+function characterAnimation() {
+  // Displays the sad image at its actual size at a specific position
+  image(imgSad, width / 2, height / 5, 300, 300);
+  // Displays the happy image at its actual size at a specific position
+  image(imgHappy, width / 2, height / 5, 300, 300);
+
 }
