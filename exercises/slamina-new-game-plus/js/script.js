@@ -232,6 +232,10 @@ function displayAnswer() {
   if (currentAnswer === currentAnimal) {
     fill(0, 255, 0);
     happyState = true;
+
+    responsiveVoice.speak("Well done!", "UK English Male", {pitch: 2} );
+    responsiveVoice.cancel();
+
   }
   else {
     fill(255, 0, 0);
@@ -279,7 +283,6 @@ function nextQuestion() {
   currentAnswer = ``;
   currentAnimal = random(animals);
   sayAnimalBackwards(currentAnimal);
-  happyState = true;
 }
 
 /**
