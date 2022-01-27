@@ -170,6 +170,7 @@ let happyState = true;
 
 
                                 /* END OF VARIABLES */
+/*************************************************************************************************/
 
 /** Preloading happy and sad images to display for right and wrong answers
 */
@@ -211,6 +212,7 @@ function setup() {
   imageMode(CENTER);
 }
 
+/*************************************************************************************************/
 
 /**
 Display the current answer.
@@ -223,6 +225,8 @@ function draw() {
   characterAnimation()
 }
 
+/*************************************************************************************************/
+
 /**
 Display the current answer in red if incorrect and green if correct
 (Displays nothing if no guess entered yet)
@@ -231,15 +235,12 @@ function displayAnswer() {
 
   if (currentAnswer === currentAnimal) {
     fill(0, 255, 0);
-    happyState = true;
 
-    responsiveVoice.speak("Well done!", "UK English Male", {pitch: 2} );
-    responsiveVoice.cancel();
 
   }
   else {
     fill(255, 0, 0);
-    happyState = false;
+
   }
   text(currentAnswer, width / 2, height / 2);
 }
@@ -251,6 +252,8 @@ function sayAnimalBackwards(animal) {
   let reverseAnimal = reverseString(animal);
   responsiveVoice.speak(reverseAnimal);
 }
+
+/*************************************************************************************************/
 
 /**
 Reverses the provided string
@@ -266,6 +269,8 @@ function reverseString(string) {
   return result;
 }
 
+/*************************************************************************************************/
+
 /**
 Called by annyang when the user make a guess.
 animal parameter contains the guess as a string.
@@ -274,7 +279,22 @@ Sets the answer text to the guess.
 function guessAnimal(animal) {
   // Convert the guess to lowercase to match the answer format
   currentAnswer = animal.toLowerCase();
+
+  if (currentAnswer === currentAnimal) {
+
+
+    responsiveVoice.speak("Well done!", "UK English Male", {pitch: 2} );
+    happyState = true;
+
+
+  }
+  else {
+         responsiveVoice.speak("Wrong!", "UK English Male", {pitch: 2} );
+         happyState = false;
+  }
 }
+
+/*************************************************************************************************/
 
 /**
 Reset the answer text, get a new random animal, say its name
@@ -285,12 +305,16 @@ function nextQuestion() {
   sayAnimalBackwards(currentAnimal);
 }
 
+/*************************************************************************************************/
+
 /**
 When the user clicks, go to the next question
 */
 function mousePressed() {
   nextQuestion();
 }
+
+/*************************************************************************************************/
 
 /**
 function to display character and reaction
@@ -305,7 +329,5 @@ function characterAnimation() {
     // Displays the sad image at its actual size at a specific position
     image(imgSad, width / 2, height / 5, 300, 300);
   }
-
-
 
 }
