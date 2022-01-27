@@ -1,3 +1,12 @@
-# Template p5 project
+# Slamina New Game Plus!
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+by Azmat Ishaq
+
+This is a coding exercise project for CART263 at Concordia University.
+
+The original code was written by Professor Pippin Barr.
+
+It is essentially a guessing game involving voice feedback from the user.
+The user will need a microphone and the browser also needs to be able to work with ResponsiveVoice and annyang.
+
+I added some more features to the code such as
