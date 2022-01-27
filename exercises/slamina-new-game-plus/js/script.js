@@ -165,6 +165,9 @@ let currentAnimal = ``;
 let imgHappy = undefined;
 let imgSad = undefined;
 
+// Variable to set the state of the character emotion
+let happyState = true;
+
 
                                 /* END OF VARIABLES */
 
@@ -225,12 +228,14 @@ Display the current answer in red if incorrect and green if correct
 (Displays nothing if no guess entered yet)
 */
 function displayAnswer() {
+
   if (currentAnswer === currentAnimal) {
     fill(0, 255, 0);
-
+    happyState = true;
   }
   else {
     fill(255, 0, 0);
+    happyState = false;
   }
   text(currentAnswer, width / 2, height / 2);
 }
@@ -274,6 +279,7 @@ function nextQuestion() {
   currentAnswer = ``;
   currentAnimal = random(animals);
   sayAnimalBackwards(currentAnimal);
+  happyState = true;
 }
 
 /**
@@ -288,9 +294,15 @@ function to display character and reaction
 */
 
 function characterAnimation() {
-  // Displays the sad image at its actual size at a specific position
-  image(imgSad, width / 2, height / 5, 300, 300);
-  // Displays the happy image at its actual size at a specific position
-  image(imgHappy, width / 2, height / 5, 300, 300);
+
+  if (happyState) {
+    // Displays the happy image at its actual size at a specific position
+    image(imgHappy, width / 2, height / 5, 300, 300);
+  }  else {
+    // Displays the sad image at its actual size at a specific position
+    image(imgSad, width / 2, height / 5, 300, 300);
+  }
+
+
 
 }
