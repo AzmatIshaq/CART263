@@ -196,13 +196,27 @@ let pitchLow = 0.1;
 // Setting for high pitch
 let pitchHigh = 2;
 
+// Level variable
+let level = 0;
+
+// background colour variable
+let bg = {
+  r: 0,
+  g: 0,
+  b: 0,
+}
+
+
+
+
 
                                 /* END OF VARIABLES */
 
 
 /*************************************************************************************************/
 
-/** Preloading happy and sad images to display for right and wrong answers
+/**
+Preloading happy and sad images to display for right and wrong answers
 */
 
 function preload() {
@@ -231,12 +245,55 @@ function setup() {
     // Create the guessing command
     let commands = {
       'It is *animal': guessAnimal,
+
       'back off' () {
           happyState = true;
           responsiveVoice.speak("Oh fiddle sticks!", "UK English Male", {pitch: pitchHigh} );
           imageProperties.w = imageProperties.reset;
           imageProperties.h = imageProperties.reset;
           imageProperties.y = height / 5;
+      },
+
+      'add red' () {
+        alert(`Ok Boss!`);
+        bg.r += 25;
+
+
+
+    },
+
+    'add a lot of red' () {
+        alert(`Ok Boss!`);
+        bg.r += 65;
+
+
+    },
+
+
+    'add green' () {
+        bg.g += 25;
+        alert(`Ok Boss!`);
+
+    },
+
+
+    'add a lot of green' () {
+        alert(`Ok Boss!`);
+        bg.r += 65;
+
+    },
+
+
+    'add blue' () {
+        bg.b += 25;
+        alert(`Ok Boss!`);
+
+    },
+
+    'add a lot of blue' () {
+        bg.b += 65;
+        alert(`Ok Boss!`);
+
       },
     };
 
@@ -252,15 +309,29 @@ function setup() {
 
   // Setting default image mode
   imageMode(CENTER);
+
+  // Prevent background rgb from being more than 255
+  if (bg.r > 255  ) {
+    bg.r = 255;
+  }
+
+  if (bg.g > 255  ) {
+    bg.g = 255;
+  }
+
+  if (bg.b > 255  ) {
+    bg.b = 255;
+  }
+
 }
 
 /*************************************************************************************************/
 
 /**
-Display the current answer.
+Display the current answer and animate the character. Also display the score and other text.
  */
 function draw() {
-  background(0);
+  background(bg.r, bg.g, bg.b);
 
  // Alternate between game states
  if (state === `title`) {
@@ -332,9 +403,12 @@ function guessAnimal(animal) {
       responsiveVoice.speak("Well done!", "UK English Male", {pitch: pitchHigh} );
     // Character animates when user is correct
       imageProperties.w = abs(sin(imageProperties.angle)) * imageProperties.w;
+
+      if (scoreKeeper === level) {
     // Increase the score
-    scoreKeeper++
-  }
+      scoreKeeper++;
+      }
+    }
   else {
       // Responsive voice reacts to user when they are incorrect
        responsiveVoice.speak("That is wrong!", "UK English Male", {pitch: pitchLow} );
@@ -354,6 +428,11 @@ function nextQuestion() {
   currentAnswer = ``;
   currentAnimal = random(animals);
   sayAnimalBackwards(currentAnimal);
+
+  // Reset the character position
+  imageProperties.w = imageProperties.reset;
+  imageProperties.h = imageProperties.reset;
+  imageProperties.y = height / 5;
 }
 
 /*************************************************************************************************/
@@ -362,7 +441,13 @@ function nextQuestion() {
 When the user clicks, go to the next question
 */
 function mousePressed() {
+  if (state === `animation`) {
   nextQuestion();
+  // If the scorekeeper is more than the level only then will the level number increase
+    if (scoreKeeper > level) {
+      level++;
+    }
+  }
 
 
   // Go from title state to animation state by pressing mouse
@@ -404,17 +489,10 @@ function characterAnimation() {
     imageProperties.h = abs(sin(imageProperties.angleH)) * imageProperties.reset;
 
 }
-  // If the user guesses an answer incorrectly then the character will spin
+
+  // If the user guesses an answer incorrectly then the character will appear to move towards the user
   if (currentAnswer != currentAnimal && happyState === false) {
-
-    imageProperties.w += 1
-    imageProperties.h += 1
-
-  }
-
-  // If the user guesses an answer incorrectly then the character will spin
-  if (currentAnswer != currentAnimal && happyState === false) {
-
+    // Character movement
     imageProperties.w += 1
     imageProperties.h += 1
     imageProperties.y += 1
@@ -433,6 +511,24 @@ function textAnimation () {
   text(`Score` + `:` + ` ` + scoreKeeper, width / 10, height / 1.5);
   pop();
 
+  // Text on how to play
+  push();
+  fill(255);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  text(`Try to guess which animal the AI is saying backwards. Say "It is [animal]"`, width / 2, height / 1.3);
+  text(`Click the mouse to try a different animal`, width / 2, height / 1.2);
+  pop();
+
+  // Text on how to play
+  push();
+  fill(255);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  text(`Say "Back off" if the character gets too close to you`, width / 2, height / 1.1);
+  pop();
+
+
 }
 
 /*************************************************************************************************/
@@ -440,12 +536,27 @@ function textAnimation () {
 // Title state of the game
 function titleState() {
 
-  // Display end winning text
+  // Display title text
   push();
   fill(255, 255, 255);
   textSize(40);
   textAlign(CENTER, CENTER);
-  text(`Click mouse to continue`, width / 2, height / 2);
+  text(`Welcome to Slamina New Game Plus!`, width / 2, height / 5);
+  textStyle(NORMAL);
+  textSize(30);
+  text(`Click the mouse to start playing`, width / 2, height / 4);
+  pop();
+
+  // Display end winning text
+  push();
+  fill(255, 255, 255);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  textStyle(NORMAL);
+  text(`But first try changing the background color`, width / 2, height / 2);
+  text(`Say "Add Red" for more red`, width / 2, height / 1.8);
+  text(`Say "Add A Lot of Red" for alot of red`, width / 2, height / 1.6);
+  text(`This works for Green and Blue also...`, width / 2, height / 1.4);
   pop();
 }
 
@@ -462,5 +573,20 @@ function animationState() {
    textAnimation();
 
 }
+
+// Function to load the end lose state elements
+function endLoseState() {
+
+  // Display end winning text
+  push();
+  fill(255);
+  textSize(textFont);
+  textAlign(CENTER, CENTER);
+  text(`He got too Close!`, width / gameText.endWidth1, height / gameText.endHeight1);
+  text(`Refresh the Page to Try Again`, width / gameText.endWidth2, height / gameText.endHeight2);
+  pop();
+
+}
+
 
                                                 /*  END */
