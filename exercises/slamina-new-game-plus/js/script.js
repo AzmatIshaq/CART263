@@ -179,8 +179,8 @@ let imgSad = undefined;
 let imageProperties = {
   x: 0,
   y: 0,
-  w: 300,
-  h: 300,
+  w: 200,
+  h: 200,
   vx: 0,
   vy: 1,
   sizeIncrease: 1,
@@ -193,7 +193,7 @@ let imageProperties = {
   angleH: 0.1,
   angleIncreaseH: 0.15,
   // properties to reset the image width, height, and angle
-  reset: 300,
+  reset: 200,
   angleReset: 0.1,
 };
 
@@ -237,7 +237,7 @@ let answerText = {
 // Variable to style score when displayed as text
 let scoreText = {
   fill: 255,
-  size: 55,
+  size: 35,
   x: 10,
   y: 1.5
 };
@@ -245,7 +245,7 @@ let scoreText = {
 // Variable to style tutorial text displayed during animation state
 let tutorialText = {
   fill: 255,
-  size: 30,
+  size: 20,
   x1: 2,
   x2: 2,
   x3: 2,
@@ -257,7 +257,7 @@ let tutorialText = {
 // Variable to style text displayed during title state
 let titleText = {
   fill: 255,
-  size: 40,
+  size: 20,
   x1: 2,
   x2: 2,
   x3: 2,
@@ -275,7 +275,7 @@ let titleText = {
 // Variable to style text displayed during end state
 let endText = {
   fill: 255,
-  size: 30,
+  size: 20,
   x1: 2,
   x2: 2,
   y1: 2,
@@ -375,7 +375,7 @@ function setup() {
   }
 
   // Text defaults
-  textSize(102);
+  textSize(50);
   textStyle(BOLD);
   textAlign(CENTER);
 
@@ -617,14 +617,14 @@ function titleState() {
   textAlign(CENTER, CENTER);
   text(`Welcome to Slamina New Game Plus!`, width / titleText.x1, height / titleText.y1);
   textStyle(NORMAL);
-  textSize(30);
+  textSize(17);
   text(`Click the mouse to start playing`, width / titleText.x2, height / titleText.y2);
   pop();
 
   // Display end winning text
   push();
-  fill(255, 255, 255);
-  textSize(30);
+  fill(titleText.fill);
+  textSize(titleText.size);
   textAlign(CENTER, CENTER);
   textStyle(NORMAL);
   text(`But first try changing the background color`, width / titleText.x3, height / titleText.y3);
