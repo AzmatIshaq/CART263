@@ -258,17 +258,13 @@ function setup() {
         alert(`Ok Boss!`);
         bg.r += 25;
 
-
-
     },
 
     'add a lot of red' () {
         alert(`Ok Boss!`);
         bg.r += 65;
 
-
     },
-
 
     'add green' () {
         bg.g += 25;
@@ -276,13 +272,11 @@ function setup() {
 
     },
 
-
     'add a lot of green' () {
         alert(`Ok Boss!`);
         bg.r += 65;
 
     },
-
 
     'add blue' () {
         bg.b += 25;
@@ -340,6 +334,9 @@ function draw() {
  if (state === `animation`) {
    animationState();
  }
+
+ if (state === `endLose`)
+  endLoseState();
 }
 
 /*************************************************************************************************/
@@ -496,7 +493,10 @@ function characterAnimation() {
     imageProperties.w += 1
     imageProperties.h += 1
     imageProperties.y += 1
-
+    // Losing condition if character gets too close
+    if (imageProperties.y > 650) {
+      state = `endLose`
+    }
   }
 }
 
@@ -580,10 +580,11 @@ function endLoseState() {
   // Display end winning text
   push();
   fill(255);
-  textSize(textFont);
+  textSize(30);
+  textStyle(NORMAL);
   textAlign(CENTER, CENTER);
-  text(`He got too Close!`, width / gameText.endWidth1, height / gameText.endHeight1);
-  text(`Refresh the Page to Try Again`, width / gameText.endWidth2, height / gameText.endHeight2);
+  text(`He got too Close!`, width / 2, height / 2);
+  text(`Refresh the Page to Try Again`, width / 2, height / 1.7);
   pop();
 
 }
