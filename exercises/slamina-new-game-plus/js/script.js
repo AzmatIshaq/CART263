@@ -4,13 +4,13 @@
 Slamina New Game Plus
 By Azmat Ishaq
 
-Starting Code based on Pippin Barr's: Activity - Slamina!
+Starting code is based on Pippin Barr's: Activity - Slamina!
 
 Originally a guessing game in which the page pronounces the name of an animal
 backwards and the user has to figure out what it was and say the
 name forwards.
 
-In Slamina New Game Plus there are added game states
+In Slamina New Game Plus I added a character animation. I also responsive voice elements.
 ******************/
 
 // An array of animal names from
@@ -159,17 +159,28 @@ let currentAnswer = `Click to begin.`;
 // The current animal name the user is trying to guess
 let currentAnimal = ``;
 
-
-// Happy and sad images variable
-
+// Happy and sad images variables for character animation
 let imgHappy = undefined;
 let imgSad = undefined;
+
+// Variable to set size of character image
+  let imageProperties = {
+    w: 300,
+    h: 300,
+    angleW: 0.1,
+    angleIncreaseW: 0.15,
+    angleH: 0.1,
+    angleIncreaseH: 0.15,
+    reset: 300,
+  };
 
 // Variable to set the state of the character emotion
 let happyState = true;
 
 
                                 /* END OF VARIABLES */
+
+
 /*************************************************************************************************/
 
 /** Preloading happy and sad images to display for right and wrong answers
@@ -177,12 +188,13 @@ let happyState = true;
 
 function preload() {
 
-
   imgHappy = loadImage('assets/images/happy_birthday.png'); // Load the happy image
 
   imgSad = loadImage('assets/images/sad_birthday.png'); // Load the sad image
 
 }
+
+/*************************************************************************************************/
 
 /**
 Create a canvas
@@ -220,8 +232,10 @@ Display the current answer.
 function draw() {
   background(0);
 
+  // This function displays the user's answer
   displayAnswer();
 
+  // This function animates the game character
   characterAnimation()
 }
 
@@ -235,15 +249,14 @@ function displayAnswer() {
 
   if (currentAnswer === currentAnimal) {
     fill(0, 255, 0);
-
-
   }
   else {
     fill(255, 0, 0);
-
   }
   text(currentAnswer, width / 2, height / 2);
 }
+
+/*************************************************************************************************/
 
 /**
 Reverse the animal name and say it with ResponsiveVoice
@@ -281,16 +294,18 @@ function guessAnimal(animal) {
   currentAnswer = animal.toLowerCase();
 
   if (currentAnswer === currentAnimal) {
-
-
-    responsiveVoice.speak("Well done!", "UK English Male", {pitch: 2} );
-    happyState = true;
-
-
+    // Change character animation state to happy
+      happyState = true;
+    // Responsive voice reacts to user when they are correct
+      responsiveVoice.speak("Well done!", "UK English Male", {pitch: 2} );
+    // Character animates when user is correct
+      imageProperties.w = abs(sin(imageProperties.angle)) * imageProperties.w;
   }
   else {
-         responsiveVoice.speak("Wrong!", "UK English Male", {pitch: 2} );
-         happyState = false;
+      // Responsive voice reacts to user when they are incorrect
+       responsiveVoice.speak("That is wrong!", "UK English Male", {pitch: 2} );
+       // Change character animation state to sad
+       happyState = false;
   }
 }
 
@@ -312,6 +327,7 @@ When the user clicks, go to the next question
 */
 function mousePressed() {
   nextQuestion();
+  imageProperties.w = imageProperties.reset;
 }
 
 /*************************************************************************************************/
@@ -323,11 +339,22 @@ function to display character and reaction
 function characterAnimation() {
 
   if (happyState) {
-    // Displays the happy image at its actual size at a specific position
-    image(imgHappy, width / 2, height / 5, 300, 300);
+    // Display the happy character image
+    image(imgHappy, width / 2, height / 5, imageProperties.w, imageProperties.h);
   }  else {
-    // Displays the sad image at its actual size at a specific position
-    image(imgSad, width / 2, height / 5, 300, 300);
+    // Display the sad character image
+    image(imgSad, width / 2, height / 5, imageProperties.w, imageProperties.h);
   }
 
+  if (currentAnswer === currentAnimal) {
+    // Character animates when user is correct
+    imageProperties.angleW = imageProperties.angleW + imageProperties.angleIncreaseW;
+    imageProperties.angleH = imageProperties.angleH + imageProperties.angleIncreaseH;
+    imageProperties.w = abs(sin(imageProperties.angleW)) * 300;
+    imageProperties.h = abs(sin(imageProperties.angleH)) * 300;
+  }
+
+
 }
+
+                                                /*  END */
