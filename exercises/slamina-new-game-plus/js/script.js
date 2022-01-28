@@ -154,6 +154,10 @@ const animals = [
 
 const QUESTION_DELAY = 2000; // in milliseconds
 
+// Variable to set initial state
+
+let state = `title`;
+
 // The current answer to display (we use it initially to display the click instruction)
 let currentAnswer = `Click to begin.`;
 // The current animal name the user is trying to guess
@@ -165,17 +169,32 @@ let imgSad = undefined;
 
 // Variable to set size of character image
   let imageProperties = {
+    x: 0,
+    y: 0,
     w: 300,
     h: 300,
+    // angle properties to manipulate image width
     angleW: 0.1,
     angleIncreaseW: 0.15,
+    // angle properties to manipulate image height
     angleH: 0.1,
     angleIncreaseH: 0.15,
+    // properties to reset the image width, height, and angle
     reset: 300,
+    angleReset: 0.1,
   };
 
 // Variable to set the state of the character emotion
 let happyState = true;
+
+// Scorekeeper variable to keep track of score
+let scoreKeeper = 0;
+
+// Variables for pitch for responsive voice
+// Setting for low pitch
+let pitchLow = 0.1;
+// Setting for high pitch
+let pitchHigh = 2;
 
 
                                 /* END OF VARIABLES */
@@ -204,12 +223,23 @@ Set text defaults
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  imageProperties.x = width / 2;
+  imageProperties.y = height / 5;
+
   // Is annyang available?
   if (annyang) {
     // Create the guessing command
     let commands = {
-      'It is *animal': guessAnimal
+      'It is *animal': guessAnimal,
+      'back off' () {
+          happyState = true;
+          responsiveVoice.speak("Oh fiddle sticks!", "UK English Male", {pitch: pitchHigh} );
+          imageProperties.w = imageProperties.reset;
+          imageProperties.h = imageProperties.reset;
+          imageProperties.y = height / 5;
+      },
     };
+
     // Setup annyang and start
     annyang.addCommands(commands);
     annyang.start();
@@ -232,11 +262,13 @@ Display the current answer.
 function draw() {
   background(0);
 
-  // This function displays the user's answer
-  displayAnswer();
-
-  // This function animates the game character
-  characterAnimation()
+ // Alternate between game states
+ if (state === `title`) {
+   titleState();
+ }
+ if (state === `animation`) {
+   animationState();
+ }
 }
 
 /*************************************************************************************************/
@@ -297,17 +329,21 @@ function guessAnimal(animal) {
     // Change character animation state to happy
       happyState = true;
     // Responsive voice reacts to user when they are correct
-      responsiveVoice.speak("Well done!", "UK English Male", {pitch: 2} );
+      responsiveVoice.speak("Well done!", "UK English Male", {pitch: pitchHigh} );
     // Character animates when user is correct
       imageProperties.w = abs(sin(imageProperties.angle)) * imageProperties.w;
+    // Increase the score
+    scoreKeeper++
   }
   else {
       // Responsive voice reacts to user when they are incorrect
-       responsiveVoice.speak("That is wrong!", "UK English Male", {pitch: 2} );
+       responsiveVoice.speak("That is wrong!", "UK English Male", {pitch: pitchLow} );
        // Change character animation state to sad
        happyState = false;
   }
 }
+
+
 
 /*************************************************************************************************/
 
@@ -327,7 +363,19 @@ When the user clicks, go to the next question
 */
 function mousePressed() {
   nextQuestion();
+
+
+  // Go from title state to animation state by pressing mouse
+  if (state === `title`) {
+    state = `animation`;
+  }
+
+  // Reset the image properties
   imageProperties.w = imageProperties.reset;
+  imageProperties.h = imageProperties.reset;
+  imageProperties.angleW = imageProperties.angleReset;
+  imageProperties.angleH = imageProperties.angleReset;
+  imageProperties.y = height / 5;
 }
 
 /*************************************************************************************************/
@@ -337,23 +385,81 @@ function to display character and reaction
 */
 
 function characterAnimation() {
-
+  // If the happy state is true or false then the character will change their expression
   if (happyState) {
     // Display the happy character image
-    image(imgHappy, width / 2, height / 5, imageProperties.w, imageProperties.h);
+    image(imgHappy, imageProperties.x, imageProperties.y, imageProperties.w, imageProperties.h);
   }  else {
     // Display the sad character image
-    image(imgSad, width / 2, height / 5, imageProperties.w, imageProperties.h);
+    image(imgSad, imageProperties.x, imageProperties.y, imageProperties.w, imageProperties.h);
   }
 
-  if (currentAnswer === currentAnimal) {
-    // Character animates when user is correct
+  // If the user guesses an answer correctly then the character will grow and shrink
+  if (currentAnswer === currentAnimal && happyState) {
+
+    // Character grows and shrinks when user is correct
     imageProperties.angleW = imageProperties.angleW + imageProperties.angleIncreaseW;
     imageProperties.angleH = imageProperties.angleH + imageProperties.angleIncreaseH;
-    imageProperties.w = abs(sin(imageProperties.angleW)) * 300;
-    imageProperties.h = abs(sin(imageProperties.angleH)) * 300;
+    imageProperties.w = abs(sin(imageProperties.angleW)) * imageProperties.reset;
+    imageProperties.h = abs(sin(imageProperties.angleH)) * imageProperties.reset;
+
+}
+  // If the user guesses an answer incorrectly then the character will spin
+  if (currentAnswer != currentAnimal && happyState === false) {
+
+    imageProperties.w += 1
+    imageProperties.h += 1
+
   }
 
+  // If the user guesses an answer incorrectly then the character will spin
+  if (currentAnswer != currentAnimal && happyState === false) {
+
+    imageProperties.w += 1
+    imageProperties.h += 1
+    imageProperties.y += 1
+
+  }
+}
+
+/*************************************************************************************************/
+
+function textAnimation () {
+  // Text to display score
+  push();
+  fill(255);
+  textSize(55);
+  textAlign(CENTER, CENTER);
+  text(`Score` + `:` + ` ` + scoreKeeper, width / 10, height / 1.5);
+  pop();
+
+}
+
+/*************************************************************************************************/
+
+// Title state of the game
+function titleState() {
+
+  // Display end winning text
+  push();
+  fill(255, 255, 255);
+  textSize(40);
+  textAlign(CENTER, CENTER);
+  text(`Click mouse to continue`, width / 2, height / 2);
+  pop();
+}
+
+/*************************************************************************************************/
+
+function animationState() {
+  // This function displays the user's answer
+  displayAnswer();
+
+  // This function animates the game character
+  characterAnimation();
+
+  // This function displays some of the game text
+   textAnimation();
 
 }
 
