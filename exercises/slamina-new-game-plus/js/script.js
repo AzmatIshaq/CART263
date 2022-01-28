@@ -11,6 +11,10 @@ backwards and the user has to figure out what it was and say the
 name forwards.
 
 In Slamina New Game Plus I added a character animation. I also responsive voice elements.
+I also added an end state which is triggered is the character gets too close to you.
+
+Note there is no win state, only a scorekeeper.
+
 ******************/
 
 // An array of animal names from
@@ -204,7 +208,11 @@ let bg = {
   r: 0,
   g: 0,
   b: 0,
+// property for background color increase
+  increase: 25,
+  increaseALot: 65,
 }
+
 
 
 
@@ -237,6 +245,7 @@ Set text defaults
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  // Setting up image position
   imageProperties.x = width / 2;
   imageProperties.y = height / 5;
 
@@ -256,36 +265,36 @@ function setup() {
 
       'add red' () {
         alert(`Ok Boss!`);
-        bg.r += 25;
+        bg.r += bg.increase;
 
     },
 
     'add a lot of red' () {
         alert(`Ok Boss!`);
-        bg.r += 65;
+        bg.r += bg.increaseALot;
 
     },
 
     'add green' () {
-        bg.g += 25;
+        bg.g += bg.increase;
         alert(`Ok Boss!`);
 
     },
 
     'add a lot of green' () {
         alert(`Ok Boss!`);
-        bg.r += 65;
+        bg.r += bg.increaseALot;
 
     },
 
     'add blue' () {
-        bg.b += 25;
+        bg.b += bg.increase;
         alert(`Ok Boss!`);
 
     },
 
     'add a lot of blue' () {
-        bg.b += 65;
+        bg.b += bg.increaseALot;
         alert(`Ok Boss!`);
 
       },
@@ -305,20 +314,20 @@ function setup() {
   imageMode(CENTER);
 
   // Prevent background rgb from being more than 255
-  if (bg.r > 255  ) {
-    bg.r = 255;
-  }
+    if (bg.r > 255  ) {
+      bg.r = 255;
+    }
 
-  if (bg.g > 255  ) {
-    bg.g = 255;
-  }
+    if (bg.g > 255  ) {
+      bg.g = 255;
+    }
 
-  if (bg.b > 255  ) {
-    bg.b = 255;
-  }
+    if (bg.b > 255  ) {
+      bg.b = 255;
+    }
+
 
 }
-
 /*************************************************************************************************/
 
 /**
@@ -494,7 +503,7 @@ function characterAnimation() {
     imageProperties.h += 1
     imageProperties.y += 1
     // Losing condition if character gets too close
-    if (imageProperties.y > 650) {
+    if (imageProperties.y > height) {
       state = `endLose`
     }
   }
@@ -555,7 +564,7 @@ function titleState() {
   textStyle(NORMAL);
   text(`But first try changing the background color`, width / 2, height / 2);
   text(`Say "Add Red" for more red`, width / 2, height / 1.8);
-  text(`Say "Add A Lot of Red" for alot of red`, width / 2, height / 1.6);
+  text(`Say "Add A Lot of Red" for a lot of red`, width / 2, height / 1.6);
   text(`This works for Green and Blue also...`, width / 2, height / 1.4);
   pop();
 }
@@ -571,7 +580,6 @@ function animationState() {
 
   // This function displays some of the game text
    textAnimation();
-
 }
 
 // Function to load the end lose state elements
