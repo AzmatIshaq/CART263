@@ -413,7 +413,7 @@ function draw() {
     animationState();
   }
 
-  if (state === `endLose`)
+  if (state === `endLose`) 
     endLoseState();
 }
 
