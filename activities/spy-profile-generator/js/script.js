@@ -19,7 +19,6 @@ let canvasProperties = {
 };
 
 // Variable to style the background
-
 let bg = {
   r: 0,
   g: 0,
@@ -27,9 +26,21 @@ let bg = {
 };
 
 // Variable to set starting state to `title`
-
 let state = `title`;
 
+
+// The spy profile data while the program is running
+let spyProfile = {
+  name: `**REDACTED**`,
+  alias: `**REDACTED**`,
+  secretWeapon: `**REDACTED**`,
+  password: `**REDACTED**`
+};
+
+// Variables to store JSON data for generating the profile
+let tarotData;
+let objectsData;
+let instrumentsData;
 
 /*********************** PRELOAD **********************************************/
 
@@ -37,6 +48,10 @@ let state = `title`;
 Description of preload
 */
 function preload() {
+
+  tarotData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/divination/tarot_interpretations.json`);
+  objectsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/objects/objects.json`);
+  instrumentsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/music/instruments.json`);
 
 }
 
@@ -49,6 +64,17 @@ Description of setup
 function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
+
+  let data = JSON.parse(localStorage.getItem(`spy-profile-data`));
+    if (data !== null) {
+      let password = prompt(`Agent! What is your password?!`)
+        if (password === data.password) {
+            setupSpyProfile(data);
+        }
+    }
+    else {
+        genereateSpyProfile();
+    }
 
 }
 
@@ -96,10 +122,54 @@ function animationState() {
 
 function titleState() {
 
+  let profile = `** SPY PROFILE: DO NOT DISTRIBUTE! **
+
+Name: ${spyProfile.name}
+Alias: ${spyProfile.alias}
+Secret Weapon: ${spyProfile.secretWeapon}
+Password: ${spyProfile.password}`;
+
+  push();
+  textSize(32);
+  textFont(`Courier, Monospace`);
+  textAlign(CENTER, CENTER);
+  rectMode(CENTER);
+  fill(255);
+  text(profile, width / 2, height / 2);
+  pop();
 }
+
+
 
 /*********************** RESET STATES *****************************************/
 
 function resetStates() {
 
+}
+
+/* - - - - - - - - - - - MISC - - - - - - - - - - - - - - - - - - - - - - - - */
+
+/*********************** GENERATE SPY PROFILE *********************************/
+
+function genereateSpyProfile() {
+  spyProfile.name = prompt (`Agent! What is your name?`);
+  let instrument = random(instrumentsData.instruments);
+  spyProfile.alias =  `The ${instrument}`
+  spyProfile.secretWeapon = random(objectsData.objects);
+  let card = random(tarotData.tarot_interpretations);
+  spyProfile.password = random(card.keywords);
+
+  localStorage.setItem(`spy-profile-data`, JSON.stringify(spyProfile));
+}
+
+/*********************** SETUP SPY PROFILE ************************************/
+
+/**
+Assigns across the profile properties from the data to the current profile
+*/
+function setupSpyProfile(data) {
+  spyProfile.name = data.name;
+  spyProfile.alias = data.alias;
+  spyProfile.secretWeapon = data.secretWeapon;
+  spyProfile.password = data.password;
 }
