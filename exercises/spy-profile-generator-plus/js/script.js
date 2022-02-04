@@ -33,8 +33,8 @@ let bg = {
 };
 
 // Variable to set starting state to `title`
-let state = `title`;
-
+// let state = `title`;
+let state = `animation`;
 
 // The spy profile data while the program is running
 let spyProfile = {
@@ -44,8 +44,6 @@ let spyProfile = {
 
   sidekick: `**REDACTED**`,
   nemesis: `**REDACTED**`,
-
-
 
   password: `**REDACTED**`
 };
@@ -64,6 +62,20 @@ let greeting;
 let fadeOut = true;
 let startTextAlpha = 0;
 
+// Bomb pulsing effect
+
+let bombPulse = true;
+
+// Variable to load bomb image
+
+let imgBomb;
+
+// Variable to set bomb image values
+let bombImage = {
+  width: 100,
+  height: 100
+};
+
 // Variable to make bomb diffuse sentence
 
 let bombDiffuseSentence;
@@ -79,15 +91,21 @@ let timer = {
 }
 
 // Variable for typewriter text
-let text1 = `Hello`;
+let text1;
 
 let lastCharacter;
+
+//set the biggest the diameter can be
+// set initial values
+let maxDiameter;
+let theta;
 
 
 /*********************** PRELOAD **********************************************/
 
 /**
-Description of preload
+Preloading data from dariusk JSON library
+Also preloading some images
 */
 function preload() {
 
@@ -96,6 +114,8 @@ function preload() {
   instrumentsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/music/instruments.json`);
   celebrityData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/humans/celebrities.json`);
   vegetablesData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/foods/vegetables.json`);
+
+  imgBomb = loadImage(`../assets/images/bomb.png`)
 }
 
 
@@ -120,6 +140,12 @@ function setup() {
         genereateSpyProfile();
     }
 
+    // Set up pulsing variables
+    maxDiameter = 30;
+  	theta = 0;
+
+    // Set up typewriter text
+    text1 = `SCDCSDCSDCSDCSDCSDC`;
 }
 
 
@@ -139,6 +165,7 @@ function draw() {
   }
   if (state === `animation`) {
     animationState();
+
   }
 
 } // End of draw()
@@ -153,10 +180,10 @@ function draw() {
 /*********************** MOUSE PRESSED ****************************************/
 
 function mousePressed() {
-  let greeting = `Hello Agent ${spyProfile.name}`;
-  if (spyProfile.name !== `**REDACTED**`) {
+  let greeting = `Hello Agent ${spyProfile.name}. Here is your first mission`;
+  if (state === `title` && spyProfile.name !== `**REDACTED**`) {
   responsiveVoice.speak(greeting, "UK English Male", {pitch: 1, rate: 1});
-  } else {
+} else if (state === `title`) {
   responsiveVoice.speak(`DENIED`, "UK English Male", {pitch: 0.8, rate: 1});
     }
 
@@ -171,7 +198,21 @@ function mousePressed() {
 
 function animationState() {
 
-let bombDiffuseSentence = ``
+  push();
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  rectMode(CENTER);
+  fill(255);
+  text(`Say the secret code to diffuse the bomb:`, width / 2, height / 2);
+  text(` The ${spyProfile.alias} and the ${spyProfile.alias}`, width / 2, height / 1.8);
+  text(text1.substring(0, lastCharacter), width / 2, height / 3);
+  pop();
+
+  lastCharacter += 0.1;
+
+// let text1 = `${spyProfile.alias} and the ${spyProfile.alias}`;
+
+// let bombDiffuseSentence = ``
 
   push();
   textSize(32);
@@ -182,17 +223,25 @@ let bombDiffuseSentence = ``
   text(`DEFUSE THE BOMB!`, width / 2, height / 6);
   pop();
 
+
+
+
+
+  let diam = 120 + sin(theta) * maxDiameter ;
+
   push();
-  textSize(32);
-  textAlign(CENTER, CENTER);
-  rectMode(CENTER);
-  fill(255);
-  text(`The secret code to diffuse the bomb is`, width / 2, height / 2);
-  text(`${spyProfile.alias} and the ${spyProfile.alias}`, width / 2, height / 1.8);
-  text(text1.substring(0, lastCharacter), width / 2, height / 2.3);
+  imageMode(CENTER);
+  // Display the bomb image
+  image(imgBomb, 170, 135, diam, diam)
   pop();
 
-  lastCharacter += 0.1;
+  // make theta keep getting bigger
+   // you can play with this number to change the speed
+   theta += .2;
+
+
+
+
 
   countdownTimer();
 }
@@ -201,16 +250,14 @@ let bombDiffuseSentence = ``
 
 function titleState() {
 
-
-
   let profile = `** SPY PROFILE: DO NOT DISTRIBUTE! **
 
-Name: ${spyProfile.name}
-Alias: ${spyProfile.alias}
-Secret Weapon: ${spyProfile.secretWeapon}
-Sidekick: ${spyProfile.sidekick}
-Nemesis: ${spyProfile.nemesis}
-Password: ${spyProfile.password}`;
+  Name: ${spyProfile.name}
+  Alias: ${spyProfile.alias}
+  Secret Weapon: ${spyProfile.secretWeapon}
+  Sidekick: ${spyProfile.sidekick}
+  Nemesis: ${spyProfile.nemesis}
+  Password: ${spyProfile.password}`;
 
   push();
   textSize(32);
@@ -231,24 +278,19 @@ Password: ${spyProfile.password}`;
   text(`Click For Objective`, width / 2, height / 7);
   pop();
 
-// Fade effect for text
-if (startTextAlpha >= 256 || startTextAlpha <= 0) {
-  fadeOut = !fadeOut;
-}
-if (fadeOut) {
-  startTextAlpha -= 3
-} else {
-  startTextAlpha += 4
-}
-}
+  // Fade effect for text
+  if (startTextAlpha >= 256 || startTextAlpha <= 0) {
+    fadeOut = !fadeOut;
+  }
+  if (fadeOut) {
+    startTextAlpha -= 3
+  } else {
+    startTextAlpha += 4
+  }
 
 
 
 
-
-/*********************** RESET STATES *****************************************/
-
-function resetStates() {
 
 }
 
@@ -267,7 +309,7 @@ function genereateSpyProfile() {
   spyProfile.sidekick = random(celebrityData.celebrities);
 
   // Generate a random vegetable as nemesis
-  spyProfile.nemesis = random(celebrityData.vegetables);
+  spyProfile.nemesis =  `The ${random(vegetablesData.vegetables)}`;
 
   // Generate a password from a random keyword for a random tarot card
   let card = random(tarotData.tarot_interpretations);
@@ -286,7 +328,7 @@ function setupSpyProfile(data) {
   spyProfile.alias = data.alias;
   spyProfile.secretWeapon = data.secretWeapon;
   spyProfile.sidekick = data.sidekick;
-
+  spyProfile.nemesis = data.nemesis;
   spyProfile.password = data.password;
 }
 
@@ -319,6 +361,6 @@ function countdownTimer() {
 
   // Game over text when countdown reaches 0
   if (timer.countdown == 0) {
-    state = `endLose`
+    // state = `endLose`
   }
 }
