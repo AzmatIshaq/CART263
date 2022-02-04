@@ -124,7 +124,7 @@ function preload() {
   bodyPartsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/humans/bodyParts.json`)
 
   // Preloading bomb image
-  imgBomb = loadImage(`../assets/images/bomb.png`)
+  imgBomb = loadImage(`assets/images/bomb.png`)
 }
 
 
