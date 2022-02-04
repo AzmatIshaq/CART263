@@ -1,9 +1,16 @@
 /**
-Project title
-Author
+Spy profile Generator Plus!
+Azmat Ishaq
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Originally "Asks the user for their name and generates a spy profile for them! Uses
+JSON data to create the profile. Generates a password and requires that
+password to view the profile when the program is loaded again." - Pipping Barr
+
+I added
+
+JSON Library:
+Darius Kazemi's corpora project:
+https://github.com/dariusk/corpora/
 */
 
 "use strict";
@@ -34,6 +41,12 @@ let spyProfile = {
   name: `**REDACTED**`,
   alias: `**REDACTED**`,
   secretWeapon: `**REDACTED**`,
+
+  sidekick: `**REDACTED**`,
+  nemesis: `**REDACTED**`,
+
+
+
   password: `**REDACTED**`
 };
 
@@ -41,6 +54,7 @@ let spyProfile = {
 let tarotData;
 let objectsData;
 let instrumentsData;
+let celebrityData;
 
 /*********************** PRELOAD **********************************************/
 
@@ -52,6 +66,7 @@ function preload() {
   tarotData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/divination/tarot_interpretations.json`);
   objectsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/objects/objects.json`);
   instrumentsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/music/instruments.json`);
+  celebrityData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/humans/celebrities.json`);
 
 }
 
@@ -122,11 +137,14 @@ function animationState() {
 
 function titleState() {
 
+// responsiveVoice.speak(phrase, "UK English Male", {pitch: 1, rate: 1, onstart: showSpeaking, onend: hideSpeaking});
+
   let profile = `** SPY PROFILE: DO NOT DISTRIBUTE! **
 
 Name: ${spyProfile.name}
 Alias: ${spyProfile.alias}
 Secret Weapon: ${spyProfile.secretWeapon}
+Sidekick: ${spyProfile.sidekick}
 Password: ${spyProfile.password}`;
 
   push();
@@ -138,6 +156,8 @@ Password: ${spyProfile.password}`;
   text(profile, width / 2, height / 2);
   pop();
 }
+
+
 
 
 
@@ -153,12 +173,18 @@ function resetStates() {
 
 function genereateSpyProfile() {
   spyProfile.name = prompt (`Agent! What is your name?`);
-  let instrument = random(instrumentsData.instruments);
-  spyProfile.alias =  `The ${instrument}`
+  // Generate an alias from a random instrument
+  spyProfile.alias = `The ${random(instrumentsData.instruments)}`;
+  // Generate a secret weapon from a random object
   spyProfile.secretWeapon = random(objectsData.objects);
+
+  // Generate a random celebrity as a sidekick
+  spyProfile.sidekick = random(celebrityData.celebrities);
+
+  // Generate a password from a random keyword for a random tarot card
   let card = random(tarotData.tarot_interpretations);
   spyProfile.password = random(card.keywords);
-
+  // Save the resulting profile to local storage
   localStorage.setItem(`spy-profile-data`, JSON.stringify(spyProfile));
 }
 

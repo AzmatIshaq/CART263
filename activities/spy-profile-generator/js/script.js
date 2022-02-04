@@ -42,6 +42,8 @@ let tarotData;
 let objectsData;
 let instrumentsData;
 
+let checkbox;
+
 /*********************** PRELOAD **********************************************/
 
 /**
@@ -75,6 +77,8 @@ function setup() {
     else {
         genereateSpyProfile();
     }
+
+checkbox = createCheckox();
 
 }
 
