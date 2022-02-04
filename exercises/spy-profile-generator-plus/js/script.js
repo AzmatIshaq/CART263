@@ -83,9 +83,12 @@ let bombImage = {
   height: 100
 };
 
+// Bomb defuse initial state
+let bombDefused = false;
+
 // Timer variable for bomb timer
 let timer = {
-  countdown: 30,
+  countdown: 20,
   x: 40,
   y: 40,
   textFont: 60
@@ -136,6 +139,8 @@ function setup() {
 
 // data variable to setup JSON for spy profile
   let data = JSON.parse(localStorage.getItem(`spy-profile-data`));
+  // If there is no data already then generate a new profile
+  // Otherwise ask for a password
     if (data !== null) {
       let password = prompt(`Agent! What is your password?!`)
         if (password === data.password) {
@@ -147,16 +152,13 @@ function setup() {
         genereateSpyProfile();
     }
 
-
-
     // Set up pulsing variables
     maxDiameter = 30;
     theta = 0;
+
   } // End of setup
 
-
 /*********************** DRAW *************************************************/
-
 
 /**
 Description of draw
@@ -171,7 +173,6 @@ function draw() {
   }
   if (state === `animation`) {
     animationState();
-
   }
 
 } // End of draw()
@@ -183,6 +184,18 @@ function keyPressed() {
 
 if(state === `animation` && key === `Enter`) {
   let secretCodeAnswer = prompt(`What is the secret code?`)
+    // Stop bomb if user guesses correct code
+    if (secretCodeAnswer === `${spyProfile.code1} is my favourite ${spyProfile.code2}`) {
+      responsiveVoice.speak(`Well done`, "UK English Male", {pitch: 1, rate: 1});
+      // setTimeout(state = `title`, 30000000);
+
+      // Stop pulsing bomb
+      maxDiameter = 0;
+      theta = 0;
+      // Change bomb state
+      bombDefused = true;
+
+    }
   }
 }
 
@@ -198,6 +211,10 @@ function mousePressed() {
 
   if (state === `title` && spyProfile.name !== `**REDACTED**`) {
     state = `animation`;
+  }
+
+  if (state === `animation` && bombDefused === true) {
+    state = `title`;
   }
 }
 
@@ -219,15 +236,13 @@ function animationState() {
 
   // Tutorial text on next action for user
   push();
-  textSize(32);
+  textSize(28);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   fill(255);
-  text(`Say the secret code to diffuse the bomb:`, width / 2, height / 2);
+  text(`Press Enter to type the secret code and defuse the bomb:`, width / 2, height / 2);
   text(`${spyProfile.code1} is my favourite ${spyProfile.code2}`, width / 2, height / 1.8);
   pop();
-
-
 
   // Variable to set diameter of bomb image
   let diam = 120 + sin(theta) * maxDiameter ;
@@ -243,22 +258,30 @@ function animationState() {
   // you can play with this number to change the speed
    theta += .2;
 
-   // Stop bomb if user guesses correct code
-   if (secretCodeAnswer === `${spyProfile.code1} is my favourite ${spyProfile.code2}`) {
-     maxDiameter = 30;
-     theta -= 0.;
-   }
+// Text to guide user back to title screen after completing mission
+if (bombDefused === true && state === `animation`) {
 
-
-
-
-  countdownTimer();
+  push();
+  fill(255, 255, 255, startTextAlpha);
+  textSize(33);
+  textAlign(CENTER, CENTER);
+  text(`Click to go back to Agent Profile`, width / 2, height / 10);
+  pop();
 }
+
+  // Apply fade on text during title state
+  fadeEffect();
+
+;
+  countdownTimer();
+
+} // End of animationState
 
 /*********************** TITLE STATE ******************************************/
 
 function titleState() {
-
+  // A variable to hold all the strings that will be displayed for the agent's
+  // profile
   let profile = `** SPY PROFILE: DO NOT DISTRIBUTE! **
 
   Name: ${spyProfile.name}
@@ -268,6 +291,7 @@ function titleState() {
   Nemesis: ${spyProfile.nemesis}
   Password: ${spyProfile.password}`;
 
+  // Display profile text
   push();
   textSize(32);
   textFont(`Courier, Monospace`);
@@ -277,9 +301,7 @@ function titleState() {
   text(profile, width / 2, height / 2);
   pop();
 
-
-
-  // Display end winning text
+  // Display text to guide user to objective
   push();
   fill(255, 255, 255, startTextAlpha);
   textSize(33);
@@ -287,16 +309,17 @@ function titleState() {
   text(`Click For Objective`, width / 2, height / 7);
   pop();
 
-  // Fade effect for text
-  if (startTextAlpha >= 256 || startTextAlpha <= 0) {
-    fadeOut = !fadeOut;
-  }
-  if (fadeOut) {
-    startTextAlpha -= 3
-  } else {
-    startTextAlpha += 4
-  }
+  //Apply fade on text during title state
+  fadeEffect();
 
+  // reset the timer
+  timer.countdown = 20;
+  // reset bomb state
+  bombDefused = false;
+  // reset bomb animation
+  // Set up pulsing variables
+  maxDiameter = 30;
+  theta = 0;
 }
 
 /* - - - - - - - - - - - MISC - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -354,14 +377,6 @@ function generateSecretCode(data2) {
   localStorage.setItem(`secret-code-data`, JSON.stringify(secretCode));
 }
 
-/*********************** SETUP SECRET CODE ************************************/
-
-// function setupSecretCode(data2) {
-//   secretCode.code1 = data2.code1;
-//   secretCode.code2 = data2.code2;
-// }
-
-
 
 /*********************** COUNTDOWN TIMER **************************************/
 // Function to set up a countdown timer
@@ -386,18 +401,28 @@ function countdownTimer() {
   pop();
 
   // Logic to make the countdown timer operate based on famecount.
-  if (frameCount % 60 == 0 && timer.countdown > 0) {
+  if (frameCount % 60 == 0 && timer.countdown > 0 && bombDefused === false) {
     timer.countdown--;
   }
 
   // Game over text when countdown reaches 0
-  if (timer.countdown == 0) {
-    // state = `endLose`
+  if (timer.countdown === 0) {
+    responsiveVoice.speak(`You are lucky this was only a test, Agent. I reset the timer so you can try again.`, "UK English Male", {pitch: 1, rate: 0.9});
+    timer.countdown = 20;
+
   }
-}
+} // End of countdown Timer
 
-/*********************** SAY CODE **************************************/
+/*********************** FADE EFFECT ******************************************/
 
-function sayCode() {
-
+function fadeEffect() {
+  // Fade effect for text
+  if (startTextAlpha >= 256 || startTextAlpha <= 0) {
+    fadeOut = !fadeOut;
+  }
+  if (fadeOut) {
+    startTextAlpha -= 3;
+  } else {
+    startTextAlpha += 4;
+  }
 }
