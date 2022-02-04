@@ -55,6 +55,15 @@ let tarotData;
 let objectsData;
 let instrumentsData;
 let celebrityData;
+let vegetablesData;
+
+// Reactive voice variable
+let greeting;
+
+// Text fade effect
+let fadeOut = true;
+let startTextAlpha = 0;
+
 
 /*********************** PRELOAD **********************************************/
 
@@ -67,7 +76,7 @@ function preload() {
   objectsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/objects/objects.json`);
   instrumentsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/music/instruments.json`);
   celebrityData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/humans/celebrities.json`);
-
+  vegetablesData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/foods/vegetables.json`);
 }
 
 
@@ -85,6 +94,7 @@ function setup() {
       let password = prompt(`Agent! What is your password?!`)
         if (password === data.password) {
             setupSpyProfile(data);
+
         }
     }
     else {
@@ -106,6 +116,7 @@ function draw() {
     // Alternate between game states
   if (state === `title`) {
     titleState();
+
   }
   if (state === `animation`) {
     animationState();
@@ -122,8 +133,18 @@ function draw() {
 
 /*********************** MOUSE PRESSED ****************************************/
 
-// function mousePressed() {
-// }
+function mousePressed() {
+  let greeting = `Hello Agent ${spyProfile.name}`;
+  if (spyProfile.name !== `**REDACTED**`) {
+  responsiveVoice.speak(greeting, "UK English Male", {pitch: 1, rate: 1});
+  } else {
+  responsiveVoice.speak(`DENIED`, "UK English Male", {pitch: 0.8, rate: 1});
+    }
+
+  if (state === `title` && spyProfile.name !== `**REDACTED**`) {
+    state = `animation`;
+  }
+}
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - - - */
 
@@ -137,7 +158,7 @@ function animationState() {
 
 function titleState() {
 
-// responsiveVoice.speak(phrase, "UK English Male", {pitch: 1, rate: 1, onstart: showSpeaking, onend: hideSpeaking});
+
 
   let profile = `** SPY PROFILE: DO NOT DISTRIBUTE! **
 
@@ -145,6 +166,7 @@ Name: ${spyProfile.name}
 Alias: ${spyProfile.alias}
 Secret Weapon: ${spyProfile.secretWeapon}
 Sidekick: ${spyProfile.sidekick}
+Nemesis: ${spyProfile.nemesis}
 Password: ${spyProfile.password}`;
 
   push();
@@ -155,6 +177,26 @@ Password: ${spyProfile.password}`;
   fill(255);
   text(profile, width / 2, height / 2);
   pop();
+
+
+
+  // Display end winning text
+push();
+fill(255, 255, 255, startTextAlpha);
+textSize(33);
+textAlign(CENTER, CENTER);
+text(`Click For Objective`, width / 2, height / 7);
+pop();
+
+// Fade effect for text
+if (startTextAlpha >= 256 || startTextAlpha <= 0) {
+  fadeOut = !fadeOut;
+}
+if (fadeOut) {
+  startTextAlpha -= 3
+} else {
+  startTextAlpha += 4
+}
 }
 
 
@@ -181,6 +223,9 @@ function genereateSpyProfile() {
   // Generate a random celebrity as a sidekick
   spyProfile.sidekick = random(celebrityData.celebrities);
 
+  // Generate a random vegetable as nemesis
+  spyProfile.nemesis = random(celebrityData.vegetables);
+
   // Generate a password from a random keyword for a random tarot card
   let card = random(tarotData.tarot_interpretations);
   spyProfile.password = random(card.keywords);
@@ -197,5 +242,7 @@ function setupSpyProfile(data) {
   spyProfile.name = data.name;
   spyProfile.alias = data.alias;
   spyProfile.secretWeapon = data.secretWeapon;
+  spyProfile.sidekick = data.sidekick;
+
   spyProfile.password = data.password;
 }
