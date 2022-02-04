@@ -1,5 +1,6 @@
 # Spy profile Generator Plus!
-Azmat Ishaq
+by Azmat Ishaq
+Based on Pippin Barr's original code "Spy Profile Generator"
 
 Originally "Asks the user for their name and generates a spy profile for them! Uses
 JSON data to create the profile. Generates a password and requires that

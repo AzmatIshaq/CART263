@@ -9,7 +9,9 @@ password to view the profile when the program is loaded again." - Pipping Barr
 
 I added additional JSON profile information. I also added user interaction to move
 to an animation state, as well as keyboard input. The user now has to defuse a bomb in the
-animation state by inputting more JSON produced information.
+animation state by inputting more JSON produced information. Added other minor details also.
+
+Azmat Ishaq-
 
 JSON Library:
 Darius Kazemi's corpora project:
