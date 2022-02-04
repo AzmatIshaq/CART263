@@ -33,8 +33,8 @@ let bg = {
 };
 
 // Variable to set starting state to `title`
-// let state = `title`;
-let state = `animation`;
+let state = `title`;
+// let state = `animation`;
 
 // The spy profile data while the program is running
 let spyProfile = {
@@ -45,8 +45,11 @@ let spyProfile = {
   sidekick: `**REDACTED**`,
   nemesis: `**REDACTED**`,
 
-  password: `**REDACTED**`
+  password: `**REDACTED**`,
+  code1: ``,
+  code2: ``,
 };
+
 
 // Variables to store JSON data for generating the profile
 let tarotData;
@@ -54,6 +57,10 @@ let objectsData;
 let instrumentsData;
 let celebrityData;
 let vegetablesData;
+// Variables for secret code
+let artIsmsData;
+let bodyPartsData;
+
 
 // Reactive voice variable
 let greeting;
@@ -76,13 +83,7 @@ let bombImage = {
   height: 100
 };
 
-// Variable to make bomb diffuse sentence
-
-let bombDiffuseSentence;
-
-// Timer for bomb
-
-// Timer variable for countdown timer
+// Timer variable for bomb timer
 let timer = {
   countdown: 30,
   x: 40,
@@ -90,16 +91,16 @@ let timer = {
   textFont: 60
 }
 
-// Variable for typewriter text
-let text1;
-
-let lastCharacter;
-
 //set the biggest the diameter can be
 // set initial values
 let maxDiameter;
 let theta;
 
+
+let secretCodeAnswer;
+
+// Variable for current code
+let currentCode;
 
 /*********************** PRELOAD **********************************************/
 
@@ -108,13 +109,18 @@ Preloading data from dariusk JSON library
 Also preloading some images
 */
 function preload() {
-
+  // JSON libraries for agent profile
   tarotData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/divination/tarot_interpretations.json`);
   objectsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/objects/objects.json`);
   instrumentsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/music/instruments.json`);
   celebrityData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/humans/celebrities.json`);
   vegetablesData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/foods/vegetables.json`);
 
+  // JSON libraries for secret code
+  artIsmsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/art/isms.json`)
+  bodyPartsData = loadJSON(`https://raw.githubusercontent.com/dariusk/corpora/master/data/humans/bodyParts.json`)
+
+  // Preloading bomb image
   imgBomb = loadImage(`../assets/images/bomb.png`)
 }
 
@@ -128,6 +134,7 @@ function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
 
+// data variable to setup JSON for spy profile
   let data = JSON.parse(localStorage.getItem(`spy-profile-data`));
     if (data !== null) {
       let password = prompt(`Agent! What is your password?!`)
@@ -140,13 +147,12 @@ function setup() {
         genereateSpyProfile();
     }
 
+
+
     // Set up pulsing variables
     maxDiameter = 30;
-  	theta = 0;
-
-    // Set up typewriter text
-    text1 = `SCDCSDCSDCSDCSDCSDC`;
-}
+    theta = 0;
+  } // End of setup
 
 
 /*********************** DRAW *************************************************/
@@ -172,10 +178,13 @@ function draw() {
 
 /* - - - - - - - - - - - USER INTERACTION - - - - - - - - - - - - - - - - - - */
 
-/*********************** KEY PRESSED ******************************************/
 
-// function keyPressed() {
-// }
+function keyPressed() {
+
+if(state === `animation` && key === `Enter`) {
+  let secretCodeAnswer = prompt(`What is the secret code?`)
+  }
+}
 
 /*********************** MOUSE PRESSED ****************************************/
 
@@ -198,22 +207,7 @@ function mousePressed() {
 
 function animationState() {
 
-  push();
-  textSize(32);
-  textAlign(CENTER, CENTER);
-  rectMode(CENTER);
-  fill(255);
-  text(`Say the secret code to diffuse the bomb:`, width / 2, height / 2);
-  text(` The ${spyProfile.alias} and the ${spyProfile.alias}`, width / 2, height / 1.8);
-  text(text1.substring(0, lastCharacter), width / 2, height / 3);
-  pop();
-
-  lastCharacter += 0.1;
-
-// let text1 = `${spyProfile.alias} and the ${spyProfile.alias}`;
-
-// let bombDiffuseSentence = ``
-
+  // Tutorial text on next action for user
   push();
   textSize(32);
   textFont(`Courier, Monospace`);
@@ -223,12 +217,22 @@ function animationState() {
   text(`DEFUSE THE BOMB!`, width / 2, height / 6);
   pop();
 
+  // Tutorial text on next action for user
+  push();
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  rectMode(CENTER);
+  fill(255);
+  text(`Say the secret code to diffuse the bomb:`, width / 2, height / 2);
+  text(`${spyProfile.code1} is my favourite ${spyProfile.code2}`, width / 2, height / 1.8);
+  pop();
 
 
 
-
+  // Variable to set diameter of bomb image
   let diam = 120 + sin(theta) * maxDiameter ;
 
+  // Display the bomb image
   push();
   imageMode(CENTER);
   // Display the bomb image
@@ -236,9 +240,14 @@ function animationState() {
   pop();
 
   // make theta keep getting bigger
-   // you can play with this number to change the speed
+  // you can play with this number to change the speed
    theta += .2;
 
+   // Stop bomb if user guesses correct code
+   if (secretCodeAnswer === `${spyProfile.code1} is my favourite ${spyProfile.code2}`) {
+     maxDiameter = 30;
+     theta -= 0.;
+   }
 
 
 
@@ -288,10 +297,6 @@ function titleState() {
     startTextAlpha += 4
   }
 
-
-
-
-
 }
 
 /* - - - - - - - - - - - MISC - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -304,16 +309,18 @@ function genereateSpyProfile() {
   spyProfile.alias = `The ${random(instrumentsData.instruments)}`;
   // Generate a secret weapon from a random object
   spyProfile.secretWeapon = random(objectsData.objects);
-
   // Generate a random celebrity as a sidekick
   spyProfile.sidekick = random(celebrityData.celebrities);
-
   // Generate a random vegetable as nemesis
   spyProfile.nemesis =  `The ${random(vegetablesData.vegetables)}`;
-
   // Generate a password from a random keyword for a random tarot card
   let card = random(tarotData.tarot_interpretations);
   spyProfile.password = random(card.keywords);
+  // Generate a random art ism as part of a secret code
+  spyProfile.code1 = random(artIsmsData.isms);
+  // Generate a random body part as part of a secret code
+  spyProfile.code2 = random(bodyPartsData.bodyParts);
+
   // Save the resulting profile to local storage
   localStorage.setItem(`spy-profile-data`, JSON.stringify(spyProfile));
 }
@@ -330,7 +337,31 @@ function setupSpyProfile(data) {
   spyProfile.sidekick = data.sidekick;
   spyProfile.nemesis = data.nemesis;
   spyProfile.password = data.password;
+  spyProfile.code1 = data.code1;
+  spyProfile.code2 = data.code2;
 }
+
+
+/*********************** GENERATE SECRET CODE *********************************/
+
+function generateSecretCode(data2) {
+  // Generate a random celebrity as a sidekick
+  secretCode.code1 = random(artIsmsData.isms);
+
+  // Generate a random vegetable as nemesis
+  secretCode.code2 =  random(bodyPartsData.bodyParts);
+
+  localStorage.setItem(`secret-code-data`, JSON.stringify(secretCode));
+}
+
+/*********************** SETUP SECRET CODE ************************************/
+
+// function setupSecretCode(data2) {
+//   secretCode.code1 = data2.code1;
+//   secretCode.code2 = data2.code2;
+// }
+
+
 
 /*********************** COUNTDOWN TIMER **************************************/
 // Function to set up a countdown timer
@@ -363,4 +394,10 @@ function countdownTimer() {
   if (timer.countdown == 0) {
     // state = `endLose`
   }
+}
+
+/*********************** SAY CODE **************************************/
+
+function sayCode() {
+
 }
