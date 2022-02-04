@@ -1,3 +1,25 @@
-# Template p5 project
+# Spy profile Generator Plus!
+Azmat Ishaq
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+Originally "Asks the user for their name and generates a spy profile for them! Uses
+JSON data to create the profile. Generates a password and requires that
+password to view the profile when the program is loaded again." - Pipping Barr
+
+I added additional JSON profile information. I also added user interaction to move
+to animation as well as keyboard input. The user now has to defuse a bomb in the
+animation state by inputing information.
+
+JSON Library:
+Darius Kazemi's corpora project:
+https://github.com/dariusk/corpora/
+
+Sources:
+Images:
+BOMB:
+https://www.emojipng.com/preview/12295947
+
+Code:
+Timer:
+https://editor.p5js.org/marynotari/sketches/S1T2ZTMp-
+Bomb animation:
+https://editor.p5js.org/dansakamoto/sketches/H1ICcXXtm
