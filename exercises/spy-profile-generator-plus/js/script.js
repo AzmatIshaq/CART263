@@ -1,14 +1,15 @@
 /**
 Spy profile Generator Plus!
-Azmat Ishaq
+By Azmat Ishaq
+Based on Pippin Barr's original code "Spy Profile Generator"
 
 Originally "Asks the user for their name and generates a spy profile for them! Uses
 JSON data to create the profile. Generates a password and requires that
 password to view the profile when the program is loaded again." - Pipping Barr
 
 I added additional JSON profile information. I also added user interaction to move
-to animation as well as keyboard input. The user now has to defuse a bomb in the
-animation state by inputing information. 
+to an animation state, as well as keyboard input. The user now has to defuse a bomb in the
+animation state by inputting more JSON produced information.
 
 JSON Library:
 Darius Kazemi's corpora project:
@@ -22,7 +23,7 @@ https://github.com/dariusk/corpora/
 
 // Variable to style canvas
 let canvasProperties = {
-// Set canvas width and height
+  // Set canvas width and height
   w: 850,
   h: 550,
 };
@@ -43,10 +44,8 @@ let spyProfile = {
   name: `**REDACTED**`,
   alias: `**REDACTED**`,
   secretWeapon: `**REDACTED**`,
-
   sidekick: `**REDACTED**`,
   nemesis: `**REDACTED**`,
-
   password: `**REDACTED**`,
   code1: ``,
   code2: ``,
@@ -59,10 +58,9 @@ let objectsData;
 let instrumentsData;
 let celebrityData;
 let vegetablesData;
-// Variables for secret code
+// Variables for bomb code
 let artIsmsData;
 let bodyPartsData;
-
 
 // Reactive voice variable
 let greeting;
@@ -72,11 +70,9 @@ let fadeOut = true;
 let startTextAlpha = 0;
 
 // Bomb pulsing effect
-
 let bombPulse = true;
 
 // Variable to load bomb image
-
 let imgBomb;
 
 // Variable to set bomb image values
@@ -111,7 +107,7 @@ let currentCode;
 
 /**
 Preloading data from dariusk JSON library
-Also preloading some images
+Also preloading a bomb image
 */
 function preload() {
   // JSON libraries for agent profile
@@ -133,45 +129,44 @@ function preload() {
 /*********************** SETUP ************************************************/
 
 /**
-Description of setup
+Setup canvas as well as data variable in order to utilize JSON libraries. Also used
+setup to initiate bomb animation variables.
 */
 function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
 
-// data variable to setup JSON for spy profile
+  // data variable to setup JSON for spy profile
   let data = JSON.parse(localStorage.getItem(`spy-profile-data`));
   // If there is no data already then generate a new profile
   // Otherwise ask for a password
-    if (data !== null) {
-      let password = prompt(`Agent! What is your password?!`)
-        if (password === data.password) {
-            setupSpyProfile(data);
+  if (data !== null) {
+    let password = prompt(`Agent! What is your password?!`)
+    if (password === data.password) {
+      setupSpyProfile(data);
 
-        }
     }
-    else {
-        genereateSpyProfile();
-    }
+  } else {
+    generateSpyProfile();
+  }
 
-    // Set up pulsing variables
-    maxDiameter = 30;
-    theta = 0;
+  // Set up pulsing variables
+  maxDiameter = 30;
+  theta = 0;
 
-  } // End of setup
+} // End of setup
 
 /*********************** DRAW *************************************************/
 
 /**
-Description of draw
+Draw contains a background and two states: title and animation.
 */
 function draw() {
   background(bg.r, bg.g, bg.b);
 
-    // Alternate between game states
+  // Alternate between game states
   if (state === `title`) {
     titleState();
-
   }
   if (state === `animation`) {
     animationState();
@@ -181,40 +176,51 @@ function draw() {
 
 /* - - - - - - - - - - - USER INTERACTION - - - - - - - - - - - - - - - - - - */
 
-
+// Keypressed function to handle user input for bomb level.
 function keyPressed() {
 
-if(state === `animation` && key === `Enter`) {
-  let secretCodeAnswer = prompt(`What is the secret code?`)
+  if (state === `animation` && key === `Enter`) {
+    let secretCodeAnswer = prompt(`What is the secret code?`)
     // Stop bomb if user guesses correct code
     if (secretCodeAnswer === `${spyProfile.code1} is my favourite ${spyProfile.code2}`) {
-      responsiveVoice.speak(`Well done`, "UK English Male", {pitch: 1, rate: 1});
-      // setTimeout(state = `title`, 30000000);
-
+      responsiveVoice.speak(`Well done`, "UK English Male", {
+        pitch: 1,
+        rate: 1
+      });
       // Stop pulsing bomb
       maxDiameter = 0;
       theta = 0;
       // Change bomb state
       bombDefused = true;
-
     }
   }
 }
 
 /*********************** MOUSE PRESSED ****************************************/
 
+// mouspressed function to initiate state changes based on user mouse input.
 function mousePressed() {
+  // setting up variable for responsive voice greeting
   let greeting = `Hello Agent ${spyProfile.name}. Here is your first mission`;
+  // If user inputs the password they will be greeted
   if (state === `title` && spyProfile.name !== `**REDACTED**`) {
-  responsiveVoice.speak(greeting, "UK English Male", {pitch: 1, rate: 1});
-} else if (state === `title`) {
-  responsiveVoice.speak(`DENIED`, "UK English Male", {pitch: 0.8, rate: 1});
-    }
+    responsiveVoice.speak(greeting, "UK English Male", {
+      pitch: 1,
+      rate: 1
+    });
+    // If user does not use correct password they will denied
+  } else if (state === `title`) {
+    responsiveVoice.speak(`DENIED`, "UK English Male", {
+      pitch: 0.8,
+      rate: 1
+    });
+  }
 
+  // If the profile is not redacted then switch to animation state
   if (state === `title` && spyProfile.name !== `**REDACTED**`) {
     state = `animation`;
   }
-
+  // If the bomb is defused then return to title state
   if (state === `animation` && bombDefused === true) {
     state = `title`;
   }
@@ -224,6 +230,7 @@ function mousePressed() {
 
 /*********************** ANIMATION STATE **************************************/
 
+// Hold the animation for the program.
 function animationState() {
 
   // Tutorial text on next action for user
@@ -242,12 +249,12 @@ function animationState() {
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   fill(255);
-  text(`Press Enter to type the secret code and defuse the bomb:`, width / 2, height / 2);
+  text(`Press Enter to type the following code and defuse the bomb:`, width / 2, height / 2);
   text(`${spyProfile.code1} is my favourite ${spyProfile.code2}`, width / 2, height / 1.8);
   pop();
 
   // Variable to set diameter of bomb image
-  let diam = 120 + sin(theta) * maxDiameter ;
+  let diam = 120 + sin(theta) * maxDiameter;
 
   // Display the bomb image
   push();
@@ -258,18 +265,18 @@ function animationState() {
 
   // make theta keep getting bigger
   // you can play with this number to change the speed
-   theta += .2;
+  theta += .2;
 
-// Text to guide user back to title screen after completing mission
-if (bombDefused === true && state === `animation`) {
+  // Text to guide user back to title screen after completing mission
+  if (bombDefused === true && state === `animation`) {
 
-  push();
-  fill(255, 255, 255, startTextAlpha);
-  textSize(33);
-  textAlign(CENTER, CENTER);
-  text(`Click to go back to Agent Profile`, width / 2, height / 10);
-  pop();
-}
+    push();
+    fill(255, 255, 255, startTextAlpha);
+    textSize(33);
+    textAlign(CENTER, CENTER);
+    text(`Click to go back to Agent Profile`, width / 2, height / 10.5);
+    pop();
+  }
 
   // Apply fade on text during title state
   fadeEffect();
@@ -328,8 +335,8 @@ function titleState() {
 
 /*********************** GENERATE SPY PROFILE *********************************/
 
-function genereateSpyProfile() {
-  spyProfile.name = prompt (`Agent! What is your name?`);
+function generateSpyProfile() {
+  spyProfile.name = prompt(`Agent! What is your name?`);
   // Generate an alias from a random instrument
   spyProfile.alias = `The ${random(instrumentsData.instruments)}`;
   // Generate a secret weapon from a random object
@@ -337,7 +344,7 @@ function genereateSpyProfile() {
   // Generate a random celebrity as a sidekick
   spyProfile.sidekick = random(celebrityData.celebrities);
   // Generate a random vegetable as nemesis
-  spyProfile.nemesis =  `The ${random(vegetablesData.vegetables)}`;
+  spyProfile.nemesis = `The ${random(vegetablesData.vegetables)}`;
   // Generate a password from a random keyword for a random tarot card
   let card = random(tarotData.tarot_interpretations);
   spyProfile.password = random(card.keywords);
@@ -362,23 +369,10 @@ function setupSpyProfile(data) {
   spyProfile.sidekick = data.sidekick;
   spyProfile.nemesis = data.nemesis;
   spyProfile.password = data.password;
+  // Setup for bomb diffusing code
   spyProfile.code1 = data.code1;
   spyProfile.code2 = data.code2;
 }
-
-
-/*********************** GENERATE SECRET CODE *********************************/
-
-function generateSecretCode(data2) {
-  // Generate a random celebrity as a sidekick
-  secretCode.code1 = random(artIsmsData.isms);
-
-  // Generate a random vegetable as nemesis
-  secretCode.code2 =  random(bodyPartsData.bodyParts);
-
-  localStorage.setItem(`secret-code-data`, JSON.stringify(secretCode));
-}
-
 
 /*********************** COUNTDOWN TIMER **************************************/
 // Function to set up a countdown timer
@@ -409,7 +403,10 @@ function countdownTimer() {
 
   // Game over text when countdown reaches 0
   if (timer.countdown === 0) {
-    responsiveVoice.speak(`You are lucky this was only a test, Agent. I reset the timer so you can try again.`, "UK English Male", {pitch: 1, rate: 0.9});
+    responsiveVoice.speak(`You are lucky this was only a test, Agent. I reset the timer so you can try again.`, "UK English Male", {
+      pitch: 1,
+      rate: 0.9
+    });
     timer.countdown = 20;
 
   }

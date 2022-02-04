@@ -7,7 +7,7 @@ password to view the profile when the program is loaded again." - Pipping Barr
 
 I added additional JSON profile information. I also added user interaction to move
 to animation as well as keyboard input. The user now has to defuse a bomb in the
-animation state by inputing information.
+animation state by inputting more JSON produced information.
 
 JSON Library:
 Darius Kazemi's corpora project:
@@ -23,3 +23,7 @@ Timer:
 https://editor.p5js.org/marynotari/sketches/S1T2ZTMp-
 Bomb animation:
 https://editor.p5js.org/dansakamoto/sketches/H1ICcXXtm
+
+JSON Library:
+Darius Kazemi's corpora project:
+https://github.com/dariusk/corpora/
