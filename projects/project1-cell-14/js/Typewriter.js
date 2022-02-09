@@ -21,6 +21,11 @@ class Typewriter {
     this.string = string;
     this.currentCharacter = 0;
     this.rate = rate;
+    this.introText = {
+      x: width / 4,
+      y: height / 6,
+      size: 30
+    }
   }
 
   /**
@@ -33,13 +38,17 @@ class Typewriter {
 
     // Display it
     push();
+    fill(255);
     textFont(`Courier`);
-    textSize(12);
-    text(currentString, this.x, this.y, this.w, this.h);
+    textSize(this.introText.size);
+    text(currentString, this.introText.x, this.introText.y, this.w, this.h);
     pop();
 
     // Increase the current character so that we'll see
     // the next part of the string
     this.currentCharacter += this.rate;
+
+    // String text orated by responsive voice
+      // responsiveVoice.speak(currentString, "UK English Male", {pitch: 1, rate: 1,});
   }
 }

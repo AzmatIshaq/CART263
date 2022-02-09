@@ -92,11 +92,26 @@ let introText = undefined;
 
 // Variable for intro Text string
 let string = `
-All work and no play makes me a dullard.
-All work and no play makess Me a dullard,
-Aall work and no play makes me a sdullard.,
-All work and NO play makes me a dullard.
-All work and no play makes me a dullard.`;
+
+Detective's log Star Date 34717
+
+I have been tasked with the investigation of a malfunctioning android.
+
+It was detected damaging some of the equipment on board the Startship Endeavour 2
+
+It was then sent to Cargo Bay 3 to be repaired.
+
+It escaped after injuring a crew member.
+
+It now sits in Cell 14 waiting for my preliminary interrogation`;
+
+
+// Variables for intro sound response for incorrect and correct questions
+
+let incorrectQuestion = undefined;
+
+let correctQuestion = undefined;
+
 
 
 
@@ -110,6 +125,10 @@ function preload() {
 
 // Preload ramen noodles image
 imageRamen = loadImage(`assets/images/ramen_pixelated.png`);
+
+// Preloading sound for correct and incorrect responses
+
+incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
 
 }
 
@@ -125,10 +144,31 @@ function setup() {
 
   resetStates();
 
-  introText = new Typewriter(string, 25, 25, 350, 200, 0.1);
+  if (annyang && state === `title`) {
+    // Let's define our first command. First the text we expect, and then the function it should call
+    let commands = {
+      // 'testing' is what the user would say. I guess you type it out?
+      'testing': function() {
+        alert(`Howdy!`);
 
-}
+        },
 
+      'Why': function() {
+        incorrectQuestion.play();
+        // Change state to next level of intro
+        state = `intro phase 1`;
+        },
+      }
+
+  // Add our commands to annyang
+  annyang.addCommands(commands);
+
+  // Start listening. You can call this here, or attach this call to an event, button, etc.
+  annyang.start();
+
+  } // End of annyang
+
+} // End of setup()
 
 /*********************** DRAW *************************************************/
 
@@ -173,7 +213,7 @@ function animationState() {
   countdownTimer();
   // Display rain drops
   dropDisplay();
-
+  introText.update();
 }
 
 /*********************** TITLE STATE ******************************************/
@@ -195,6 +235,9 @@ function resetStates() {
 
   // Set up items
   createItem();
+
+  // Set up typewriter class
+  introText = new Typewriter(string, 25, 25, 350, 200, 0.1);
 
 }
 
@@ -325,7 +368,7 @@ function dropDisplay() {
   }
  }
 
-/*********************** TYPEWRITER **************************************/
+
 
 
 /*  END */
