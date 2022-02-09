@@ -87,6 +87,18 @@ let item;
 // Image variables
 let imageRamen = undefined;
 
+// Variable for intro text
+let introText = undefined;
+
+// Variable for intro Text string
+let string = `
+All work and no play makes me a dullard.
+All work and no play makess Me a dullard,
+Aall work and no play makes me a sdullard.,
+All work and NO play makes me a dullard.
+All work and no play makes me a dullard.`;
+
+
 
 
 /*********************** PRELOAD **********************************************/
@@ -112,6 +124,8 @@ function setup() {
   createCanvas(canvasProperties.w, canvasProperties.h);
 
   resetStates();
+
+  introText = new Typewriter(string, 25, 25, 350, 200, 0.1);
 
 }
 
@@ -310,5 +324,8 @@ function dropDisplay() {
     drop[i].update();
   }
  }
+
+/*********************** TYPEWRITER **************************************/
+
 
 /*  END */
