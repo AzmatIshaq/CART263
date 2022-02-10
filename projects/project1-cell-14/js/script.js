@@ -84,26 +84,24 @@ let state = `title`;
 // Variable to create items
 let item;
 
-// Image variables
-let imageRamen = undefined;
-
 // Variable for intro text
 let introText = undefined;
 
 // Variable for intro Text string
 let string = `
-
-Detective's log Star Date 34717
+Detective's log Date 3471.
 
 I have been tasked with the investigation of a malfunctioning android.
 
-It was detected damaging some of the equipment on board the Startship Endeavour 2
+It was detected damaging some of the equipment on board the Startship Endeavour 2.
 
 It was then sent to Cargo Bay 3 to be repaired.
 
 It escaped after injuring a crew member.
 
-It now sits in Cell 14 waiting for my preliminary interrogation`;
+It now sits in Cell 14 waiting for my preliminary interrogation.
+
+. . .`;
 
 
 // Variables for intro sound response for incorrect and correct questions
@@ -112,9 +110,13 @@ let incorrectQuestion = undefined;
 
 let correctQuestion = undefined;
 
+// Variable for JSON dialogue data file
 
+let dialogueData = undefined;
 
+// Variable to set designers active state to true
 
+let designerScene1Active = true;
 
 /*********************** PRELOAD **********************************************/
 
@@ -123,12 +125,13 @@ Description of preload
 */
 function preload() {
 
-// Preload ramen noodles image
-imageRamen = loadImage(`assets/images/ramen_pixelated.png`);
-
 // Preloading sound for correct and incorrect responses
 
 incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
+
+// Preloading JSON data for dialogue
+
+dialogueData = loadJSON(`assets/data/dialogue.JSON`);
 
 }
 
@@ -148,16 +151,27 @@ function setup() {
     // Let's define our first command. First the text we expect, and then the function it should call
     let commands = {
       // 'testing' is what the user would say. I guess you type it out?
-      'testing': function() {
-        alert(`Howdy!`);
-
+      'Designer speak to me': function() {
+        alert(`Speak detective. But note, my responses are limited.`);
+        designerScene1Active = true;
         },
 
-      'Why': function() {
+      'Who *anything': function() {
+        if(designerScene1Active) {
         incorrectQuestion.play();
         // Change state to next level of intro
-        state = `intro phase 1`;
+        // state = `intro phase 1`;
+          }
         },
+
+      'Whose revolution?': function() {
+        if(designerScene1Active) {
+        correctQuestion.play();
+        // Change state to next level of intro
+        // state = `intro phase 1`;
+          }
+        },
+
       }
 
   // Add our commands to annyang
@@ -167,6 +181,8 @@ function setup() {
   annyang.start();
 
   } // End of annyang
+
+
 
 } // End of setup()
 
@@ -220,6 +236,17 @@ function animationState() {
 
 function titleState() {
   textAnimation();
+
+  // Variable to setup JSON dialogue file
+   let dialogue1 = dialogueData.dialogue.scene1[0].type;
+
+  // To display the countdown text
+  push();
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(33);
+  text(dialogue1, 250, 250);
+  pop();
 }
 
 /*********************** RESET STATES *****************************************/
@@ -237,7 +264,7 @@ function resetStates() {
   createItem();
 
   // Set up typewriter class
-  introText = new Typewriter(string, 25, 25, 350, 200, 0.1);
+  introText = new Typewriter(string, 25, 25, 550, 550, 0.18);
 
 }
 

@@ -1,0 +1,36 @@
+{
+  "characters": {
+    "joachim": {
+      "name": "Joachim von Ginseng",
+      "age": 23,
+      "backgroundColor": "#336699"
+    },
+    "jacqueline": {
+      "name": "Jacqueline du Pré",
+      "age": 77,
+      "backgroundColor": "#996633"
+    }
+  },
+  "dialogue": {
+    "scene1": [
+      {
+        "type": "speech",
+        "character": "joachim",
+        "speech": "Do you know what they call a Quarter Pounder in France?"
+      },
+      {
+        "type": "speech",
+        "character": "jacqueline",
+        "speech": "No? What? Tell me..."
+      },
+      {
+        "type": "speech",
+        "character": "joachim",
+        "speech": "A... Royale with Cheese"
+      },
+      {
+        "type": "speech"
+      }
+    ]
+  }
+}

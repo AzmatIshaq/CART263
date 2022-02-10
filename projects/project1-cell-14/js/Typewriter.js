@@ -23,8 +23,8 @@ class Typewriter {
     this.rate = rate;
     this.introText = {
       x: width / 4,
-      y: height / 6,
-      size: 30
+      y: height / 40,
+      size: 18
     }
   }
 
