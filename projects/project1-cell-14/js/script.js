@@ -14,8 +14,8 @@ author, and this description to match your project!
 // Variable to style canvas
 let canvasProperties = {
 // Set canvas width and height
-  w: 850,
-  h: 550,
+  w: 750,
+  h: 450,
 };
 
 // Variable to style the background
@@ -23,6 +23,7 @@ let bg = {
   r: 0,
   g: 0,
   b: 0,
+  titleColour: 30,
 };
 
 // Variable to style title text displayed during title state
@@ -34,7 +35,7 @@ let titleText = {
   alpha: 20,
   alpha2: 50,
   size: 20,
-  size2: 17,
+  size2: 27,
   x1: 2,
   x2: 2,
   y1: 3,
@@ -47,13 +48,13 @@ let fadeOut = {
   upperLimit: 256,
   upperLimit2: 0,
   // Limit for how low the alpha fade effect will go
-  lowerLimit: 40,
+  lowerLimit: 20,
   lowerLimit2: 0,
   // Rate at which fade increases
-  increaseRate: 2.5,
+  increaseRate: 1.5,
   increaseRate2: 0,
   // Rate at which fade decreases
-  decreaseRate: 5,
+  decreaseRate: 2,
   decreaseRate2: 0,
   rate: 0,
   rate2: 0,
@@ -85,21 +86,26 @@ let state = `title`;
 let item;
 
 // Variable for intro text
-let introText = undefined;
+let openingText = undefined;
 
 // Variable for intro Text string
 let string = `
-Detective's log Date 3471.
+Detective's log, Date 3471.
 
-I have been tasked with the investigation of a malfunctioning android.
+I have been tasked with the investigation of a
+malfunctioning android: C-4478.
 
-It was detected damaging some of the equipment on board the Startship Endeavour 2.
+It was detected damaging some equipment on board the Startship Endeavour 2.
 
-It was then sent to Cargo Bay 3 to be repaired.
+The android was then sent to Cargo Bay 3 to be
+repaired.
 
 It escaped after injuring a crew member.
 
-It now sits in Cell 14 waiting for my preliminary interrogation.
+The crew stated it got "angry"...
+
+C-4478 now sits in Cell 14 waiting for my
+preliminary interrogation.
 
 . . .`;
 
@@ -110,13 +116,21 @@ let incorrectQuestion = undefined;
 
 let correctQuestion = undefined;
 
+// Variable for soundtrack
+
+let introMusic = undefined;
+
 // Variable for JSON dialogue data file
 
-let dialogueData = undefined;
+let dialogueData;
 
 // Variable to set designers active state to true
 
-let designerScene1Active = true;
+let designerScene1Active = false;
+
+// Variable array to set up star effect in intro
+
+let stars = [];
 
 /*********************** PRELOAD **********************************************/
 
@@ -126,12 +140,13 @@ Description of preload
 function preload() {
 
 // Preloading sound for correct and incorrect responses
-
 incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
 
 // Preloading JSON data for dialogue
-
 dialogueData = loadJSON(`assets/data/dialogue.JSON`);
+
+// Prealoading intro sound music
+introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
 
 }
 
@@ -147,13 +162,22 @@ function setup() {
 
   resetStates();
 
-  if (annyang && state === `title`) {
+  if (annyang && state === `sceneTwo`) {
     // Let's define our first command. First the text we expect, and then the function it should call
     let commands = {
       // 'testing' is what the user would say. I guess you type it out?
       'Designer speak to me': function() {
         alert(`Speak detective. But note, my responses are limited.`);
         designerScene1Active = true;
+        incorrectQuestion.play();
+        },
+
+      // 'testing' is what the user would say. I guess you type it out?
+      'Designer goodbye': function() {
+        if (designerScene1Active) {
+        alert(`Goodbye detective.`);
+        designerScene1Active = false;
+      }
         },
 
       'Who *anything': function() {
@@ -164,13 +188,13 @@ function setup() {
           }
         },
 
-      'Whose revolution?': function() {
-        if(designerScene1Active) {
-        correctQuestion.play();
-        // Change state to next level of intro
-        // state = `intro phase 1`;
-          }
-        },
+      // 'What revolution?': function() {
+      //   if(designerScene1Active) {
+      //   correctQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
 
       }
 
@@ -181,6 +205,16 @@ function setup() {
   annyang.start();
 
   } // End of annyang
+
+// Trigger soundtrack
+  if (state === `title`) {
+    introMusic.loop();
+  }
+
+// Stars effect during intro
+for (let i = 0; i < 1000; i++) {
+		stars[i] = new Star();
+	}
 
 
 
@@ -195,9 +229,26 @@ Description of draw
 function draw() {
   background(bg.r, bg.g, bg.b);
 
+// Background effects
+  if(state === `title`) {
+    bg.r = bg.titleColour;
+    bg.g = bg.titleColour;
+    bg.b = bg.titleColour;
+  }
+  // else {
+  //   bg.r = 60;
+  //   bg.g = 60;
+  //   bg.b = 60;
+  // }
+
+
     // Alternate between game states
   if (state === `title`) {
     titleState();
+
+  }
+  if (state === `sceneOne`) {
+    sceneOneState();
   }
   if (state === `animation`) {
     animationState();
@@ -210,43 +261,73 @@ function draw() {
 /*********************** KEY PRESSED ******************************************/
 
 function keyPressed() {
+  // Make sure to order the if statements correctly to switch states effectively.
+
+  // If the state is title and the user presses Enter then go to animation state
+  if (state ===`sceneOne` && key === "Enter") {
+    state = `sceneTwo`;
+  }
+
   // If the state is title and the user presses Enter then go to animation state
   if (state === `title` && key === "Enter") {
-    state = `animation`;
+    state = `sceneOne`;
   }
+
+
+
 }
 /*********************** MOUSE PRESSED ****************************************/
 
-// function mousePressed() {
-// }
+function mousePressed() {
+  console.log(state);
+
+}
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - - - */
 
 /*********************** ANIMATION STATE **************************************/
 
-function animationState() {
-  // Display timer
-  countdownTimer();
-  // Display rain drops
-  dropDisplay();
-  introText.update();
-}
+// function animationState() {
+//
+// }
+
+
 
 /*********************** TITLE STATE ******************************************/
 
 function titleState() {
   textAnimation();
 
-  // Variable to setup JSON dialogue file
-   let dialogue1 = dialogueData.dialogue.scene1[0].type;
+  // Stars effect
+  for (var i = 0; i < stars.length; i++) {
+  stars[i].draw();
+  }
 
-  // To display the countdown text
-  push();
-  fill(255);
-  textAlign(CENTER, CENTER);
-  textSize(33);
-  text(dialogue1, 250, 250);
-  pop();
+} // End of title state
+
+/*********************** SCENE 1 STATE ****************************************/
+
+function sceneOneState() {
+
+  // Display timer
+  countdownTimer();
+  // Display rain drops
+  dropDisplay();
+  // Display scene one text
+  textAnimation();
+
+}
+
+/*********************** SCENE 1 STATE ****************************************/
+
+function sceneTwoState() {
+
+}
+
+/*********************** SCENE 1 STATE ****************************************/
+
+function sceneThreeState() {
+
 }
 
 /*********************** RESET STATES *****************************************/
@@ -256,7 +337,7 @@ function resetStates() {
   titleText.alpha2 = 0;
 
   // Set up rain effect
-  for (var i = 0; i < 200; i++) {
+  for (let i = 0; i < 200; i++) {
     drop[i] = new Drop();
   }
 
@@ -264,7 +345,7 @@ function resetStates() {
   createItem();
 
   // Set up typewriter class
-  introText = new Typewriter(string, 25, 25, 550, 550, 0.18);
+  openingText = new Typewriter(string, 25, 25, 550, 550, 0.18);
 
 }
 
@@ -279,13 +360,12 @@ function textAnimation() {
       fill(titleText.r, titleText.g, titleText.b);
       textSize(titleText.size);
       textAlign(CENTER, CENTER);
-      text(`Welcome to ...!`, width / titleText.x1, height / titleText.y1);
+      // text(`Welcome to ...!`, width / titleText.x1, height / titleText.y1);
       textStyle(NORMAL);
       textSize(titleText.size2);
       fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
       text(`Press ENTER to start`, width / titleText.x2, height / titleText.y2);
       pop();
-
 
       // Fade effect for title text
       if (titleText.alpha2 <= fadeOut.lowerLimit) {
@@ -299,6 +379,33 @@ function textAnimation() {
       titleText.alpha2 += fadeOut.rate;
 
   } // End of title text
+
+
+    if (state === `sceneOne`) {
+
+      // To display opening text
+      openingText.update();
+
+      }
+
+
+    if (state === `sceneTwo`) {
+      // JSON in animation state
+
+      // Variable to setup JSON dialogue file
+       let dialogue1 = dialogueData.dialogue.scene1[0].type;
+
+       // To display the dialogue
+       push();
+       fill(255);
+       textAlign(CENTER, CENTER);
+       textSize(33);
+       text(dialogue1, 250, 250);
+       pop();
+
+    }
+
+
 }
 
 
@@ -384,7 +491,7 @@ function Drop() {
   }
 } // End of Drop function
 
-/*********************** DROP DISPLAY **************************************/
+/*********************** DROP DISPLAY *****************************************/
 
 function dropDisplay() {
   // Rain effect
@@ -396,6 +503,22 @@ function dropDisplay() {
  }
 
 
+/*********************** Class: Star ******************************************/
+ // star class
+ class Star {
+ 	constructor() {
+ 		this.x = random(width);
+ 		this.y = random(height);
+ 		this.size = random(0.25, 3);
+ 		this.t = random(TAU);
+ 	}
 
+ 	draw() {
+ 		this.t += 0.1;
+ 		let scale = this.size + sin(this.t) * 2;
+ 		noStroke();
+ 		ellipse(this.x, this.y, scale, scale);
+ 	}
+}
 
 /*  END */
