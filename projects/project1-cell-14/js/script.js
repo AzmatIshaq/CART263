@@ -95,7 +95,7 @@ Detective's log, Date 3471.
 I have been tasked with the investigation of a
 malfunctioning android: C-4478.
 
-It was detected damaging some equipment on board the Startship Endeavour 2.
+It was detected damaging some equipment on board the Starship Endeavour 2.
 
 The android was then sent to Cargo Bay 3 to be
 repaired.
@@ -109,6 +109,11 @@ preliminary interrogation.
 
 . . .`;
 
+/* ~~~~ IMAGE VARIABLES ~~~~ */
+
+let designer;
+
+/* ~~~~ SOUND VARIABLES ~~~~ */
 
 // Variables for intro sound response for incorrect and correct questions
 
@@ -120,13 +125,18 @@ let correctQuestion = undefined;
 
 let introMusic = undefined;
 
+
+/* ~~~~ JSON VARIABLES ~~~~ */
+
 // Variable for JSON dialogue data file
 
 let dialogueData;
 
+/* MISC VARIABLES */
+
 // Variable to set designers active state to true
 
-let designerScene1Active = false;
+let designerScene1Active = true;
 
 // Variable array to set up star effect in intro
 
@@ -139,14 +149,25 @@ Description of preload
 */
 function preload() {
 
+/* Preload sound */
 // Preloading sound for correct and incorrect responses
 incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
 
-// Preloading JSON data for dialogue
-dialogueData = loadJSON(`assets/data/dialogue.JSON`);
+// Preloading sound for correct and incorrect responses
+correctQuestion = loadSound(`assets/sounds/the_right_question.mp3`);
 
 // Prealoading intro sound music
 introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
+
+/* Preload JSON */
+// Preloading JSON data for dialogue
+dialogueData = loadJSON(`assets/data/dialogue.JSON`);
+
+/* Preload Image */
+// Preloading designer image
+designer = loadImage(`assets/images/my_pic_pixelated.png`);
+
+
 
 }
 
@@ -162,14 +183,15 @@ function setup() {
 
   resetStates();
 
-  if (annyang && state === `sceneTwo`) {
+  if (annyang) {
     // Let's define our first command. First the text we expect, and then the function it should call
     let commands = {
       // 'testing' is what the user would say. I guess you type it out?
       'Designer speak to me': function() {
-        alert(`Speak detective. But note, my responses are limited.`);
+        if (state === `sceneTwo`) {
+        alert(`Hello detective. Please note, my responses are limited.`);
         designerScene1Active = true;
-        incorrectQuestion.play();
+          }
         },
 
       // 'testing' is what the user would say. I guess you type it out?
@@ -180,13 +202,149 @@ function setup() {
       }
         },
 
-      'Who *anything': function() {
+      // '*anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'What *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Why *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Where *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'When *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Did *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Does *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Do *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Can *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Is *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+      //
+      // 'Are *anything': function() {
+      //   if(designerScene1Active) {
+      //   incorrectQuestion.play();
+      //   // Change state to next level of intro
+      //   // state = `intro phase 1`;
+      //     }
+      //   },
+
+  // Questions that don't get a detailed response from Designer
+      'What can you tell me': function() {
         if(designerScene1Active) {
-        incorrectQuestion.play();
-        // Change state to next level of intro
-        // state = `intro phase 1`;
-          }
+          incorrectQuestion.play();
+            }
         },
+
+        'What are you hiding': function() {
+          if(designerScene1Active) {
+            incorrectQuestion.play();
+              }
+          },
+
+        'Why did the android malfunction': function() {
+          if(designerScene1Active) {
+            incorrectQuestion.play();
+              }
+          },
+
+    // Questions that get a detailed response from Designer
+
+    'Do robots think': function() {
+      if(designerScene1Active) {
+        alert(`Certainly detective... Can you? But that is not the right question.`);
+        }
+      },
+
+    'Can androids kill': function() {
+      if(designerScene1Active) {
+        alert(`Certainly detective... Can you? But that is not the right question.`);
+        }
+      },
+
+    'Did it malfunction': function() {
+      if(designerScene1Active) {
+        alert(`"It" did what "it" was programmed to do.`);
+        }
+      },
+
+    'Is the android dangerous': function() {
+      if(designerScene1Active) {
+        // Add text later
+        alert(`add text later`);
+        }
+      },
+
+    'Is he alive': function() {
+      if(designerScene1Active) {
+      introMusic.setVolume(0);
+      correctQuestion.play();
+      state = `sceneThree`;
+        }
+      },
+
+
 
       // 'What revolution?': function() {
       //   if(designerScene1Active) {
@@ -209,6 +367,7 @@ function setup() {
 // Trigger soundtrack
   if (state === `title`) {
     introMusic.loop();
+
   }
 
 // Stars effect during intro
@@ -250,9 +409,10 @@ function draw() {
   if (state === `sceneOne`) {
     sceneOneState();
   }
-  if (state === `animation`) {
-    animationState();
+  if (state === `sceneTwo`) {
+    sceneTwoState();
   }
+
 
 } // End of draw()
 
@@ -262,15 +422,32 @@ function draw() {
 
 function keyPressed() {
   // Make sure to order the if statements correctly to switch states effectively.
-
-  // If the state is title and the user presses Enter then go to animation state
+  // If the state is sceneOne and the user presses Enter then go to next state
   if (state ===`sceneOne` && key === "Enter") {
-    state = `sceneTwo`;
+
+    // Lower volume
+    introMusic.setVolume(0.3);
+
+    // Trigger responsive voice message
+    responsiveVoice.speak("Detective, incoming correspondence", "UK English Male",
+      {
+        pitch: 0.1,
+        rate: 0.97,
+      });
+
+    // Delay before changing states
+    // Anonymouse function to manage delay elements
+    let sceneOneMessage = function () {
+      state = `sceneTwo`;
+    };
+    setTimeout(sceneOneMessage, 3000);
+
+
   }
 
-  // If the state is title and the user presses Enter then go to animation state
+  // If the state is title and the user presses Enter then go to next state
   if (state === `title` && key === "Enter") {
-    state = `sceneOne`;
+    state = `sceneOne`
   }
 
 
@@ -305,7 +482,7 @@ function titleState() {
 
 } // End of title state
 
-/*********************** SCENE 1 STATE ****************************************/
+/*********************** SCENE ONE STATE ****************************************/
 
 function sceneOneState() {
 
@@ -318,9 +495,17 @@ function sceneOneState() {
 
 }
 
-/*********************** SCENE 1 STATE ****************************************/
+/*********************** SCENE TWO STATE ****************************************/
 
 function sceneTwoState() {
+
+// Display the designer image
+ push();
+ imageMode(CENTER);
+ image(designer, width / 2, height / 2, 200 , 200);
+ pop();
+
+textAnimation()
 
 }
 
@@ -393,18 +578,26 @@ function textAnimation() {
       // JSON in animation state
 
       // Variable to setup JSON dialogue file
-       let dialogue1 = dialogueData.dialogue.scene1[0].type;
+       let dialogue1 = dialogueData.dialogue.scene1[0].speech;
 
        // To display the dialogue
        push();
        fill(255);
        textAlign(CENTER, CENTER);
        textSize(33);
-       text(dialogue1, 250, 250);
+       text(dialogue1, width / 2, height / 12);
+       text(`Say Designer Speak to Me`, width / 2, height / 6);
        pop();
 
-    }
+       // To display the dialogue
+       // push();
+       // fill(255);
+       // textAlign(CENTER, CENTER);
+       // textSize(33);
+       // text(`hello`, width / 2, height / 12);
+       // pop();
 
+    }
 
 }
 

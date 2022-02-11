@@ -15,8 +15,8 @@
     "scene1": [
       {
         "type": "speech",
-        "character": "joachim",
-        "speech": "Do you know what they call a Quarter Pounder in France?"
+        "character": "designer",
+        "speech": "Hello Detective. Call me Designer."
       },
       {
         "type": "speech",
