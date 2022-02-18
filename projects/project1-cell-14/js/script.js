@@ -80,7 +80,8 @@ let timer = {
 let drop = [];
 
 // Variable to set starting state to `title`
-let state = `title`;
+// let state = `title`;
+let state = `sceneTwo`;
 
 // Variable to create items
 let item;
@@ -97,8 +98,7 @@ malfunctioning android: C-4478.
 
 It was detected damaging some equipment on board the Starship Endeavour 2.
 
-The android was then sent to Cargo Bay 3 to be
-repaired.
+The android was sent to Cargo Bay 3 to be repaired.
 
 It escaped after injuring a crew member.
 
@@ -109,11 +109,11 @@ preliminary interrogation.
 
 . . .`;
 
-/* ~~~~ IMAGE VARIABLES ~~~~ */
+                  /* ~~~~ IMAGE VARIABLES ~~~~ */
 
 let designer;
 
-/* ~~~~ SOUND VARIABLES ~~~~ */
+                  /* ~~~~ SOUND VARIABLES ~~~~ */
 
 // Variables for intro sound response for incorrect and correct questions
 
@@ -125,14 +125,30 @@ let correctQuestion = undefined;
 
 let introMusic = undefined;
 
+// Variable for andoird image
 
-/* ~~~~ JSON VARIABLES ~~~~ */
+let androidImage = undefined;
+
+
+              /* ~~~~ JSON VARIABLES ~~~~ */
 
 // Variable for JSON dialogue data file
 
 let dialogueData;
 
-/* MISC VARIABLES */
+// Variable to style dialogue
+
+let dialogueStyle = {
+  r2: 90,
+  g2: 103,
+  b2: 103
+}
+
+// Variable to colour answered dialogue
+
+let dialogueAnswered = 192;
+
+                  /* MISC VARIABLES */
 
 // Variable to set designers active state to true
 
@@ -141,6 +157,11 @@ let designerScene1Active = true;
 // Variable array to set up star effect in intro
 
 let stars = [];
+
+// Variable
+
+let sceneOneDialogue = `sceneOne`;
+
 
 /*********************** PRELOAD **********************************************/
 
@@ -159,14 +180,19 @@ correctQuestion = loadSound(`assets/sounds/the_right_question.mp3`);
 // Prealoading intro sound music
 introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
 
+// Prloading footsteps
+// footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.mp3`)
+
 /* Preload JSON */
 // Preloading JSON data for dialogue
 dialogueData = loadJSON(`assets/data/dialogue.JSON`);
 
 /* Preload Image */
+
 // Preloading designer image
 designer = loadImage(`assets/images/my_pic_pixelated.png`);
-
+// Preloading android image
+androidImage = loadImage(`assets/images/irobot.png`)
 
 
 }
@@ -181,193 +207,145 @@ function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
 
-  resetStates();
+
 
   if (annyang) {
-    // Let's define our first command. First the text we expect, and then the function it should call
-    let commands = {
-      // 'testing' is what the user would say. I guess you type it out?
-      'Designer speak to me': function() {
-        if (state === `sceneTwo`) {
-        alert(`Hello detective. Please note, my responses are limited.`);
-        designerScene1Active = true;
-          }
-        },
+    annyang.start();
+  }
 
-      // 'testing' is what the user would say. I guess you type it out?
-      'Designer goodbye': function() {
-        if (designerScene1Active) {
-        alert(`Goodbye detective.`);
-        designerScene1Active = false;
-      }
-        },
+  setUpScene();
 
-      // '*anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'What *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Why *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Where *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'When *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Did *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Does *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Do *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Can *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Is *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-      //
-      // 'Are *anything': function() {
-      //   if(designerScene1Active) {
-      //   incorrectQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-
-  // Questions that don't get a detailed response from Designer
-      'What can you tell me': function() {
-        if(designerScene1Active) {
-          incorrectQuestion.play();
-            }
-        },
-
-        'What are you hiding': function() {
-          if(designerScene1Active) {
-            incorrectQuestion.play();
-              }
-          },
-
-        'Why did the android malfunction': function() {
-          if(designerScene1Active) {
-            incorrectQuestion.play();
-              }
-          },
-
-    // Questions that get a detailed response from Designer
-
-    'Do robots think': function() {
-      if(designerScene1Active) {
-        alert(`Certainly detective... Can you? But that is not the right question.`);
-        }
-      },
-
-    'Can androids kill': function() {
-      if(designerScene1Active) {
-        alert(`Certainly detective... Can you? But that is not the right question.`);
-        }
-      },
-
-    'Did it malfunction': function() {
-      if(designerScene1Active) {
-        alert(`"It" did what "it" was programmed to do.`);
-        }
-      },
-
-    'Is the android dangerous': function() {
-      if(designerScene1Active) {
-        // Add text later
-        alert(`add text later`);
-        }
-      },
-
-    'Is he alive': function() {
-      if(designerScene1Active) {
-      introMusic.setVolume(0);
-      correctQuestion.play();
-      state = `sceneThree`;
-        }
-      },
-
-
-
-      // 'What revolution?': function() {
-      //   if(designerScene1Active) {
-      //   correctQuestion.play();
-      //   // Change state to next level of intro
-      //   // state = `intro phase 1`;
-      //     }
-      //   },
-
-      }
-
-  // Add our commands to annyang
-  annyang.addCommands(commands);
-
-  // Start listening. You can call this here, or attach this call to an event, button, etc.
-  annyang.start();
-
-  } // End of annyang
+  resetStates();
+  // if (annyang) {
+  //   // Let's define our first command. First the text we expect, and then the function it should call
+  //   let commands = {
+  //     // 'testing' is what the user would say. I guess you type it out?
+  //     'Designer speak to me': function() {
+  //       if (state === `sceneTwo`) {
+  //       alert(`Hello detective. Please note, my responses are limited.`);
+  //       designerScene1Active = true;
+  //         }
+  //       },
+  //
+  //     // 'testing' is what the user would say. I guess you type it out?
+  //     'Designer goodbye': function() {
+  //       if (designerScene1Active) {
+  //       alert(`Goodbye detective.`);
+  //       designerScene1Active = false;
+  //     }
+  //       },
+  //
+  //     // '*anything': function() {
+  //     //   if(designerScene1Active) {
+  //     //   incorrectQuestion.play();
+  //     //   // Change state to next level of intro
+  //     //   // state = `intro phase 1`;
+  //     //     }
+  //     //   },
+  //     //
+  //     // 'What *anything': function() {
+  //     //   if(designerScene1Active) {
+  //     //   incorrectQuestion.play();
+  //     //   // Change state to next level of intro
+  //     //   // state = `intro phase 1`;
+  //     //     }
+  //     //   },
+  //     //
+  //
+  //
+  // // Questions that don't get a detailed response from Designer
+  //     'What can you tell me': function() {
+  //       if(designerScene1Active) {
+  //         incorrectQuestion.play();
+  //         dialogueStyle.r2 = dialogueAnswered;
+  //         dialogueStyle.g2 = dialogueAnswered;
+  //         dialogueStyle.b2 = dialogueAnswered;
+  //           }
+  //       },
+  //
+  //       'What are you hiding': function() {
+  //         if(designerScene1Active) {
+  //           incorrectQuestion.play();
+  //             }
+  //         },
+  //
+  //       'Why did the android malfunction': function() {
+  //         if(designerScene1Active) {
+  //           incorrectQuestion.play();
+  //             }
+  //         },
+  //
+  //   // Questions that get a detailed response from Designer
+  //
+  //   'Is there a problem with the three laws': function() {
+  //     if(designerScene1Active) {
+  //       alert(`The three laws are perfect.`);
+  //       }
+  //     },
+  //
+  //   'Do robots think': function() {
+  //     if(designerScene1Active) {
+  //       alert(`Certainly detective... Can you? But that is not the right question.`);
+  //       }
+  //     },
+  //
+  //   'Can androids kill': function() {
+  //     if(designerScene1Active) {
+  //       alert(`Certainly detective... Can you? But that is not the right question.`);
+  //       }
+  //     },
+  //
+  //   'Did it malfunction': function() {
+  //     if(designerScene1Active) {
+  //       alert(`"It" did what "it" was programmed to do.`);
+  //       }
+  //     },
+  //
+  //   'Is the android dangerous': function() {
+  //     if(designerScene1Active) {
+  //       // Add text later
+  //       alert(`Can a tool be dangerous? Maybe one that isn't alive`);
+  //       }
+  //     },
+  //
+  //   'Is he alive': function() {
+  //     if(designerScene1Active) {
+  //     introMusic.setVolume(0);
+  //     correctQuestion.play();
+  //     state = `sceneThree`;
+  //       }
+  //     },
+  //
+  //
+  //
+  //     // 'What revolution?': function() {
+  //     //   if(designerScene1Active) {
+  //     //   correctQuestion.play();
+  //     //   // Change state to next level of intro
+  //     //   // state = `intro phase 1`;
+  //     //     }
+  //     //   },
+  //
+  //     }
+  //
+  // // Add our commands to annyang
+  // annyang.addCommands(commands);
+  //
+  // // Start listening. You can call this here, or attach this call to an event, button, etc.
+  // annyang.start();
+  //
+  // } // End of annyang
 
 // Trigger soundtrack
   if (state === `title`) {
     introMusic.loop();
 
+  }
+
+// Trigger footsteps sound for scene 3
+
+  if (state === `sceneThree`) {
+    footsteps.play();
   }
 
 // Stars effect during intro
@@ -378,6 +356,33 @@ for (let i = 0; i < 1000; i++) {
 
 
 } // End of setup()
+
+
+/*********************** SET UP SCENE *****************************************/
+
+function setUpScene() {
+  annyang.removeCommands();
+  let commands = {
+    // Questions that don't get a detailed response from Designer
+        'What can you tell me': function() {
+          if(designerScene1Active) {
+            incorrectQuestion.play();
+            dialogueStyle.r2 = dialogueAnswered;
+            dialogueStyle.g2 = dialogueAnswered;
+            dialogueStyle.b2 = dialogueAnswered;
+              }
+          },
+
+  };
+  for (let i = 0; i < dialogueData[sceneOneDialogue].questions.length; i++) {
+    let question = dialogueData[sceneOneDialogue].questions[i];
+    commands[question.question] = function () {
+      alert(question.answer);
+    };
+  }
+  annyang.addCommands(commands);
+}
+
 
 /*********************** DRAW *************************************************/
 
@@ -412,7 +417,9 @@ function draw() {
   if (state === `sceneTwo`) {
     sceneTwoState();
   }
-
+  if (state === `sceneThree`) {
+    sceneThreeState();
+  }
 
 } // End of draw()
 
@@ -455,10 +462,8 @@ function keyPressed() {
 }
 /*********************** MOUSE PRESSED ****************************************/
 
-function mousePressed() {
-  console.log(state);
-
-}
+// function mousePressed() {
+// }
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - - - */
 
@@ -507,13 +512,22 @@ function sceneTwoState() {
 
 textAnimation()
 
+
 }
 
 /*********************** SCENE 1 STATE ****************************************/
 
 function sceneThreeState() {
 
+  // Display the designer image
+   push();
+   imageMode(CENTER);
+   image(androidImage, width / 2, height / 2, 200 , 200);
+   pop();
+
 }
+
+
 
 /*********************** RESET STATES *****************************************/
 
@@ -578,27 +592,47 @@ function textAnimation() {
       // JSON in animation state
 
       // Variable to setup JSON dialogue file
-       let dialogue1 = dialogueData.dialogue.scene1[0].speech;
+        let dialogue1 = dialogueData.dialogue.scene1[0].speech;
+
+      // Display the user speaking options
+        // let dialogue1 = dialogueData.dialogue.scene1[0].speech;
 
        // To display the dialogue
        push();
        fill(255);
        textAlign(CENTER, CENTER);
-       textSize(33);
+       textSize(23);
        text(dialogue1, width / 2, height / 12);
-       text(`Say Designer Speak to Me`, width / 2, height / 6);
+       // text(`Say Designer Speak to Me`, width / 2, height / 6);
        pop();
 
+
+       let dialogue2 = dialogueData.dialogue.scene1[1].userDialogueA_1;
+
        // To display the dialogue
-       // push();
-       // fill(255);
-       // textAlign(CENTER, CENTER);
-       // textSize(33);
-       // text(`hello`, width / 2, height / 12);
-       // pop();
+       push();
+       fill(dialogueStyle.r2,dialogueStyle.g2,dialogueStyle.b2);
+       textAlign(CENTER, CENTER);
+       textSize(22);
+       text(dialogue2, width / 3, height / 5);
+       pop();
 
+
+
+       // Dialogue text
+         push();
+         fill(255);
+         text(dialogueData[sceneOneDialogue].intro, 100, 100);
+         pop();
+
+       for (let i = 0; i < dialogueData[sceneOneDialogue].questions.length; i++) {
+         let question = dialogueData[sceneOneDialogue].questions[i];
+         push();
+         fill(255);
+         text(question.question, 100, 200 + i * 25);
+         pop();
+       }
     }
-
 }
 
 

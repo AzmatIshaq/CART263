@@ -1,32 +1,50 @@
 {
-  "characters": {
-    "joachim": {
-      "name": "Joachim von Ginseng",
-      "age": 23,
-      "backgroundColor": "#336699"
-    },
-    "jacqueline": {
-      "name": "Jacqueline du Pré",
-      "age": 77,
-      "backgroundColor": "#996633"
-    }
+  "sceneOne": {
+    "intro": "Hello Detective, I am Designer",
+    "questions": [
+      {
+        "question": "What can you tell me?",
+        "answer": "I thought I saw a puddy tat!",
+        "correct": false
+      },
+      {
+        "question": "Where's the beef?",
+        "answer": "I don't care!",
+        "correct": true
+      },
+      {
+        "question": "Who am I?",
+        "answer": "Yes."
+      }
+    ],
+    "default_response": "I have no idea what you mean.",
+    "final_question": "J'accuse!"
   },
+
   "dialogue": {
     "scene1": [
       {
         "type": "speech",
         "character": "designer",
-        "speech": "Hello Detective. Call me Designer."
+        "speech": "Hello Detective. I am the Designer. How can I aid this investigation?"
       },
       {
         "type": "speech",
         "character": "jacqueline",
-        "speech": "No? What? Tell me..."
+        "speech": "No? What? Tell me...",
+        "userDialogueA_1": "What can you tell me?",
+        "userDialogueA_2": "What are you hiding?",
+        "userDialogueA_3": "Why did the android malfunction?",
+        "userDialogueA_4": "No? What? Tell me..."
       },
       {
         "type": "speech",
         "character": "joachim",
-        "speech": "A... Royale with Cheese"
+        "speech": "A... Royale with Cheese",
+        "userDialogueB_1": "?",
+        "userDialogueB_2": "?",
+        "userDialogueB_3": "?",
+        "userDialogueB_4": "?"
       },
       {
         "type": "speech"
