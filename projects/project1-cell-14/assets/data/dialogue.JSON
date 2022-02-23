@@ -1,21 +1,30 @@
 {
   "sceneOne": {
-    "intro": "Hello Detective, I am Designer",
+    "intro": "Hello Detective, I am the Designer",
     "questions": [
       {
-        "question": "What can you tell me?",
-        "answer": "I thought I saw a puddy tat!",
+        "question": "What are you hiding",
+        "answer": "Hello detective. Please note, my responses are limited.",
         "correct": false
       },
       {
-        "question": "Where's the beef?",
+        "question": "What can you tell me",
         "answer": "I don't care!",
         "correct": true
       },
       {
-        "question": "Who am I?",
+        "question": "Is there a problem with the three laws",
+        "answer": "Yes."
+      },
+      {
+        "question": "Can androids think",
+        "answer": "Yes."
+      },
+      {
+        "question": "Why did the android malfunction",
         "answer": "Yes."
       }
+
     ],
     "default_response": "I have no idea what you mean.",
     "final_question": "J'accuse!"

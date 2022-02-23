@@ -111,7 +111,11 @@ preliminary interrogation.
 
                   /* ~~~~ IMAGE VARIABLES ~~~~ */
 
+// Variable for designer character image
 let designer;
+
+// Variable for andoird character image
+let androidImage = undefined;
 
                   /* ~~~~ SOUND VARIABLES ~~~~ */
 
@@ -125,9 +129,9 @@ let correctQuestion = undefined;
 
 let introMusic = undefined;
 
-// Variable for andoird image
+// Variable for footsteps sound
+let footsteps = undefined;
 
-let androidImage = undefined;
 
 
               /* ~~~~ JSON VARIABLES ~~~~ */
@@ -145,21 +149,17 @@ let dialogueStyle = {
 }
 
 // Variable to colour answered dialogue
-
 let dialogueAnswered = 192;
 
                   /* MISC VARIABLES */
 
 // Variable to set designers active state to true
-
 let designerScene1Active = true;
 
 // Variable array to set up star effect in intro
-
 let stars = [];
 
-// Variable
-
+// Variable for scene one dialogue
 let sceneOneDialogue = `sceneOne`;
 
 
@@ -170,7 +170,8 @@ Description of preload
 */
 function preload() {
 
-/* Preload sound */
+      /* Preload sound */
+
 // Preloading sound for correct and incorrect responses
 incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
 
@@ -181,19 +182,19 @@ correctQuestion = loadSound(`assets/sounds/the_right_question.mp3`);
 introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
 
 // Prloading footsteps
-// footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.mp3`)
+footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.wav`)
 
-/* Preload JSON */
+      /* Preload JSON */
+
 // Preloading JSON data for dialogue
 dialogueData = loadJSON(`assets/data/dialogue.JSON`);
 
-/* Preload Image */
+      /* Preload Image */
 
 // Preloading designer image
 designer = loadImage(`assets/images/my_pic_pixelated.png`);
 // Preloading android image
 androidImage = loadImage(`assets/images/irobot.png`)
-
 
 }
 
@@ -361,34 +362,76 @@ for (let i = 0; i < 1000; i++) {
 /*********************** SET UP SCENE *****************************************/
 
 function setUpScene() {
-  annyang.removeCommands();
-  let commands = {
-    // Questions that don't get a detailed response from Designer
-        'What can you tell me': function() {
-          if(designerScene1Active) {
-            incorrectQuestion.play();
-            dialogueStyle.r2 = dialogueAnswered;
-            dialogueStyle.g2 = dialogueAnswered;
-            dialogueStyle.b2 = dialogueAnswered;
-              }
-          },
 
-  };
+// Dialogue code for annyang in scene two
+
+  // commands only for scene two
+  if (state === `sceneTwo`) {
+
+
+  annyang.removeCommands();
+
+
+  let commands = {
+
+    // Questions that don't get a detailed response from Designer
+
+          // 'What can you tell me': function() {
+          // if(designerScene1Active) {
+          //   dialogueAnimate()
+          //     }
+          // },
+          //
+          // 'What are you hiding': function() {
+          //   if(designerScene1Active) {
+          //
+          //       }
+          //   },
+          //
+          // 'Why did the android malfunction': function() {
+          //     if(designerScene1Active) {
+          //       incorrectQuestion.play();
+          //
+          //         }
+          //     },
+          //
+          //
+          // // Questions that do get a response from the designer character
+          //
+          // 'Hello Designer': function() {
+          //       if(designerScene1Active) {
+          //
+          //           }
+          //       },
+          //
+
+          };
+
+
+
+  // For loop to setup dialogue JSON data so that correct responses get an alert and
+  // incorrect responses get an audio response
   for (let i = 0; i < dialogueData[sceneOneDialogue].questions.length; i++) {
     let question = dialogueData[sceneOneDialogue].questions[i];
     commands[question.question] = function () {
+      if (question.correct === true) {
       alert(question.answer);
+    } else if (question.correct === false) {incorrectQuestion.play()}
     };
   }
   annyang.addCommands(commands);
-}
 
+} // End of sene one annyang
+
+
+
+} // End of setUpScene function
 
 /*********************** DRAW *************************************************/
 
 
 /**
-Description of draw
+Draw function to switch between states and alter background color.
 */
 function draw() {
   background(bg.r, bg.g, bg.b);
@@ -419,6 +462,12 @@ function draw() {
   }
   if (state === `sceneThree`) {
     sceneThreeState();
+  }
+  if (state === `sceneFour`) {
+    sceneFourState();
+  }
+  if (state === `sceneFive`) {
+    sceneFiveState();
   }
 
 } // End of draw()
@@ -491,8 +540,6 @@ function titleState() {
 
 function sceneOneState() {
 
-  // Display timer
-  countdownTimer();
   // Display rain drops
   dropDisplay();
   // Display scene one text
@@ -515,7 +562,7 @@ textAnimation()
 
 }
 
-/*********************** SCENE 1 STATE ****************************************/
+/*********************** SCENE THREE STATE ****************************************/
 
 function sceneThreeState() {
 
@@ -526,6 +573,23 @@ function sceneThreeState() {
    pop();
 
 }
+
+/*********************** SCENE THREE STATE ****************************************/
+
+function sceneFourState() {
+
+  // Display timer
+  countdownTimer();
+
+}
+
+/*********************** SCENE THREE STATE ****************************************/
+
+function sceneFiveState() {
+
+
+}
+
 
 
 
@@ -598,40 +662,42 @@ function textAnimation() {
         // let dialogue1 = dialogueData.dialogue.scene1[0].speech;
 
        // To display the dialogue
-       push();
-       fill(255);
-       textAlign(CENTER, CENTER);
-       textSize(23);
-       text(dialogue1, width / 2, height / 12);
-       // text(`Say Designer Speak to Me`, width / 2, height / 6);
-       pop();
+       // push();
+       // fill(255);
+       // textAlign(CENTER, CENTER);
+       // textSize(23);
+       // text(dialogue1, width / 2, height / 12);
+       // // text(`Say Designer Speak to Me`, width / 2, height / 6);
+       // pop();
+       //
+       //
+       // let dialogue2 = dialogueData.dialogue.scene1[1].userDialogueA_1;
+       //
+       // // To display the dialogue
+       // push();
+       // fill(dialogueStyle.r2,dialogueStyle.g2,dialogueStyle.b2);
+       // textAlign(CENTER, CENTER);
+       // textSize(22);
+       // text(dialogue2, width / 3, height / 5);
+       // pop();
 
 
-       let dialogue2 = dialogueData.dialogue.scene1[1].userDialogueA_1;
 
-       // To display the dialogue
-       push();
-       fill(dialogueStyle.r2,dialogueStyle.g2,dialogueStyle.b2);
-       textAlign(CENTER, CENTER);
-       textSize(22);
-       text(dialogue2, width / 3, height / 5);
-       pop();
-
-
-
-       // Dialogue text
+       // Header text for scene two
          push();
          fill(255);
-         text(dialogueData[sceneOneDialogue].intro, 100, 100);
+         text(dialogueData[sceneOneDialogue].intro, 100, 200);
          pop();
 
+        // Dialogue text for scene two
        for (let i = 0; i < dialogueData[sceneOneDialogue].questions.length; i++) {
          let question = dialogueData[sceneOneDialogue].questions[i];
          push();
          fill(255);
-         text(question.question, 100, 200 + i * 25);
+         text(question.question + `?`, width / 6, 300 + i * 25);
          pop();
        }
+
     }
 }
 
@@ -666,6 +732,15 @@ function countdownTimer() {
   if (timer.countdown == 0) {
     timer.countdown = timer.reset;
   }
+}
+
+/*********************** DIALOGUE ANIMATE *************************************/
+
+// Function to animate dialogue text when a dialogue has been selected by the user
+function dialogueAnimate() {
+        dialogueStyle.r2 = dialogueAnswered;
+        dialogueStyle.g2 = dialogueAnswered;
+        dialogueStyle.b2 = dialogueAnswered;
 }
 
 /*********************** CREATE ITEM ******************************************/
