@@ -405,12 +405,22 @@ function setUpScene() {
           correctAnswerTracker++
           if (correctAnswerTracker === 1) {
             displayQuestionSceneTwo = true;
-            //change the scene when the right amount of questions are asked
-            if(correctAnswerTracker > 2 && dialogueData.sceneTwo.finalQuestion.sceneChange === true) {
-              androidEffectActive = true;
-              state = `sceneThree`;
-              setUpScene();
+            //change the scene when the right questions are asked
+            if(displayQuestionSceneTwo = true) {
+
+              //change the scene when the right questions are asked
+                  let finalQuestion = dialogueData.sceneTwo.finalQuestion;
+                  commands[finalQuestion.question] = function() {
+                    if (finalQuestion.sceneChange === true) {
+                        state = `sceneThree`;
+                        setUpScene();
+                        // Android effect because activated
+                        androidEffectActive = true;
+                      }
+                    }
+
             }
+
           }
 
         } else if (question.correct === false) {
@@ -424,7 +434,6 @@ function setUpScene() {
 
   // Annyang for Scene Three
   if (state === `sceneThree`) {
-
 
     annyang.removeCommands();
 
