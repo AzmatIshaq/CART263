@@ -81,8 +81,8 @@ let drop = [];
 
  /* #BFFF00
  Variable to set starting state */
- // let state = `title`;
-let state = `sceneTwo`;
+ let state = `title`;
+// let state = `sceneTwo`;
 // let state = `sceneThree`;
 
 // Variable to create items
@@ -179,6 +179,8 @@ let androidEffect = {
   widthIncrease: 0.3,
   heightIncrease: 0.3
 };
+
+let androidEffectActive = false;
 
 /*********************** PRELOAD **********************************************/
 
@@ -404,8 +406,10 @@ function setUpScene() {
           if (correctAnswerTracker === 1) {
             displayQuestionSceneTwo = true;
             //change the scene when the right amount of questions are asked
-            if(correctAnswerTrack === 2) {
+            if(correctAnswerTracker > 2 && dialogueData.sceneTwo.finalQuestion.sceneChange === true) {
+              androidEffectActive = true;
               state = `sceneThree`;
+              setUpScene();
             }
           }
 
@@ -420,6 +424,7 @@ function setUpScene() {
 
   // Annyang for Scene Three
   if (state === `sceneThree`) {
+
 
     annyang.removeCommands();
 
@@ -526,9 +531,12 @@ function keyPressed() {
     // Delay before changing states
     // Anonymouse function to manage delay elements
     let sceneOneMessage = function() {
-      state = `sceneTwo`;
+        state = `sceneTwo`;
+        setUpScene();
+
+
     };
-    setTimeout(sceneOneMessage, 3000);
+    setTimeout(sceneOneMessage, 4000);
 
 
   }
@@ -568,7 +576,7 @@ function titleState() {
 
 } // End of title state
 
-/*********************** SCENE ONE STATE ****************************************/
+/*********************** SCENE ONE STATE **************************************/
 
 function sceneOneState() {
 
@@ -579,7 +587,7 @@ function sceneOneState() {
 
 }
 
-/*********************** SCENE TWO STATE ****************************************/
+/*********************** SCENE TWO STATE **************************************/
 
 function sceneTwoState() {
 
@@ -594,7 +602,7 @@ function sceneTwoState() {
 
 }
 
-/*********************** SCENE THREE STATE ****************************************/
+/*********************** SCENE THREE STATE ************************************/
 
 function sceneThreeState() {
 
@@ -619,16 +627,20 @@ function sceneThreeState() {
 
   // Limit the size of the image
   if (androidEffect.width > 200) {
-
+    androidEffectActive = false;
     androidEffect.width = 200;
     androidEffect.height = 200;
+    responsiveVoice.speak("Hello. Detective.", {
+        pitch: 0.4,
+        rate: 0.9,
+      });
 
   }
 
 
 } // End of scene three state
 
-/*********************** SCENE FOUR STATE ****************************************/
+/*********************** SCENE FOUR STATE *************************************/
 
 function sceneFourState() {
 
@@ -637,7 +649,7 @@ function sceneFourState() {
 
 }
 
-/*********************** SCENE FIVE STATE ****************************************/
+/*********************** SCENE FIVE STATE *************************************/
 
 function sceneFiveState() {
 
@@ -732,7 +744,7 @@ function textAnimation() {
       textSize(20);
       textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData[sceneTwoDialogue].finalQuestion, width / 5.5, height / 1.2);
+      text(dialogueData.sceneTwo.finalQuestion.question  + `?`, width / 5.5, height / 1.2);
       pop();
     }
   }
