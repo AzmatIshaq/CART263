@@ -34,7 +34,7 @@
         "correct": false
       },
       {
-        "question": "Are androids alive?",
+        "question": "Are androids alive",
         "answer": "Yes.",
         "correct": false,
         "sceneChange": true
@@ -47,46 +47,23 @@
     "final_question": "J'accuse!"
   },
 
-
-  "dialogue": {
-    "scene1": [
-      {
-        "type": "speech",
-        "character": "designer",
-        "speech": "Hello Detective. I am the Designer. How can I aid this investigation?"
-      },
-      {
-        "type": "speech",
-        "character": "jacqueline",
-        "speech": "No? What? Tell me...",
-        "userDialogueA_1": "What can you tell me?",
-        "userDialogueA_2": "What are you hiding?",
-        "userDialogueA_3": "Why did the android malfunction?",
-        "userDialogueA_4": "No? What? Tell me..."
-      },
-      {
-        "type": "speech",
-        "character": "joachim",
-        "speech": "A... Royale with Cheese",
-        "userDialogueB_1": "?",
-        "userDialogueB_2": "?",
-        "userDialogueB_3": "?",
-        "userDialogueB_4": "?"
-      },
-      {
-        "type": "speech"
-      }
-    ]
-  },
-
-
   "sceneThree": {
     "intro": "Welcome to CELL-14",
     "questions": [
       {
         "question": "What is your protocol",
         "answer": "Hello detective.",
-        "correct": true
+        "correct": 1
+      },
+      {
+        "question": "You mean your designer",
+        "answer": "Hello detective.",
+        "correct": 2
+      },
+      {
+        "question": "Whose revolution",
+        "answer": "Hello detective.",
+        "correct": 3
       }
     ]
   }

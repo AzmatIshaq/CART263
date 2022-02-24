@@ -425,15 +425,26 @@ function setUpScene() {
     for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
       let question = dialogueData[sceneThreeDialogue].questions[i];
       commands[question.question] = function() {
-        if (question.correct === true) {
+        if (question.correct === 1) {
             responsiveVoice.speak("My father tried to teach me human emotions... They are ... difficult ", "UK English Male", {
                 pitch: 0.4,
                 rate: 0.9,
               });
 
-        } else if (question.correct === false) {
+        } else if (question.correct === 2) {
+          responsiveVoice.speak("He preferred when I called him father.", "UK English Male", {
+              pitch: 0.4,
+              rate: 0.9,
+            });
 
+        }  else if (question.correct === 3) {
+          responsiveVoice.speak("That, detective. Is the right question.", "UK English Male", {
+              pitch: 0.4,
+              rate: 0.9,
+            });
+            introMusic.setVolume(1);
         }
+
       };
     }
     annyang.addCommands(commands);
