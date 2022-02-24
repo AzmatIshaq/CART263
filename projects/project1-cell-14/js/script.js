@@ -172,10 +172,10 @@ let displayQuestionSceneTwo;
 // Variable to add effects to android image
 
 let androidEffect = {
-  width: 0,
-  height: 0,
-  widthIncrease: 1,
-  heightIncrease: 1
+  width: 0.1,
+  height: 0.1,
+  widthIncrease: 0.3,
+  heightIncrease: 0.3
 };
 
 /*********************** PRELOAD **********************************************/
@@ -569,15 +569,41 @@ function sceneThreeState() {
 
 
 if (state === `sceneThree`) {
-  androidEffect.width += androidEffect.widthIncrease
-  androidEffect.height += androidEffect.heightIncrease
-}
+
 
   // Display the designer image
    push();
    imageMode(CENTER);
-   image(androidImage, width / 2, height / 2, androidEffect.width, androidEffect.height);
+   image(androidImage, width / 2, height / 2,  androidEffect.width, androidEffect.height);
    pop();
+
+  // Effect to have android incrase in size
+   let androidMeeting = function () {
+
+       // Effect for android in scene three
+       androidEffect.width += androidEffect.widthIncrease;
+       androidEffect.height += androidEffect.heightIncrease;
+   }
+
+   // Timer to control when the effect occurs
+  setTimeout(androidMeeting, 10000);
+
+  if (androidEffect.width > 200) {
+    androidEffect.width = 200;
+    androidEffect.height = 200;
+    }
+
+}
+
+
+
+   // Trigger responsive voice message
+   // responsiveVoice.speak("Detective, incoming correspondence", "UK English Male",
+   //   {
+   //     pitch: 0.1,
+   //     rate: 0.97,
+   //   });
+
 
 }
 
