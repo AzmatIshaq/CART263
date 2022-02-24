@@ -79,9 +79,10 @@ let timer = {
 // Array variable for rain effect
 let drop = [];
 
-// Variable to set starting state
-// let state = `title`;
-let state = `sceneThree`;
+ /* #BFFF00
+ Variable to set starting state */
+ // let state = `title`;
+let state = `sceneTwo`;
 // let state = `sceneThree`;
 
 // Variable to create items
@@ -224,7 +225,7 @@ function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
 
-
+alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience`);
 
   if (annyang) {
     annyang.start();
@@ -400,8 +401,12 @@ function setUpScene() {
 
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker++
-          if (correctAnswerTracker > 2) {
+          if (correctAnswerTracker === 1) {
             displayQuestionSceneTwo = true;
+            //change the scene when the right amount of questions are asked
+            if(correctAnswerTrack === 2) {
+              state = `sceneThree`;
+            }
           }
 
         } else if (question.correct === false) {
@@ -716,7 +721,7 @@ function textAnimation() {
       let question = dialogueData[sceneTwoDialogue].questions[i];
       push();
       fill(255);
-      text(question.question + `?`, width / 14, 200 + i * 25);
+      text(question.question + `?`, width / 14, 190 + i * 25);
       pop();
     }
 
@@ -727,7 +732,7 @@ function textAnimation() {
       textSize(20);
       textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(`Are androids alive?`, width / 5.5, height / 1.2);
+      text(dialogueData[sceneTwoDialogue].finalQuestion, width / 5.5, height / 1.2);
       pop();
     }
   }

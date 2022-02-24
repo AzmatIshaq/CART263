@@ -32,16 +32,16 @@
         "question": "Why did the android malfunction",
         "answer": "Yes.",
         "correct": false
-      },
-      {
-        "question": "Are androids alive",
-        "answer": "Yes.",
-        "correct": false,
-        "sceneChange": true
       }
 
     ],
 
+    "finalQuestion": {
+      "question": "Are androids alive",
+      "answer": "Yes.",
+      "correct": false,
+      "sceneChange": true
+    },
 
     "default_response": "I have no idea what you mean.",
     "final_question": "J'accuse!"
