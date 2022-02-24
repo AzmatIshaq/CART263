@@ -81,7 +81,8 @@ let drop = [];
 
 // Variable to set starting state to `title`
 // let state = `title`;
-let state = `sceneTwo`;
+// let state = `sceneTwo`;
+let state = `sceneThree`;
 
 // Variable to create items
 let item;
@@ -162,6 +163,20 @@ let stars = [];
 // Variable for scene one dialogue
 let sceneOneDialogue = `sceneOne`;
 
+// Variable to track correct answers
+let correctAnswerTracker = 0;
+
+// Variable to display question for scene two
+let displayQuestionSceneTwo;
+
+// Variable to add effects to android image
+
+let androidEffect = {
+  width: 0,
+  height: 0,
+  widthIncrease: 1,
+  heightIncrease: 1
+};
 
 /*********************** PRELOAD **********************************************/
 
@@ -343,11 +358,11 @@ function setup() {
 
   }
 
-// Trigger footsteps sound for scene 3
-
-  if (state === `sceneThree`) {
-    footsteps.play();
-  }
+// // Trigger footsteps sound for scene 3
+//
+//   if (state === `sceneThree`) {
+//
+//   }
 
 // Stars effect during intro
 for (let i = 0; i < 1000; i++) {
@@ -374,37 +389,6 @@ function setUpScene() {
 
   let commands = {
 
-    // Questions that don't get a detailed response from Designer
-
-          // 'What can you tell me': function() {
-          // if(designerScene1Active) {
-          //   dialogueAnimate()
-          //     }
-          // },
-          //
-          // 'What are you hiding': function() {
-          //   if(designerScene1Active) {
-          //
-          //       }
-          //   },
-          //
-          // 'Why did the android malfunction': function() {
-          //     if(designerScene1Active) {
-          //       incorrectQuestion.play();
-          //
-          //         }
-          //     },
-          //
-          //
-          // // Questions that do get a response from the designer character
-          //
-          // 'Hello Designer': function() {
-          //       if(designerScene1Active) {
-          //
-          //           }
-          //       },
-          //
-
           };
 
 
@@ -415,13 +399,30 @@ function setUpScene() {
     let question = dialogueData[sceneOneDialogue].questions[i];
     commands[question.question] = function () {
       if (question.correct === true) {
+
+      // Alert response from designer character if the correct question is asked.
       alert(question.answer);
+
+      // Tracker to tally correct answers to be able to move to the next scene.
+      correctAnswerTracker++
+          if (correctAnswerTracker > 2) {
+            displayQuestionSceneTwo = true;
+          }
+
     } else if (question.correct === false) {incorrectQuestion.play()}
     };
   }
   annyang.addCommands(commands);
 
-} // End of sene one annyang
+} // End of scene two annyang
+
+// Annyang for Scene Three
+  if (state === `sceneThree`) {
+
+
+  annyang.removeCommands();
+
+} // End of scene three annyang
 
 
 
@@ -566,10 +567,16 @@ textAnimation()
 
 function sceneThreeState() {
 
+
+if (state === `sceneThree`) {
+  androidEffect.width += androidEffect.widthIncrease
+  androidEffect.height += androidEffect.heightIncrease
+}
+
   // Display the designer image
    push();
    imageMode(CENTER);
-   image(androidImage, width / 2, height / 2, 200 , 200);
+   image(androidImage, width / 2, height / 2, androidEffect.width, androidEffect.height);
    pop();
 
 }
@@ -644,6 +651,7 @@ function textAnimation() {
   } // End of title text
 
 
+  // Text to display if it is scene one
     if (state === `sceneOne`) {
 
       // To display opening text
@@ -651,42 +659,14 @@ function textAnimation() {
 
       }
 
-
+  // Text to display if it is scene two
     if (state === `sceneTwo`) {
-      // JSON in animation state
-
-      // Variable to setup JSON dialogue file
-        let dialogue1 = dialogueData.dialogue.scene1[0].speech;
-
-      // Display the user speaking options
-        // let dialogue1 = dialogueData.dialogue.scene1[0].speech;
-
-       // To display the dialogue
-       // push();
-       // fill(255);
-       // textAlign(CENTER, CENTER);
-       // textSize(23);
-       // text(dialogue1, width / 2, height / 12);
-       // // text(`Say Designer Speak to Me`, width / 2, height / 6);
-       // pop();
-       //
-       //
-       // let dialogue2 = dialogueData.dialogue.scene1[1].userDialogueA_1;
-       //
-       // // To display the dialogue
-       // push();
-       // fill(dialogueStyle.r2,dialogueStyle.g2,dialogueStyle.b2);
-       // textAlign(CENTER, CENTER);
-       // textSize(22);
-       // text(dialogue2, width / 3, height / 5);
-       // pop();
-
-
 
        // Header text for scene two
          push();
          fill(255);
-         text(dialogueData[sceneOneDialogue].intro, 100, 200);
+         textSize(23);
+         text(dialogueData[sceneOneDialogue].intro, width / 3.5, height / 6);
          pop();
 
         // Dialogue text for scene two
@@ -694,9 +674,20 @@ function textAnimation() {
          let question = dialogueData[sceneOneDialogue].questions[i];
          push();
          fill(255);
-         text(question.question + `?`, width / 6, 300 + i * 25);
+         text(question.question + `?`, width / 14, 200 + i * 25);
          pop();
        }
+
+    // Text to display if user has met the conditions
+      if (displayQuestionSceneTwo === true) {
+        push();
+        fill(90, 160, 200);
+        textSize(20);
+        textAlign(CENTER, CENTER);
+        textStyle(NORMAL);
+        text(`Are androids alive?`, width / 5.5, height / 1.2);
+        pop();
+      }
 
     }
 }

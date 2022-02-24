@@ -3,6 +3,11 @@
     "intro": "Hello Detective, I am the Designer",
     "questions": [
       {
+        "question": "Hello Designer",
+        "answer": "Hello detective. Please note, my responses are limited.",
+        "correct": true
+      },
+      {
         "question": "What are you hiding",
         "answer": "Hello detective. Please note, my responses are limited.",
         "correct": false
@@ -10,19 +15,24 @@
       {
         "question": "What can you tell me",
         "answer": "I don't care!",
-        "correct": true
+        "correct": false
+
       },
       {
         "question": "Is there a problem with the three laws",
-        "answer": "Yes."
+        "answer": "The three laws are perfect.",
+        "correct": true
       },
       {
         "question": "Can androids think",
-        "answer": "Yes."
+        "answer": "Certainly detective... Can you? But that is not the right question.",
+        "correct": true
       },
       {
         "question": "Why did the android malfunction",
-        "answer": "Yes."
+        "answer": "Yes.",
+        "correct": false
+
       }
 
     ],
