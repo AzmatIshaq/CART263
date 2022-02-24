@@ -13,7 +13,7 @@ author, and this description to match your project!
 
 // Variable to style canvas
 let canvasProperties = {
-// Set canvas width and height
+  // Set canvas width and height
   w: 750,
   h: 450,
 };
@@ -79,10 +79,10 @@ let timer = {
 // Array variable for rain effect
 let drop = [];
 
-// Variable to set starting state to `title`
+// Variable to set starting state
 // let state = `title`;
-// let state = `sceneTwo`;
 let state = `sceneThree`;
+// let state = `sceneThree`;
 
 // Variable to create items
 let item;
@@ -110,7 +110,7 @@ preliminary interrogation.
 
 . . .`;
 
-                  /* ~~~~ IMAGE VARIABLES ~~~~ */
+/* ~~~~ IMAGE VARIABLES ~~~~ */
 
 // Variable for designer character image
 let designer;
@@ -118,7 +118,7 @@ let designer;
 // Variable for andoird character image
 let androidImage = undefined;
 
-                  /* ~~~~ SOUND VARIABLES ~~~~ */
+/* ~~~~ SOUND VARIABLES ~~~~ */
 
 // Variables for intro sound response for incorrect and correct questions
 
@@ -135,7 +135,7 @@ let footsteps = undefined;
 
 
 
-              /* ~~~~ JSON VARIABLES ~~~~ */
+/* ~~~~ JSON VARIABLES ~~~~ */
 
 // Variable for JSON dialogue data file
 
@@ -152,7 +152,7 @@ let dialogueStyle = {
 // Variable to colour answered dialogue
 let dialogueAnswered = 192;
 
-                  /* MISC VARIABLES */
+/* MISC VARIABLES */
 
 // Variable to set designers active state to true
 let designerScene1Active = true;
@@ -160,8 +160,9 @@ let designerScene1Active = true;
 // Variable array to set up star effect in intro
 let stars = [];
 
-// Variable for scene one dialogue
-let sceneOneDialogue = `sceneOne`;
+// Variables for JSON scene dialogue
+let sceneTwoDialogue = `sceneTwo`;
+let sceneThreeDialogue = `sceneThree`;
 
 // Variable to track correct answers
 let correctAnswerTracker = 0;
@@ -185,31 +186,31 @@ Description of preload
 */
 function preload() {
 
-      /* Preload sound */
+  /* Preload sound */
 
-// Preloading sound for correct and incorrect responses
-incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
+  // Preloading sound for correct and incorrect responses
+  incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
 
-// Preloading sound for correct and incorrect responses
-correctQuestion = loadSound(`assets/sounds/the_right_question.mp3`);
+  // Preloading sound for correct and incorrect responses
+  correctQuestion = loadSound(`assets/sounds/the_right_question.mp3`);
 
-// Prealoading intro sound music
-introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
+  // Prealoading intro sound music
+  introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
 
-// Prloading footsteps
-footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.wav`)
+  // Prloading footsteps
+  footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.wav`)
 
-      /* Preload JSON */
+  /* Preload JSON */
 
-// Preloading JSON data for dialogue
-dialogueData = loadJSON(`assets/data/dialogue.JSON`);
+  // Preloading JSON data for dialogue
+  dialogueData = loadJSON(`assets/data/dialogue.JSON`);
 
-      /* Preload Image */
+  /* Preload Image */
 
-// Preloading designer image
-designer = loadImage(`assets/images/my_pic_pixelated.png`);
-// Preloading android image
-androidImage = loadImage(`assets/images/irobot.png`)
+  // Preloading designer image
+  designer = loadImage(`assets/images/my_pic_pixelated.png`);
+  // Preloading android image
+  androidImage = loadImage(`assets/images/irobot.png`)
 
 }
 
@@ -352,22 +353,22 @@ function setup() {
   //
   // } // End of annyang
 
-// Trigger soundtrack
+  // Trigger soundtrack
   if (state === `title`) {
     introMusic.loop();
 
   }
 
-// // Trigger footsteps sound for scene 3
-//
-//   if (state === `sceneThree`) {
-//
-//   }
+  // // Trigger footsteps sound for scene 3
+  //
+  //   if (state === `sceneThree`) {
+  //
+  //   }
 
-// Stars effect during intro
-for (let i = 0; i < 1000; i++) {
-		stars[i] = new Star();
-	}
+  // Stars effect during intro
+  for (let i = 0; i < 1000; i++) {
+    stars[i] = new Star();
+  }
 
 
 
@@ -378,51 +379,66 @@ for (let i = 0; i < 1000; i++) {
 
 function setUpScene() {
 
-// Dialogue code for annyang in scene two
+  // Dialogue code for annyang in scene two
 
   // commands only for scene two
   if (state === `sceneTwo`) {
 
+    annyang.removeCommands();
 
-  annyang.removeCommands();
+    let commands = {};
 
+    // For loop to setup dialogue JSON data so that correct responses get an alert and
+    // incorrect responses get an audio response
+    for (let i = 0; i < dialogueData[sceneTwoDialogue].questions.length; i++) {
+      let question = dialogueData[sceneTwoDialogue].questions[i];
+      commands[question.question] = function() {
+        if (question.correct === true) {
 
-  let commands = {
+          // Alert response from designer character if the correct question is asked.
+          alert(question.answer);
 
-          };
-
-
-
-  // For loop to setup dialogue JSON data so that correct responses get an alert and
-  // incorrect responses get an audio response
-  for (let i = 0; i < dialogueData[sceneOneDialogue].questions.length; i++) {
-    let question = dialogueData[sceneOneDialogue].questions[i];
-    commands[question.question] = function () {
-      if (question.correct === true) {
-
-      // Alert response from designer character if the correct question is asked.
-      alert(question.answer);
-
-      // Tracker to tally correct answers to be able to move to the next scene.
-      correctAnswerTracker++
+          // Tracker to tally correct answers to be able to move to the next scene.
+          correctAnswerTracker++
           if (correctAnswerTracker > 2) {
             displayQuestionSceneTwo = true;
           }
 
-    } else if (question.correct === false) {incorrectQuestion.play()}
-    };
-  }
-  annyang.addCommands(commands);
+        } else if (question.correct === false) {
+          incorrectQuestion.play()
+        }
+      };
+    }
+    annyang.addCommands(commands);
 
-} // End of scene two annyang
+  } // End of scene two annyang
 
-// Annyang for Scene Three
+  // Annyang for Scene Three
   if (state === `sceneThree`) {
 
+    annyang.removeCommands();
 
-  annyang.removeCommands();
+    let commands = {};
 
-} // End of scene three annyang
+    // For loop to setup dialogue JSON data so that correct responses get an alert and
+    // incorrect responses get an audio response
+    for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
+      let question = dialogueData[sceneThreeDialogue].questions[i];
+      commands[question.question] = function() {
+        if (question.correct === true) {
+            responsiveVoice.speak("My father tried to teach me human emotions... They are ... difficult ", "UK English Male", {
+                pitch: 0.4,
+                rate: 0.9,
+              });
+
+        } else if (question.correct === false) {
+
+        }
+      };
+    }
+    annyang.addCommands(commands);
+
+  } // End of scene three annyang
 
 
 
@@ -437,8 +453,8 @@ Draw function to switch between states and alter background color.
 function draw() {
   background(bg.r, bg.g, bg.b);
 
-// Background effects
-  if(state === `title`) {
+  // Background effects
+  if (state === `title`) {
     bg.r = bg.titleColour;
     bg.g = bg.titleColour;
     bg.b = bg.titleColour;
@@ -450,7 +466,7 @@ function draw() {
   // }
 
 
-    // Alternate between game states
+  // Alternate between game states
   if (state === `title`) {
     titleState();
 
@@ -480,21 +496,20 @@ function draw() {
 function keyPressed() {
   // Make sure to order the if statements correctly to switch states effectively.
   // If the state is sceneOne and the user presses Enter then go to next state
-  if (state ===`sceneOne` && key === "Enter") {
+  if (state === `sceneOne` && key === "Enter") {
 
     // Lower volume
     introMusic.setVolume(0.3);
 
     // Trigger responsive voice message
-    responsiveVoice.speak("Detective, incoming correspondence", "UK English Male",
-      {
-        pitch: 0.1,
-        rate: 0.97,
-      });
+    responsiveVoice.speak("Detective. Incoming correspondence", "UK English Female", {
+      pitch: 0.9,
+      rate: 0.75,
+    });
 
     // Delay before changing states
     // Anonymouse function to manage delay elements
-    let sceneOneMessage = function () {
+    let sceneOneMessage = function() {
       state = `sceneTwo`;
     };
     setTimeout(sceneOneMessage, 3000);
@@ -532,7 +547,7 @@ function titleState() {
 
   // Stars effect
   for (var i = 0; i < stars.length; i++) {
-  stars[i].draw();
+    stars[i].draw();
   }
 
 } // End of title state
@@ -552,13 +567,13 @@ function sceneOneState() {
 
 function sceneTwoState() {
 
-// Display the designer image
- push();
- imageMode(CENTER);
- image(designer, width / 2, height / 2, 200 , 200);
- pop();
+  // Display the designer image
+  push();
+  imageMode(CENTER);
+  image(designer, width / 2, height / 2, 200, 200);
+  pop();
 
-textAnimation()
+  textAnimation();
 
 
 }
@@ -567,47 +582,37 @@ textAnimation()
 
 function sceneThreeState() {
 
-
-if (state === `sceneThree`) {
-
+  textAnimation();
 
   // Display the designer image
-   push();
-   imageMode(CENTER);
-   image(androidImage, width / 2, height / 2,  androidEffect.width, androidEffect.height);
-   pop();
+  push();
+  imageMode(CENTER);
+  image(androidImage, width / 2, height / 2, androidEffect.width, androidEffect.height);
+  pop();
 
   // Effect to have android incrase in size
-   let androidMeeting = function () {
+  let androidMeeting = function() {
 
-       // Effect for android in scene three
-       androidEffect.width += androidEffect.widthIncrease;
-       androidEffect.height += androidEffect.heightIncrease;
-   }
+    // Effect for android in scene three
+    androidEffect.width += androidEffect.widthIncrease;
+    androidEffect.height += androidEffect.heightIncrease;
+  }
 
-   // Timer to control when the effect occurs
-  setTimeout(androidMeeting, 10000);
+  // Timer to control when the effect occurs
+  setTimeout(androidMeeting, 5000);
 
+  // Limit the size of the image
   if (androidEffect.width > 200) {
+
     androidEffect.width = 200;
     androidEffect.height = 200;
-    }
 
-}
-
+  }
 
 
-   // Trigger responsive voice message
-   // responsiveVoice.speak("Detective, incoming correspondence", "UK English Male",
-   //   {
-   //     pitch: 0.1,
-   //     rate: 0.97,
-   //   });
+} // End of scene three state
 
-
-}
-
-/*********************** SCENE THREE STATE ****************************************/
+/*********************** SCENE FOUR STATE ****************************************/
 
 function sceneFourState() {
 
@@ -616,7 +621,7 @@ function sceneFourState() {
 
 }
 
-/*********************** SCENE THREE STATE ****************************************/
+/*********************** SCENE FIVE STATE ****************************************/
 
 function sceneFiveState() {
 
@@ -650,73 +655,95 @@ function resetStates() {
 /*********************** TEXT ANIMATION ***************************************/
 
 function textAnimation() {
-    // Display title text if in title state
-    if (state === `title`) {
-      push();
-      fill(titleText.r, titleText.g, titleText.b);
-      textSize(titleText.size);
-      textAlign(CENTER, CENTER);
-      // text(`Welcome to ...!`, width / titleText.x1, height / titleText.y1);
-      textStyle(NORMAL);
-      textSize(titleText.size2);
-      fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
-      text(`Press ENTER to start`, width / titleText.x2, height / titleText.y2);
-      pop();
+  // Display title text if in title state
+  if (state === `title`) {
+    push();
+    fill(titleText.r, titleText.g, titleText.b);
+    textSize(titleText.size);
+    textAlign(CENTER, CENTER);
+    // text(`Welcome to ...!`, width / titleText.x1, height / titleText.y1);
+    textStyle(NORMAL);
+    textSize(titleText.size2);
+    fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
+    text(`Press ENTER to start`, width / titleText.x2, height / titleText.y2);
+    pop();
 
-      // Fade effect for title text
-      if (titleText.alpha2 <= fadeOut.lowerLimit) {
-        fadeOut.rate = fadeOut.increaseRate;
-      }
+    // Fade effect for title text
+    if (titleText.alpha2 <= fadeOut.lowerLimit) {
+      fadeOut.rate = fadeOut.increaseRate;
+    }
 
-      if (titleText.alpha2 >= fadeOut.upperLimit) {
-        fadeOut.rate =- fadeOut.decreaseRate;
-      }
+    if (titleText.alpha2 >= fadeOut.upperLimit) {
+      fadeOut.rate = -fadeOut.decreaseRate;
+    }
 
-      titleText.alpha2 += fadeOut.rate;
+    titleText.alpha2 += fadeOut.rate;
 
   } // End of title text
 
 
   // Text to display if it is scene one
-    if (state === `sceneOne`) {
+  if (state === `sceneOne`) {
 
-      // To display opening text
-      openingText.update();
+    // To display opening text
+    openingText.update();
 
-      }
+  }
 
   // Text to display if it is scene two
-    if (state === `sceneTwo`) {
+  if (state === `sceneTwo`) {
 
-       // Header text for scene two
-         push();
-         fill(255);
-         textSize(23);
-         text(dialogueData[sceneOneDialogue].intro, width / 3.5, height / 6);
-         pop();
+    // Header text for scene two
+    push();
+    fill(255);
+    textSize(23);
+    text(dialogueData[sceneTwoDialogue].intro, width / 3.5, height / 6);
+    pop();
 
-        // Dialogue text for scene two
-       for (let i = 0; i < dialogueData[sceneOneDialogue].questions.length; i++) {
-         let question = dialogueData[sceneOneDialogue].questions[i];
-         push();
-         fill(255);
-         text(question.question + `?`, width / 14, 200 + i * 25);
-         pop();
-       }
+    // Dialogue text for scene two
+    for (let i = 0; i < dialogueData[sceneTwoDialogue].questions.length; i++) {
+      let question = dialogueData[sceneTwoDialogue].questions[i];
+      push();
+      fill(255);
+      text(question.question + `?`, width / 14, 200 + i * 25);
+      pop();
+    }
 
     // Text to display if user has met the conditions
-      if (displayQuestionSceneTwo === true) {
-        push();
-        fill(90, 160, 200);
-        textSize(20);
-        textAlign(CENTER, CENTER);
-        textStyle(NORMAL);
-        text(`Are androids alive?`, width / 5.5, height / 1.2);
-        pop();
-      }
-
+    if (displayQuestionSceneTwo === true) {
+      push();
+      fill(90, 160, 200);
+      textSize(20);
+      textAlign(CENTER, CENTER);
+      textStyle(NORMAL);
+      text(`Are androids alive?`, width / 5.5, height / 1.2);
+      pop();
     }
-}
+  }
+
+// Text to display if it is scene three
+  if (state === `sceneThree`) {
+
+    // Header text for scene three
+    push();
+    fill(255);
+    textSize(23);
+    text(dialogueData[sceneThreeDialogue].intro, width / 3.5, height / 6);
+    pop();
+
+    // Dialogue text for scene two
+    for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
+      let question = dialogueData[sceneThreeDialogue].questions[i];
+
+      if (androidEffect.width > 199) {
+      push();
+      fill(255);
+      text(question.question + `?`, width / 14, 200 + i * 25);
+      pop();
+      }
+    }
+  }
+} // End of Text animation function
 
 
 /* - - - - - - - - - - - MISC - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -755,9 +782,9 @@ function countdownTimer() {
 
 // Function to animate dialogue text when a dialogue has been selected by the user
 function dialogueAnimate() {
-        dialogueStyle.r2 = dialogueAnswered;
-        dialogueStyle.g2 = dialogueAnswered;
-        dialogueStyle.b2 = dialogueAnswered;
+  dialogueStyle.r2 = dialogueAnswered;
+  dialogueStyle.g2 = dialogueAnswered;
+  dialogueStyle.b2 = dialogueAnswered;
 }
 
 /*********************** CREATE ITEM ******************************************/
@@ -819,25 +846,25 @@ function dropDisplay() {
     drop[i].show();
     drop[i].update();
   }
- }
+}
 
 
 /*********************** Class: Star ******************************************/
- // star class
- class Star {
- 	constructor() {
- 		this.x = random(width);
- 		this.y = random(height);
- 		this.size = random(0.25, 3);
- 		this.t = random(TAU);
- 	}
+// star class
+class Star {
+  constructor() {
+    this.x = random(width);
+    this.y = random(height);
+    this.size = random(0.25, 3);
+    this.t = random(TAU);
+  }
 
- 	draw() {
- 		this.t += 0.1;
- 		let scale = this.size + sin(this.t) * 2;
- 		noStroke();
- 		ellipse(this.x, this.y, scale, scale);
- 	}
+  draw() {
+    this.t += 0.1;
+    let scale = this.size + sin(this.t) * 2;
+    noStroke();
+    ellipse(this.x, this.y, scale, scale);
+  }
 }
 
 /*  END */

@@ -1,5 +1,5 @@
 {
-  "sceneOne": {
+  "sceneTwo": {
     "intro": "Hello Detective, I am the Designer",
     "questions": [
       {
@@ -32,13 +32,21 @@
         "question": "Why did the android malfunction",
         "answer": "Yes.",
         "correct": false
-
+      },
+      {
+        "question": "Are androids alive?",
+        "answer": "Yes.",
+        "correct": false,
+        "sceneChange": true
       }
 
     ],
+
+
     "default_response": "I have no idea what you mean.",
     "final_question": "J'accuse!"
   },
+
 
   "dialogue": {
     "scene1": [
@@ -67,6 +75,18 @@
       },
       {
         "type": "speech"
+      }
+    ]
+  },
+
+
+  "sceneThree": {
+    "intro": "Welcome to CELL-14",
+    "questions": [
+      {
+        "question": "What is your protocol",
+        "answer": "Hello detective.",
+        "correct": true
       }
     ]
   }
