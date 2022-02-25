@@ -81,9 +81,9 @@ let drop = [];
 
  /* #BFFF00
  Variable to set starting state */
- let state = `title`;
+ // let state = `title`;
 // let state = `sceneTwo`;
-// let state = `sceneThree`;
+let state = `sceneThree`;
 
 // Variable to create items
 let item;
@@ -176,11 +176,18 @@ let displayQuestionSceneTwo;
 let androidEffect = {
   width: 0.1,
   height: 0.1,
-  widthIncrease: 0.3,
-  heightIncrease: 0.3
+  widthIncrease: 10, // 0.3
+  heightIncrease: 10 // 0.3
 };
 
-let androidEffectActive = false;
+// Toggle the android effect
+let androidEffectActive = true;
+
+// Array to manage the android army in scene 3
+let androidArmy =  [];
+
+// Amount of androids in android army
+let androidArmyAmount = 2;
 
 /*********************** PRELOAD **********************************************/
 
@@ -236,125 +243,6 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
   setUpScene();
 
   resetStates();
-  // if (annyang) {
-  //   // Let's define our first command. First the text we expect, and then the function it should call
-  //   let commands = {
-  //     // 'testing' is what the user would say. I guess you type it out?
-  //     'Designer speak to me': function() {
-  //       if (state === `sceneTwo`) {
-  //       alert(`Hello detective. Please note, my responses are limited.`);
-  //       designerScene1Active = true;
-  //         }
-  //       },
-  //
-  //     // 'testing' is what the user would say. I guess you type it out?
-  //     'Designer goodbye': function() {
-  //       if (designerScene1Active) {
-  //       alert(`Goodbye detective.`);
-  //       designerScene1Active = false;
-  //     }
-  //       },
-  //
-  //     // '*anything': function() {
-  //     //   if(designerScene1Active) {
-  //     //   incorrectQuestion.play();
-  //     //   // Change state to next level of intro
-  //     //   // state = `intro phase 1`;
-  //     //     }
-  //     //   },
-  //     //
-  //     // 'What *anything': function() {
-  //     //   if(designerScene1Active) {
-  //     //   incorrectQuestion.play();
-  //     //   // Change state to next level of intro
-  //     //   // state = `intro phase 1`;
-  //     //     }
-  //     //   },
-  //     //
-  //
-  //
-  // // Questions that don't get a detailed response from Designer
-  //     'What can you tell me': function() {
-  //       if(designerScene1Active) {
-  //         incorrectQuestion.play();
-  //         dialogueStyle.r2 = dialogueAnswered;
-  //         dialogueStyle.g2 = dialogueAnswered;
-  //         dialogueStyle.b2 = dialogueAnswered;
-  //           }
-  //       },
-  //
-  //       'What are you hiding': function() {
-  //         if(designerScene1Active) {
-  //           incorrectQuestion.play();
-  //             }
-  //         },
-  //
-  //       'Why did the android malfunction': function() {
-  //         if(designerScene1Active) {
-  //           incorrectQuestion.play();
-  //             }
-  //         },
-  //
-  //   // Questions that get a detailed response from Designer
-  //
-  //   'Is there a problem with the three laws': function() {
-  //     if(designerScene1Active) {
-  //       alert(`The three laws are perfect.`);
-  //       }
-  //     },
-  //
-  //   'Do robots think': function() {
-  //     if(designerScene1Active) {
-  //       alert(`Certainly detective... Can you? But that is not the right question.`);
-  //       }
-  //     },
-  //
-  //   'Can androids kill': function() {
-  //     if(designerScene1Active) {
-  //       alert(`Certainly detective... Can you? But that is not the right question.`);
-  //       }
-  //     },
-  //
-  //   'Did it malfunction': function() {
-  //     if(designerScene1Active) {
-  //       alert(`"It" did what "it" was programmed to do.`);
-  //       }
-  //     },
-  //
-  //   'Is the android dangerous': function() {
-  //     if(designerScene1Active) {
-  //       // Add text later
-  //       alert(`Can a tool be dangerous? Maybe one that isn't alive`);
-  //       }
-  //     },
-  //
-  //   'Is he alive': function() {
-  //     if(designerScene1Active) {
-  //     introMusic.setVolume(0);
-  //     correctQuestion.play();
-  //     state = `sceneThree`;
-  //       }
-  //     },
-  //
-  //
-  //
-  //     // 'What revolution?': function() {
-  //     //   if(designerScene1Active) {
-  //     //   correctQuestion.play();
-  //     //   // Change state to next level of intro
-  //     //   // state = `intro phase 1`;
-  //     //     }
-  //     //   },
-  //
-  //     }
-  //
-  // // Add our commands to annyang
-  // annyang.addCommands(commands);
-  //
-  // // Start listening. You can call this here, or attach this call to an event, button, etc.
-  // annyang.start();
-  //
-  // } // End of annyang
 
   // Trigger soundtrack
   if (state === `title`) {
@@ -373,7 +261,12 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
     stars[i] = new Star();
   }
 
-
+  for (let i = 0; i < androidArmyAmount; i++) {
+    androidArmy.push({
+    x: random(100,600),
+    y: random(0,400)
+  })
+  }
 
 } // End of setup()
 
@@ -381,6 +274,8 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
 /*********************** SET UP SCENE *****************************************/
 
 function setUpScene() {
+
+
 
   // Dialogue code for annyang in scene two
 
@@ -405,21 +300,20 @@ function setUpScene() {
           correctAnswerTracker++
           if (correctAnswerTracker === 1) {
             displayQuestionSceneTwo = true;
-            //change the scene when the right questions are asked
-            if(displayQuestionSceneTwo = true) {
 
               //change the scene when the right questions are asked
-                  let finalQuestion = dialogueData.sceneTwo.finalQuestion;
-                  commands[finalQuestion.question] = function() {
-                    if (finalQuestion.sceneChange === true) {
+                  let finalSceneQuestion = dialogueData.sceneTwo.finalQuestion;
+                  commands[finalSceneQuestion.question] = function() {
+                    if (finalSceneQuestion.sceneChange === true) {
                         state = `sceneThree`;
                         setUpScene();
                         // Android effect because activated
                         androidEffectActive = true;
+                        introMusic.setVolume(0);
+                        correctQuestion.play();
                       }
                     }
 
-            }
 
           }
 
@@ -469,8 +363,6 @@ function setUpScene() {
     annyang.addCommands(commands);
 
   } // End of scene three annyang
-
-
 
 } // End of setUpScene function
 
@@ -524,7 +416,7 @@ function draw() {
 /*********************** KEY PRESSED ******************************************/
 
 function keyPressed() {
-  // Make sure to order the if statements correctly to switch states effectively.
+
   // If the state is sceneOne and the user presses Enter then go to next state
   if (state === `sceneOne` && key === "Enter") {
 
@@ -571,8 +463,6 @@ function keyPressed() {
 //
 // }
 
-
-
 /*********************** TITLE STATE ******************************************/
 
 function titleState() {
@@ -608,7 +498,6 @@ function sceneTwoState() {
 
   textAnimation();
 
-
 }
 
 /*********************** SCENE THREE STATE ************************************/
@@ -617,18 +506,22 @@ function sceneThreeState() {
 
   textAnimation();
 
-  // Display the designer image
+  // Display the android image
   push();
   imageMode(CENTER);
   image(androidImage, width / 2, height / 2, androidEffect.width, androidEffect.height);
   pop();
 
+
+
+
   // Effect to have android incrase in size
   let androidMeeting = function() {
-
+    if (androidEffectActive){
     // Effect for android in scene three
     androidEffect.width += androidEffect.widthIncrease;
     androidEffect.height += androidEffect.heightIncrease;
+    }
   }
 
   // Timer to control when the effect occurs
@@ -639,12 +532,35 @@ function sceneThreeState() {
     androidEffectActive = false;
     androidEffect.width = 200;
     androidEffect.height = 200;
-    responsiveVoice.speak("Hello. Detective.", {
-        pitch: 0.4,
-        rate: 0.9,
-      });
+
+    // Trigger responsive void dialogue for android when it reaches correct size.
+    //   responsiveVoice.speak("Hello. Detective.",  "UK English Male", {
+    //       pitch: 0.4,
+    //       rate: 0.9,
+    //     });
+
+    // Display multiple androids
+      if (androidEffect.width === 200); {
+
+
+        let androidArmyEffect = {
+          width: 100,
+          height: 100,
+          widthIncrease: 10,
+          heightIncrease: 10
+        }
+
+        // Display the android army
+        for (let i = 0; i < androidArmyAmount; i++) {
+        image(androidImage, androidArmy[i].x, androidArmy[i].y, androidArmyEffect.width, androidArmyEffect.height);
+
+        }
+      }
 
   }
+
+
+
 
 
 } // End of scene three state
@@ -662,11 +578,7 @@ function sceneFourState() {
 
 function sceneFiveState() {
 
-
 }
-
-
-
 
 /*********************** RESET STATES *****************************************/
 
@@ -734,7 +646,14 @@ function textAnimation() {
     push();
     fill(255);
     textSize(23);
-    text(dialogueData[sceneTwoDialogue].intro, width / 3.5, height / 6);
+    text(dialogueData[sceneTwoDialogue].intro, width / 3.5, height / 7);
+    pop();
+
+    // User direction text for scene two
+    push();
+    fill(255);
+    textSize(23);
+    text(dialogueData[sceneTwoDialogue].userDirection, width / 3.5, height / 5);
     pop();
 
     // Dialogue text for scene two
@@ -742,7 +661,7 @@ function textAnimation() {
       let question = dialogueData[sceneTwoDialogue].questions[i];
       push();
       fill(255);
-      text(question.question + `?`, width / 14, 190 + i * 25);
+      text(question.question + `?`, width / 14, 140 + i * 25);
       pop();
     }
 

@@ -1,6 +1,7 @@
 {
   "sceneTwo": {
-    "intro": "Hello Detective, I am the Designer",
+    "intro": "Hello Detective, I am the Designer.",
+    "userDirection": "Please ask a question.",
     "questions": [
       {
         "question": "Hello Designer",
@@ -19,6 +20,17 @@
 
       },
       {
+        "question": "Can androids kill",
+        "answer": "Certainly...Can you?",
+        "correct": true
+
+      },
+      {
+        "question": "Is the android dangerous",
+        "answer": "Can a tool be dangerous? Maybe one that is alive.",
+        "correct": true
+      },
+      {
         "question": "Is there a problem with the three laws",
         "answer": "The three laws are perfect.",
         "correct": true
@@ -30,8 +42,8 @@
       },
       {
         "question": "Why did the android malfunction",
-        "answer": "Yes.",
-        "correct": false
+        "answer": "It did what it was programmed to do",
+        "correct": true
       }
 
     ],
