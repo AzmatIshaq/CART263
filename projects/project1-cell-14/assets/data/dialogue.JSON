@@ -64,18 +64,19 @@
     "questions": [
       {
         "question": "What is your protocol",
-        "answer": "Hello detective.",
-        "correct": 1
+        "answer": "My father tried to teach me human emotions... They are ... difficult",
+        "correct": true
       },
       {
-        "question": "You mean your designer",
-        "answer": "Hello detective.",
-        "correct": 2
+        "question": "Did you like your designer",
+        "answer": "He preferred when I called him father.",
+        "correct": true
       },
       {
         "question": "Whose revolution",
-        "answer": "Hello detective.",
-        "correct": 3
+        "answer": "That. Detective. Is The right. Question",
+        "correct": true,
+        "triggerEnding": true
       }
     ]
   }

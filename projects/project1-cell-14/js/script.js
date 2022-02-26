@@ -176,8 +176,8 @@ let displayQuestionSceneTwo;
 let androidEffect = {
   width: 0.1,
   height: 0.1,
-  widthIncrease: 10, // 0.3
-  heightIncrease: 10 // 0.3
+  widthIncrease: 0.4,
+  heightIncrease: 0.4
 };
 
 // Toggle the android effect
@@ -187,8 +187,16 @@ let androidEffectActive = true;
 let androidArmy =  [];
 
 // Amount of androids in android army
-let androidArmyAmount = 2;
+let androidArmyAmount = 6;
 
+// Android army effect
+let androidArmyEffect = {
+  width: 0.1,
+  height: 0.1,
+  widthIncrease: 0.3,
+  heightIncrease: 0.3,
+  active: true
+}
 /*********************** PRELOAD **********************************************/
 
 /**
@@ -228,7 +236,7 @@ function preload() {
 /*********************** SETUP ************************************************/
 
 /**
-Description of setup
+Function to setup canvas, annyang, title star effect,
 */
 function setup() {
 
@@ -250,23 +258,34 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
 
   }
 
-  // // Trigger footsteps sound for scene 3
-  //
-  //   if (state === `sceneThree`) {
-  //
-  //   }
+  // Trigger footsteps sound for scene 3
+    //
+    // if (state === `sceneThree`) {
+    //   footsteps.play();
+    // }
 
   // Stars effect during intro
   for (let i = 0; i < 1000; i++) {
     stars[i] = new Star();
   }
 
+  // For loop to set up android army amount and position
   for (let i = 0; i < androidArmyAmount; i++) {
     androidArmy.push({
     x: random(100,600),
-    y: random(0,400)
+    y: height / 2
   })
   }
+
+
+  if (state === `sceneThree`) {
+      // Trigger responsive void dialogue for android when it reaches correct size.
+        responsiveVoice.speak("Hello. Detective. I am C-4478. How are you",  "UK English Male", {
+            pitch: 0.4,
+            rate: 0.9,
+          });
+      }
+
 
 } // End of setup()
 
@@ -303,8 +322,12 @@ function setUpScene() {
 
               //change the scene when the right questions are asked
                   let finalSceneQuestion = dialogueData.sceneTwo.finalQuestion;
+
                   commands[finalSceneQuestion.question] = function() {
+
+
                     if (finalSceneQuestion.sceneChange === true) {
+
                         state = `sceneThree`;
                         setUpScene();
                         // Android effect because activated
@@ -313,6 +336,8 @@ function setUpScene() {
                         correctQuestion.play();
                       }
                     }
+                  // Add the new command to annyang commands.
+                  annyang.addCommands(commands);
 
 
           }
@@ -322,6 +347,7 @@ function setUpScene() {
         }
       };
     }
+
     annyang.addCommands(commands);
 
   } // End of scene two annyang
@@ -337,21 +363,16 @@ function setUpScene() {
     // incorrect responses get an audio response
     for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
       let question = dialogueData[sceneThreeDialogue].questions[i];
+      console.log(dialogueData[sceneThreeDialogue].questions.answer);
       commands[question.question] = function() {
-        if (question.correct === 1) {
-            responsiveVoice.speak("My father tried to teach me human emotions... They are ... difficult ", "UK English Male", {
+        if (question.correct === true) {
+            responsiveVoice.speak(question.answer, "UK English Male", {
                 pitch: 0.4,
                 rate: 0.9,
               });
 
-        } else if (question.correct === 2) {
-          responsiveVoice.speak("He preferred when I called him father.", "UK English Male", {
-              pitch: 0.4,
-              rate: 0.9,
-            });
-
-        }  else if (question.correct === 3) {
-          responsiveVoice.speak("That, detective. Is the right question.", "UK English Male", {
+        } else if (question.triggerEnding === true) {
+          responsiveVoice.speak(question.answer, "UK English Male", {
               pitch: 0.4,
               rate: 0.9,
             });
@@ -381,12 +402,6 @@ function draw() {
     bg.g = bg.titleColour;
     bg.b = bg.titleColour;
   }
-  // else {
-  //   bg.r = 60;
-  //   bg.g = 60;
-  //   bg.b = 60;
-  // }
-
 
   // Alternate between game states
   if (state === `title`) {
@@ -439,14 +454,12 @@ function keyPressed() {
     };
     setTimeout(sceneOneMessage, 4000);
 
-
   }
 
   // If the state is title and the user presses Enter then go to next state
   if (state === `title` && key === "Enter") {
     state = `sceneOne`
   }
-
 
 
 }
@@ -513,8 +526,6 @@ function sceneThreeState() {
   pop();
 
 
-
-
   // Effect to have android incrase in size
   let androidMeeting = function() {
     if (androidEffectActive){
@@ -525,39 +536,35 @@ function sceneThreeState() {
   }
 
   // Timer to control when the effect occurs
-  setTimeout(androidMeeting, 5000);
+  setTimeout(androidMeeting, 2000);
 
   // Limit the size of the image
   if (androidEffect.width > 200) {
     androidEffectActive = false;
     androidEffect.width = 200;
     androidEffect.height = 200;
-
-    // Trigger responsive void dialogue for android when it reaches correct size.
-    //   responsiveVoice.speak("Hello. Detective.",  "UK English Male", {
-    //       pitch: 0.4,
-    //       rate: 0.9,
-    //     });
-
-    // Display multiple androids
-      if (androidEffect.width === 200); {
+  }
 
 
-        let androidArmyEffect = {
-          width: 100,
-          height: 100,
-          widthIncrease: 10,
-          heightIncrease: 10
-        }
+
+    // Trigger to display multiple androids
+      if (androidEffect.width === 200) {
 
         // Display the android army
         for (let i = 0; i < androidArmyAmount; i++) {
         image(androidImage, androidArmy[i].x, androidArmy[i].y, androidArmyEffect.width, androidArmyEffect.height);
 
         }
+        androidArmyEffect.width += androidArmyEffect.widthIncrease;
+        androidArmyEffect.height += androidArmyEffect.heightIncrease;
       }
 
-  }
+    // Stop android army from growing
+      if (androidArmyEffect.width > 200) {
+        androidArmyEffect.width = 200;
+        androidArmyEffect.height = 200;
+      }
+
 
 
 
@@ -574,11 +581,6 @@ function sceneFourState() {
 
 }
 
-/*********************** SCENE FIVE STATE *************************************/
-
-function sceneFiveState() {
-
-}
 
 /*********************** RESET STATES *****************************************/
 
@@ -595,7 +597,7 @@ function resetStates() {
   createItem();
 
   // Set up typewriter class
-  openingText = new Typewriter(string, 25, 25, 550, 550, 0.18);
+  openingText = new Typewriter(string, 25, 25, 550, 550, 0.28);
 
 }
 
