@@ -2,12 +2,15 @@
 Project 1 - Night at The Movies - CELL 14
 Azmat Ishaq
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+This program creatively simulates parts of the movie I-Robot.
+It operates based on scenes which are alternated between using states.
+The dialogue and user interaction occurs by utilizing annyang and responsive voice.
+Furthermore, JSON is used to store the dialogue data. Events are often triggered
+using setTimeout.
+
 */
 
 "use strict";
-
 
 /* - - - - - - - - - - - VARIABLES - - - - - - - - - - - - - - - - - - - - -  */
 
@@ -79,11 +82,11 @@ let timer = {
 // Array variable for rain effect
 let drop = [];
 
- /* #BFFF00
- Variable to set starting state */
- let state = `title`;
+/* #BFFF00
+Variable to set starting state */
+// let state = `title`;
 // let state = `sceneTwo`;
-// let state = `sceneThree`;
+let state = `sceneThree`;
 
 // Variable to create items
 let item;
@@ -178,26 +181,32 @@ let androidEffect = {
   width: 0.1,
   height: 0.1,
   widthIncrease: 0.4,
-  heightIncrease: 0.4
+  heightIncrease: 0.4,
+  shrink: false
 };
 
 // Toggle the android effect
 let androidEffectActive = true;
 
 // Array to manage the android army in scene 3
-let androidArmy =  [];
+let androidArmy = [];
 
 // Amount of androids in android army
-let androidArmyAmount = 6;
+let androidArmyAmount = 10;
 
 // Android army effect
 let androidArmyEffect = {
   width: 0.1,
   height: 0.1,
-  widthIncrease: 0.3,
-  heightIncrease: 0.3,
+  widthIncrease: 0.1,
+  heightIncrease: 0.1,
   active: true
 }
+
+// Ending sequence active tracker
+
+let endingSequenceActive = false;
+
 /*********************** PRELOAD **********************************************/
 
 /**
@@ -246,7 +255,7 @@ function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
 
-alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience`);
+  alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience`);
 
   if (annyang) {
     annyang.start();
@@ -263,10 +272,10 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
   }
 
   // Trigger footsteps sound for scene 3
-    //
-    // if (state === `sceneThree`) {
-    //   footsteps.play();
-    // }
+  //
+  // if (state === `sceneThree`) {
+  //   footsteps.play();
+  // }
 
   // Stars effect during intro
   for (let i = 0; i < 1000; i++) {
@@ -276,9 +285,9 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
   // For loop to set up android army amount and position
   for (let i = 0; i < androidArmyAmount; i++) {
     androidArmy.push({
-    x: random(100,600),
-    y: height / 2
-  })
+      x: random(100, 600),
+      y: height / 2
+    })
   }
 
 
@@ -287,13 +296,12 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
 
 /*********************** SET UP SCENE *****************************************/
 
+// Function to set up the scene's annyang dialogue and user interactions
 function setUpScene() {
-
-
 
   // Dialogue code for annyang in scene two
 
-  // commands only for scene two
+  // Commands only for scene two
   if (state === `sceneTwo`) {
 
     annyang.removeCommands();
@@ -315,33 +323,32 @@ function setUpScene() {
           if (correctAnswerTracker1 === 1) {
             displayQuestionSceneTwo = true;
 
-              //change the scene when the right questions are asked
-                  let finalSceneQuestion = dialogueData.sceneTwo.finalQuestion;
+            //change the scene when the right questions are asked
+            let finalSceneQuestion = dialogueData.sceneTwo.finalQuestion;
 
-                  commands[finalSceneQuestion.question] = function() {
+            // Feed the commands data to annyangs commands array
+            commands[finalSceneQuestion.question] = function() {
+              if (finalSceneQuestion.sceneChange === true) {
+                correctQuestion.play();
+                introMusic.stop();
 
+                // Delay before changing states
+                // Anonymouse function to manage delay elements
+                let sceneChangeDelay = function() {
+                  state = `sceneThree`;
+                  setUpScene();
+                  // Android effect because activated
+                  androidEffectActive = true;
+                  introMusic.play();
 
-                    if (finalSceneQuestion.sceneChange === true) {
-                        correctQuestion.play();
-                        introMusic.setVolume(0);
-
-                        // Delay before changing states
-                          // Anonymouse function to manage delay elements
-                          let sceneChangeDelay = function() {
-                            state = `sceneThree`;
-                            setUpScene();
-                            // Android effect because activated
-                            androidEffectActive = true;
-                            introMusic.play();
-
-                          };
-                          // Delay the scene change
-                          setTimeout(sceneChangeDelay, 6000);
-                      }
-                    }
-                  // Add the new command to annyang commands.
-                  annyang.addCommands(commands);
-                }
+                };
+                // Delay the scene change
+                setTimeout(sceneChangeDelay, 6000);
+              }
+            }
+            // Add the new command to annyang commands.
+            annyang.addCommands(commands);
+          }
 
         } else if (question.correct === false) {
           incorrectQuestion.play()
@@ -352,7 +359,6 @@ function setUpScene() {
     annyang.addCommands(commands);
 
   } // End of scene two annyang
-
 
   // Annyang interactions for Scene Three
   if (state === `sceneThree`) {
@@ -368,69 +374,85 @@ function setUpScene() {
       console.log(dialogueData[sceneThreeDialogue].questions.answer);
       commands[question.question] = function() {
         if (question.correct === true) {
-            responsiveVoice.speak(question.answer, "UK English Male", {
-                pitch: 0.4,
-                rate: 0.9,
-              });
-
+          responsiveVoice.speak(question.answer, "UK English Male", {
+            pitch: 0.4,
+            rate: 0.9,
+          });
 
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker2++
-              if (correctAnswerTracker2 === 1) {
-                displayQuestionSceneThree = true;
+          if (correctAnswerTracker2 === 1) {
+            displayQuestionSceneThree = true;
 
-                  //change the scene when the right questions are asked
-                      let finalSceneQuestion = dialogueData.sceneThree.finalQuestion;
+            //change the scene when the right questions are asked
+            let finalSceneQuestion = dialogueData.sceneThree.finalQuestion;
 
-                      commands[finalSceneQuestion.question] = function() {
-                        if (finalSceneQuestion.triggerEnding === true) {
-                          responsiveVoice.speak(finalSceneQuestion.answer, "UK English Male", {
-                              pitch: 0.4,
-                              rate: 0.9,
-                            });
+            commands[finalSceneQuestion.question] = function() {
+              if (finalSceneQuestion.triggerEnding === true) {
+                endingSequenceActive = true;
+                annyang.removeCommands();
+                responsiveVoice.speak(finalSceneQuestion.answer, "UK English Male", {
+                  pitch: 0.4,
+                  rate: 0.9,
+                });
 
+                // Delay before initiating ending sequence
+                // Anonymouse function to manage delay elements
+                let endingSequenceDelay = function() {
+                  alarmSound.setVolume(0.1);
+                  alarmSound.loop();
+                  // Trigger responsive voice message
+                  responsiveVoice.speak(dialogueData.sceneThree.automatedMessage, "UK English Female", {
+                    pitch: 0.9,
+                    rate: 0.75,
 
-                            // Delay before initiating ending sequence
-                              // Anonymouse function to manage delay elements
-                              let endingSequenceDelay = function() {
-                                // introMusic.setVolume(1);
-                                alarmSound.loop();
-                                // Trigger responsive voice message
-                                responsiveVoice.speak(dialogueData.sceneOne.automatedMessage, "UK English Female", {
-                                  pitch: 0.9,
-                                  rate: 0.75,
-                                });
+                  });
 
-                              };
-                              // Delay the scene change
-                              setTimeout(endingSequenceDelay, 4000);
-                        }
-                      }
+                    //Final state switch to scene four blank screen
+                      let finalScene = function() {
+                      state = `sceneFour`
+                      alarmSound.stop();
+                    }
 
+                    // Timer to control when the effect occurs
+                    setTimeout(finalScene, 7000);
 
-                      // Add the new command to annyang commands.
-                      annyang.addCommands(commands);
-
-
+                };
+                // Delay the scene change
+                setTimeout(endingSequenceDelay, 4000);
               }
+            }
+
+            // Add the new command to annyang commands.
+            annyang.addCommands(commands);
+          }
         }
       };
     }
+    // Add the new command to annyang commands.
     annyang.addCommands(commands);
 
-  // Trigger responsive void dialogue for android when it reaches correct size.
-    responsiveVoice.speak(dialogueData[sceneThreeDialogue].androidGreeting,  "UK English Male", {
-        pitch: 0.4,
-        rate: 0.9,
-      });
+    // Trigger responsive void dialogue for android when it reaches correct size.
+    responsiveVoice.speak(dialogueData[sceneThreeDialogue].androidGreeting, "UK English Male", {
+      pitch: 0.4,
+      rate: 0.9,
+    });
   } // End of scene three setup
 
+
+// Start the intro music again in scene four
+  if (state = `sceneFour`) {
+    let sceneFourMusic = function() {
+      introMusic.play();
+    }
+
+    setTimeout(sceneFourMusic, 3000);    
+  }
 
 
 } // End of setUpScene function
 
 /*********************** DRAW *************************************************/
-
 
 /**
 Draw function to switch between states and alter background color.
@@ -462,10 +484,6 @@ function draw() {
   if (state === `sceneFour`) {
     sceneFourState();
   }
-  if (state === `sceneFive`) {
-    sceneFiveState();
-  }
-
 } // End of draw()
 
 /* - - - - - - - - - - - USER INTERACTION - - - - - - - - - - - - - - - - - - */
@@ -476,34 +494,26 @@ function keyPressed() {
 
   // If the state is sceneOne and the user presses Enter then go to next state
   if (state === `sceneOne` && key === "Enter") {
-
     // Lower volume
     introMusic.setVolume(0.3);
-
     // Trigger responsive voice message
     responsiveVoice.speak(dialogueData.sceneOne.automatedMessage, "UK English Female", {
       pitch: 0.9,
       rate: 0.75,
     });
-
     // Delay before changing states
     // Anonymouse function to manage delay elements
     let sceneOneMessage = function() {
-        state = `sceneTwo`;
-        setUpScene();
-
-
+      state = `sceneTwo`;
+      setUpScene();
     };
     setTimeout(sceneOneMessage, 4000);
-
   }
 
   // If the state is title and the user presses Enter then go to next state
   if (state === `title` && key === "Enter") {
     state = `sceneOne`
   }
-
-
 }
 /*********************** MOUSE PRESSED ****************************************/
 
@@ -570,10 +580,10 @@ function sceneThreeState() {
 
   // Effect to have android incrase in size
   let androidMeeting = function() {
-    if (androidEffectActive){
-    // Effect for android in scene three
-    androidEffect.width += androidEffect.widthIncrease;
-    androidEffect.height += androidEffect.heightIncrease;
+    if (androidEffectActive) {
+      // Effect for android in scene three
+      androidEffect.width += androidEffect.widthIncrease;
+      androidEffect.height += androidEffect.heightIncrease;
     }
   }
 
@@ -584,30 +594,47 @@ function sceneThreeState() {
   if (androidEffect.width > 200) {
     androidEffectActive = false;
     androidEffect.width = 200;
-    androidEffect.height = 200;
+    // androidEffect.height = 200;
+  }
+
+  // Trigger to display multiple androids
+  if (endingSequenceActive) {
+
+    // Display the android army
+    for (let i = 0; i < androidArmyAmount; i++) {
+      image(androidImage, androidArmy[i].x, androidArmy[i].y, androidArmyEffect.width, androidArmyEffect.height);
+
+    }
+
+    if(androidEffect.width < 0.2) {
+    // Make the android army grow
+    androidArmyEffect.width += androidArmyEffect.widthIncrease;
+    androidArmyEffect.height += androidArmyEffect.heightIncrease;
+    }
+  }
+
+  // Stop android army from growing
+  if (androidArmyEffect.width > 200) {
+    androidArmyEffect.width = 200;
+    androidArmyEffect.height = 200;
   }
 
 
-
-    // Trigger to display multiple androids
-      if (androidEffect.width === 200) {
-
-        // Display the android army
-        for (let i = 0; i < androidArmyAmount; i++) {
-        image(androidImage, androidArmy[i].x, androidArmy[i].y, androidArmyEffect.width, androidArmyEffect.height);
-
-        }
-        androidArmyEffect.width += androidArmyEffect.widthIncrease;
-        androidArmyEffect.height += androidArmyEffect.heightIncrease;
+  // Trigger android shrinking
+    if (endingSequenceActive) {
+      androidEffect.shrink = true;
+      if(androidEffect.shrink) {
+      androidEffect.width -= androidEffect.widthIncrease;
+      androidEffect.height -= androidEffect.heightIncrease;
       }
+    }
 
-    // Stop android army from growing
-      if (androidArmyEffect.width > 200) {
-        androidArmyEffect.width = 200;
-        androidArmyEffect.height = 200;
+  // Stop shrinking
+    if(androidEffect.width < 0.1) {
+      androidEffect.shrink = false;
+      androidEffect.width = 0.1;
+      androidEffect.height = 0.1;
       }
-
-
 
 
 
@@ -617,9 +644,10 @@ function sceneThreeState() {
 /*********************** SCENE FOUR STATE *************************************/
 
 function sceneFourState() {
-
   // Display timer
   countdownTimer();
+
+  setUpScene();
 
 }
 
@@ -716,12 +744,12 @@ function textAnimation() {
       textSize(20);
       textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData.sceneTwo.finalQuestion.question  + `?`, width / 5.5, height / 1.2);
+      text(dialogueData.sceneTwo.finalQuestion.question + `?`, width / 5.5, height / 1.2);
       pop();
     }
   }
 
-// Text to display if it is scene three
+  // Text to display if it is scene three
   if (state === `sceneThree`) {
 
     // Header text for scene three
@@ -735,11 +763,11 @@ function textAnimation() {
     for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
       let question = dialogueData[sceneThreeDialogue].questions[i];
 
-      if (androidEffect.width > 199) {
-      push();
-      fill(255);
-      text(question.question + `?`, width / 14, 200 + i * 25);
-      pop();
+      if (androidEffect.width > 100) {
+        push();
+        fill(255);
+        text(question.question + `?`, width / 14, 200 + i * 25);
+        pop();
       }
     }
 
@@ -750,7 +778,7 @@ function textAnimation() {
       textSize(20);
       textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData.sceneThree.finalQuestion.question  + `?`, width / 5.5, height / 1.2);
+      text(dialogueData.sceneThree.finalQuestion.question + `?`, width / 5.5, height / 1.2);
       pop();
     }
 
