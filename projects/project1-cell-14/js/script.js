@@ -81,9 +81,9 @@ let drop = [];
 
  /* #BFFF00
  Variable to set starting state */
- // let state = `title`;
+ let state = `title`;
 // let state = `sceneTwo`;
-let state = `sceneThree`;
+// let state = `sceneThree`;
 
 // Variable to create items
 let item;
@@ -122,18 +122,17 @@ let androidImage = undefined;
 /* ~~~~ SOUND VARIABLES ~~~~ */
 
 // Variables for intro sound response for incorrect and correct questions
-
 let incorrectQuestion = undefined;
-
 let correctQuestion = undefined;
 
 // Variable for soundtrack
-
 let introMusic = undefined;
 
 // Variable for footsteps sound
 let footsteps = undefined;
 
+// Variable for alarm sound in scene 3
+let alarmSound = undefined;
 
 
 /* ~~~~ JSON VARIABLES ~~~~ */
@@ -166,10 +165,12 @@ let sceneTwoDialogue = `sceneTwo`;
 let sceneThreeDialogue = `sceneThree`;
 
 // Variable to track correct answers
-let correctAnswerTracker = 0;
+let correctAnswerTracker1 = 0;
+let correctAnswerTracker2 = 0;
 
 // Variable to display question for scene two
 let displayQuestionSceneTwo;
+let displayQuestionSceneThree;
 
 // Variable to add effects to android image
 
@@ -215,8 +216,11 @@ function preload() {
   // Prealoading intro sound music
   introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
 
-  // Prloading footsteps
+  // Preloading footsteps
   footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.wav`)
+
+  // Preloading alarm sound
+  alarmSound = loadSound(`assets/sounds/facility-alarm-sound.wav`)
 
   /* Preload JSON */
 
@@ -278,15 +282,6 @@ alert(`Please use Google Chrome. Other browsers may not load the content correct
   }
 
 
-  if (state === `sceneThree`) {
-      // Trigger responsive void dialogue for android when it reaches correct size.
-        responsiveVoice.speak("Hello. Detective. I am C-4478. How are you",  "UK English Male", {
-            pitch: 0.4,
-            rate: 0.9,
-          });
-      }
-
-
 } // End of setup()
 
 
@@ -316,8 +311,8 @@ function setUpScene() {
           alert(question.answer);
 
           // Tracker to tally correct answers to be able to move to the next scene.
-          correctAnswerTracker++
-          if (correctAnswerTracker === 1) {
+          correctAnswerTracker1++
+          if (correctAnswerTracker1 === 1) {
             displayQuestionSceneTwo = true;
 
               //change the scene when the right questions are asked
@@ -327,20 +322,26 @@ function setUpScene() {
 
 
                     if (finalSceneQuestion.sceneChange === true) {
-
-                        state = `sceneThree`;
-                        setUpScene();
-                        // Android effect because activated
-                        androidEffectActive = true;
-                        introMusic.setVolume(0);
                         correctQuestion.play();
+                        introMusic.setVolume(0);
+
+                        // Delay before changing states
+                          // Anonymouse function to manage delay elements
+                          let sceneChangeDelay = function() {
+                            state = `sceneThree`;
+                            setUpScene();
+                            // Android effect because activated
+                            androidEffectActive = true;
+                            introMusic.play();
+
+                          };
+                          // Delay the scene change
+                          setTimeout(sceneChangeDelay, 6000);
                       }
                     }
                   // Add the new command to annyang commands.
                   annyang.addCommands(commands);
-
-
-          }
+                }
 
         } else if (question.correct === false) {
           incorrectQuestion.play()
@@ -352,7 +353,8 @@ function setUpScene() {
 
   } // End of scene two annyang
 
-  // Annyang for Scene Three
+
+  // Annyang interactions for Scene Three
   if (state === `sceneThree`) {
 
     annyang.removeCommands();
@@ -371,19 +373,59 @@ function setUpScene() {
                 rate: 0.9,
               });
 
-        } else if (question.triggerEnding === true) {
-          responsiveVoice.speak(question.answer, "UK English Male", {
-              pitch: 0.4,
-              rate: 0.9,
-            });
-            introMusic.setVolume(1);
-        }
 
+          // Tracker to tally correct answers to be able to move to the next scene.
+          correctAnswerTracker2++
+              if (correctAnswerTracker2 === 1) {
+                displayQuestionSceneThree = true;
+
+                  //change the scene when the right questions are asked
+                      let finalSceneQuestion = dialogueData.sceneThree.finalQuestion;
+
+                      commands[finalSceneQuestion.question] = function() {
+                        if (finalSceneQuestion.triggerEnding === true) {
+                          responsiveVoice.speak(finalSceneQuestion.answer, "UK English Male", {
+                              pitch: 0.4,
+                              rate: 0.9,
+                            });
+
+
+                            // Delay before initiating ending sequence
+                              // Anonymouse function to manage delay elements
+                              let endingSequenceDelay = function() {
+                                // introMusic.setVolume(1);
+                                alarmSound.loop();
+                                // Trigger responsive voice message
+                                responsiveVoice.speak(dialogueData.sceneOne.automatedMessage, "UK English Female", {
+                                  pitch: 0.9,
+                                  rate: 0.75,
+                                });
+
+                              };
+                              // Delay the scene change
+                              setTimeout(endingSequenceDelay, 4000);
+                        }
+                      }
+
+
+                      // Add the new command to annyang commands.
+                      annyang.addCommands(commands);
+
+
+              }
+        }
       };
     }
     annyang.addCommands(commands);
 
-  } // End of scene three annyang
+  // Trigger responsive void dialogue for android when it reaches correct size.
+    responsiveVoice.speak(dialogueData[sceneThreeDialogue].androidGreeting,  "UK English Male", {
+        pitch: 0.4,
+        rate: 0.9,
+      });
+  } // End of scene three setup
+
+
 
 } // End of setUpScene function
 
@@ -439,7 +481,7 @@ function keyPressed() {
     introMusic.setVolume(0.3);
 
     // Trigger responsive voice message
-    responsiveVoice.speak("Detective. Incoming correspondence", "UK English Female", {
+    responsiveVoice.speak(dialogueData.sceneOne.automatedMessage, "UK English Female", {
       pitch: 0.9,
       rate: 0.75,
     });
@@ -700,6 +742,18 @@ function textAnimation() {
       pop();
       }
     }
+
+    // Text to display if user has met the conditions
+    if (displayQuestionSceneThree === true) {
+      push();
+      fill(90, 160, 200);
+      textSize(20);
+      textAlign(CENTER, CENTER);
+      textStyle(NORMAL);
+      text(dialogueData.sceneThree.finalQuestion.question  + `?`, width / 5.5, height / 1.2);
+      pop();
+    }
+
   }
 } // End of Text animation function
 

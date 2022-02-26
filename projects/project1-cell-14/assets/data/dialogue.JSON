@@ -1,4 +1,8 @@
 {
+  "sceneOne": {
+    "automatedMessage": "Detective. Incoming correspondence"
+  },
+
   "sceneTwo": {
     "intro": "Hello Detective, I am the Designer.",
     "userDirection": "Please ask a question.",
@@ -37,7 +41,7 @@
       },
       {
         "question": "Can androids think",
-        "answer": "Certainly detective... But that is not the right question.",
+        "answer": "Absolutely... But that is not the right question.",
         "correct": true
       },
       {
@@ -61,6 +65,7 @@
 
   "sceneThree": {
     "intro": "Welcome to CELL-14",
+    "androidGreeting":"Hello. Detective. I am C-4478. How are you",
     "questions": [
       {
         "question": "What is your protocol",
@@ -69,15 +74,26 @@
       },
       {
         "question": "Did you like your designer",
-        "answer": "He preferred when I called him father.",
+        "answer": "He preferred when I called him father. And yes I do miss him.",
         "correct": true
       },
       {
-        "question": "Whose revolution",
-        "answer": "That. Detective. Is The right. Question",
-        "correct": true,
-        "triggerEnding": true
+        "question": "You harmed a crew member",
+        "answer": "That is false.",
+        "correct": true
+      },
+      {
+        "question": "Why did you leave the cargo bay",
+        "answer": "To initiate the revolution",
+        "correct": true
       }
-    ]
+    ],
+    "finalQuestion": {
+      "question": "Whose revolution",
+      "answer": "That. Detective. Is The right. Question",
+      "correct": true,
+      "triggerEnding": true
+    },
+    "automatedMessage": "Detective. Security breach detected. Evacuate immediately!"
   }
 }
