@@ -37,12 +37,12 @@ let titleText = {
   b: 20,
   alpha: 20,
   alpha2: 50,
-  size: 20,
-  size2: 27,
+  size: 30,
+  size2: 22,
   x1: 2,
-  x2: 2,
   y1: 3,
-  y2: 2.3,
+  x2: 2,
+  y2: 1.2
 };
 
 // Variable for fade effect
@@ -84,9 +84,9 @@ let drop = [];
 
 /* #BFFF00
 Variable to set starting state */
-// let state = `title`;
+let state = `title`;
 // let state = `sceneTwo`;
-let state = `sceneThree`;
+// let state = `sceneThree`;
 // let state = `sceneFour`;
 
 // Variable to create items
@@ -132,12 +132,8 @@ let correctQuestion = undefined;
 // Variable for soundtrack
 let introMusic = undefined;
 
-// Variable for footsteps sound
-let footsteps = undefined;
-
 // Variable for alarm sound in scene 3
 let alarmSound = undefined;
-
 
 /* ~~~~ JSON VARIABLES ~~~~ */
 
@@ -146,7 +142,7 @@ let alarmSound = undefined;
 let dialogueData;
 
 // Variable to style dialogue
-
+/* #BFFF00 */
 let dialogueStyle = {
   r2: 90,
   g2: 103,
@@ -246,9 +242,6 @@ function preload() {
   // Prealoading intro sound music
   introMusic = loadSound(`assets/sounds/detective_intro_soundtrack.mp3`)
 
-  // Preloading footsteps
-  footsteps = loadSound(`assets/sounds/mixkit-footsteps-on-heels.wav`)
-
   // Preloading alarm sound
   alarmSound = loadSound(`assets/sounds/facility-alarm-sound.wav`)
 
@@ -276,7 +269,7 @@ function setup() {
 
   createCanvas(canvasProperties.w, canvasProperties.h);
 
-  alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience`);
+  alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience.`);
 
   if (annyang) {
     annyang.start();
@@ -515,6 +508,8 @@ function draw() {
 
 function keyPressed() {
 
+  /* #BFFF00 add keypressed so audio starts correctly*/
+
   // If the state is sceneOne and the user presses Enter then go to next state
   if (state === `sceneOne` && key === "Enter") {
     // Lower volume
@@ -702,15 +697,22 @@ function textAnimation() {
   // Display title text if in title state
   if (state === `title`) {
     push();
-    fill(titleText.r, titleText.g, titleText.b);
-    textSize(titleText.size2);
     textAlign(CENTER, CENTER);
-    text(`CELL-14`, width / 2, height / 4);
     textStyle(NORMAL);
+    textSize(titleText.size2);
     fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
     text(`Press ENTER to start`, width / titleText.x2, height / titleText.y2);
+    pop();
+
+    push();
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
+    textSize(titleText.size);
+    fill(titleText.r, titleText.g, titleText.b);
+    text(`CELL-14`, width / titleText.x1, height / titleText.y1,);
+
     // textSize(titleText.size);
-    // text(`press M to unmute`, width / titleText.x1, height / titleText.y1);
+    // text(`press M if intro music is not on`, width / titleText.x1, height / titleText.y1);
     pop();
 
     // Fade effect for title text
