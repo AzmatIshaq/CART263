@@ -84,9 +84,9 @@ let drop = [];
 
 /* #BFFF00
 Variable to set starting state */
-let state = `title`;
+// let state = `title`;
 // let state = `sceneTwo`;
-// let state = `sceneThree`;
+let state = `sceneThree`;
 // let state = `sceneFour`;
 
 // Variable to create items
@@ -219,6 +219,15 @@ let sceneFourCredits = {
   vy: 0.3
 };
 
+// Variable for fade effect into scene 3
+let fadeSquare = {
+  width: 750,
+  height: 450,
+  alpha: 245,
+  alphaDecrease: 1,
+  active: true
+};
+
 /*********************** PRELOAD **********************************************/
 
 /**
@@ -279,7 +288,7 @@ function setup() {
 
   // Trigger soundtrack
   if (state === `title`) {
-    introMusic.loop();
+    playMusic();
 
   }
 
@@ -295,11 +304,6 @@ function setup() {
       y: height / 2
     })
   }
-
-
-
-
-
 } // End of setup()
 
 
@@ -469,7 +473,7 @@ function setUpScene() {
   // Start the intro music again in scene four
     if (state === `sceneFour`) {
       let sceneFourMusic = function() {
-        introMusic.loop();
+          playMusic();
       };
 
       setTimeout(sceneFourMusic, 2000);
@@ -483,17 +487,11 @@ function setUpScene() {
 Draw function to switch between states and alter background color.
 */
 function draw() {
-  background(bg.r, bg.g, bg.b);
-
-  // Background effects
-  if (state === `title`) {
-    bg.r = bg.titleColour;
-    bg.g = bg.titleColour;
-    bg.b = bg.titleColour;
-  }
+  background(bg.titleColour);
 
   // Alternate between game states
   if (state === `title`) {
+
     titleState();
 
   }
@@ -544,6 +542,7 @@ function keyPressed() {
 /*********************** TITLE STATE ******************************************/
 
 function titleState() {
+
   textAnimation();
 
   // Stars effect
@@ -589,6 +588,9 @@ function sceneThreeState() {
   imageMode(CENTER);
   image(androidImage, width / 2, height / 2, androidEffect.width, androidEffect.height);
   pop();
+
+  // Effect to have scene fade in
+  fadeSceneEffect();
 
 
   // Effect to have android incrase in size
@@ -701,13 +703,14 @@ function textAnimation() {
   if (state === `title`) {
     push();
     fill(titleText.r, titleText.g, titleText.b);
-    textSize(titleText.size);
-    textAlign(CENTER, CENTER);
-    // text(`Welcome to ...!`, width / titleText.x1, height / titleText.y1);
-    textStyle(NORMAL);
     textSize(titleText.size2);
+    textAlign(CENTER, CENTER);
+    text(`CELL-14`, width / 2, height / 4);
+    textStyle(NORMAL);
     fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
     text(`Press ENTER to start`, width / titleText.x2, height / titleText.y2);
+    // textSize(titleText.size);
+    // text(`press M to unmute`, width / titleText.x1, height / titleText.y1);
     pop();
 
     // Fade effect for title text
@@ -722,7 +725,6 @@ function textAnimation() {
     titleText.alpha2 += fadeOut.rate;
 
   } // End of title text
-
 
   // Text to display if it is scene one
   if (state === `sceneOne`) {
@@ -835,37 +837,6 @@ function textAnimation() {
 
 /* - - - - - - - - - - - MISC - - - - - - - - - - - - - - - - - - - - - - - - */
 
-/*********************** COUNTDOWN TIMER **************************************/
-
-// Function to set up a countdown timer
-function countdownTimer() {
-
-  // Give the countdown Timer a background
-  push();
-  fill(timer.fillRect);
-  rectMode(CENTER);
-  rect(timer.x, timer.y, timer.rectW, timer.rectH);
-  pop();
-
-  // To display the countdown text
-  push();
-  fill(timer.fill);
-  textAlign(CENTER, CENTER);
-  textSize(timer.textFont);
-  text(timer.countdown, timer.x, timer.y);
-  pop();
-
-  // Logic to make the countdown timer operate based on famecount.
-  if (frameCount % timer.frameCount == 0 && timer.countdown > 0) {
-    timer.countdown--;
-  }
-  // Game over text when countdown reaches 0
-  if (timer.countdown == 0) {
-    timer.countdown = timer.reset;
-  }
-}
-
-
 /*********************** CREATE ITEM ******************************************/
 
 // Create item
@@ -883,6 +854,34 @@ function updateItem() {
   item.display();
 }
 
+/*********************** PLAY MUSIC *******************************************/
+
+function playMusic() {
+    introMusic.loop();
+};
+
+/*********************** FADE SCENE EFFECT *******************************************/
+
+function fadeSceneEffect() {
+
+// Effect to have scene fade in
+    push();
+    fill(0, 0, 0, fadeSquare.alpha);
+    rectMode(CENTER);
+    rect(width / 2, height / 2, fadeSquare.width, fadeSquare.height);
+    pop();
+
+// Stop the effect
+    if (state === `sceneThree` && fadeSquare.active === true) {
+      fadeSquare.alpha -= fadeSquare.alphaDecrease
+      if (fadeSquare.alpha < 0) {
+        fadeSquare.active = false;
+        fadeSquare.alpha = 0;
+      }
+    }
+
+
+};
 
 
 /*********************** DROP *************************************************/
