@@ -84,9 +84,10 @@ let drop = [];
 
 /* #BFFF00
 Variable to set starting state */
-// let state = `title`;
+let state = `title`;
 // let state = `sceneTwo`;
-let state = `sceneThree`;
+// let state = `sceneThree`;
+// let state = `sceneFour`;
 
 // Variable to create items
 let item;
@@ -171,9 +172,11 @@ let sceneThreeDialogue = `sceneThree`;
 let correctAnswerTracker1 = 0;
 let correctAnswerTracker2 = 0;
 
-// Variable to display question for scene two
+// Variables to display questions for scene changes
 let displayQuestionSceneTwo;
 let displayQuestionSceneThree;
+let displayExtraQuestionSceneThree;
+
 
 // Variable to add effects to android image
 
@@ -206,6 +209,15 @@ let androidArmyEffect = {
 // Ending sequence active tracker
 
 let endingSequenceActive = false;
+
+// Ending credits boolean
+let credits = true;
+
+// Variable for credits in scene four
+let sceneFourCredits = {
+  height: 500,
+  vy: 0.3
+};
 
 /*********************** PRELOAD **********************************************/
 
@@ -271,12 +283,6 @@ function setup() {
 
   }
 
-  // Trigger footsteps sound for scene 3
-  //
-  // if (state === `sceneThree`) {
-  //   footsteps.play();
-  // }
-
   // Stars effect during intro
   for (let i = 0; i < 1000; i++) {
     stars[i] = new Star();
@@ -289,6 +295,9 @@ function setup() {
       y: height / 2
     })
   }
+
+
+
 
 
 } // End of setup()
@@ -320,7 +329,7 @@ function setUpScene() {
 
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker1++
-          if (correctAnswerTracker1 === 1) {
+          if (correctAnswerTracker1 === 5) {
             displayQuestionSceneTwo = true;
 
             //change the scene when the right questions are asked
@@ -337,9 +346,8 @@ function setUpScene() {
                 let sceneChangeDelay = function() {
                   state = `sceneThree`;
                   setUpScene();
-                  // Android effect because activated
+                  // Android effect becomes activated
                   androidEffectActive = true;
-                  introMusic.play();
 
                 };
                 // Delay the scene change
@@ -381,10 +389,27 @@ function setUpScene() {
 
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker2++
-          if (correctAnswerTracker2 === 1) {
-            displayQuestionSceneThree = true;
+          if (correctAnswerTracker2 === 5) {
+            // Display the secret question
+            displayExtraQuestionSceneThree = true;
 
-            //change the scene when the right questions are asked
+          let extraSceneQuestion = dialogueData.sceneThree.extraQuestion;
+
+          commands[extraSceneQuestion.question] = function() {
+            if (extraSceneQuestion.triggerFinalQuestion === true) {
+              // Display the secret question
+              displayQuestionSceneThree = true;
+              // Responsive voice triggers
+              responsiveVoice.speak(extraSceneQuestion.answer, "UK English Male", {
+                pitch: 0.4,
+                rate: 0.9,
+              });
+            }
+          };
+
+
+
+            //change the scene when the right question is asked
             let finalSceneQuestion = dialogueData.sceneThree.finalQuestion;
 
             commands[finalSceneQuestion.question] = function() {
@@ -408,14 +433,15 @@ function setUpScene() {
 
                   });
 
-                    //Final state switch to scene four blank screen
+                      //Final state switch to scene four blank screen
                       let finalScene = function() {
                       state = `sceneFour`
+                      setUpScene();
                       alarmSound.stop();
-                    }
+                    };
 
                     // Timer to control when the effect occurs
-                    setTimeout(finalScene, 7000);
+                    setTimeout(finalScene, 9000);
 
                 };
                 // Delay the scene change
@@ -440,15 +466,14 @@ function setUpScene() {
   } // End of scene three setup
 
 
-// Start the intro music again in scene four
-  if (state = `sceneFour`) {
-    let sceneFourMusic = function() {
-      introMusic.play();
+  // Start the intro music again in scene four
+    if (state === `sceneFour`) {
+      let sceneFourMusic = function() {
+        introMusic.loop();
+      };
+
+      setTimeout(sceneFourMusic, 2000);
     }
-
-    setTimeout(sceneFourMusic, 3000);    
-  }
-
 
 } // End of setUpScene function
 
@@ -515,18 +540,6 @@ function keyPressed() {
     state = `sceneOne`
   }
 }
-/*********************** MOUSE PRESSED ****************************************/
-
-// function mousePressed() {
-// }
-
-/* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - - - */
-
-/*********************** ANIMATION STATE **************************************/
-
-// function animationState() {
-//
-// }
 
 /*********************** TITLE STATE ******************************************/
 
@@ -644,12 +657,20 @@ function sceneThreeState() {
 /*********************** SCENE FOUR STATE *************************************/
 
 function sceneFourState() {
-  // Display timer
-  countdownTimer();
 
-  setUpScene();
+  // Code to run ending credits
+
+if (credits === true) {
+    textAnimation();
+}
+
+if (sceneFourCredits.height < -2000) {
+      sceneFourCredits.height = 650;
+      credits = false;
+   }
 
 }
+
 
 
 /*********************** RESET STATES *****************************************/
@@ -754,16 +775,16 @@ function textAnimation() {
 
     // Header text for scene three
     push();
-    fill(255);
+    fill(255, 20, 20);
     textSize(23);
-    text(dialogueData[sceneThreeDialogue].intro, width / 3.5, height / 6);
+    text(dialogueData[sceneThreeDialogue].intro, width / 4, height / 6);
     pop();
 
     // Dialogue text for scene two
     for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
       let question = dialogueData[sceneThreeDialogue].questions[i];
 
-      if (androidEffect.width > 100) {
+      if (androidEffect.width > 100 && endingSequenceActive === false) {
         push();
         fill(255);
         text(question.question + `?`, width / 14, 200 + i * 25);
@@ -772,15 +793,41 @@ function textAnimation() {
     }
 
     // Text to display if user has met the conditions
+    if (displayExtraQuestionSceneThree === true && endingSequenceActive === false) {
+      push();
+      fill(90, 160, 200);
+      textSize(20);
+      // textAlign(CENTER, CENTER);
+      textStyle(NORMAL);
+      text(dialogueData.sceneThree.extraQuestion.question + `?`, width / 4, height / 1.2);
+      pop();
+    }
+
+    // Text to display if user has met the conditions
     if (displayQuestionSceneThree === true) {
       push();
       fill(90, 160, 200);
       textSize(20);
-      textAlign(CENTER, CENTER);
+      // textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData.sceneThree.finalQuestion.question + `?`, width / 5.5, height / 1.2);
+      text(dialogueData.sceneThree.finalQuestion.question + `?`, width / 4, height / 1.1);
       pop();
     }
+  }
+
+  if (state === `sceneFour`) {
+        // Make credits scroll upwards.
+          sceneFourCredits.height -= sceneFourCredits.vy;
+
+          push();
+          fill(90, 160, 200);
+          textSize(16);
+          textAlign(CENTER, CENTER);
+          textStyle(NORMAL);
+          text(`Made by Azmat Ishaq`, width / 2, sceneFourCredits.height);
+          text(`Code contributions by Pippin Barr`, width / 2, sceneFourCredits.height + 100);
+          text(`See README for more information`, width / 2, sceneFourCredits.height + 200);
+          pop();
 
   }
 } // End of Text animation function
@@ -818,14 +865,6 @@ function countdownTimer() {
   }
 }
 
-/*********************** DIALOGUE ANIMATE *************************************/
-
-// Function to animate dialogue text when a dialogue has been selected by the user
-function dialogueAnimate() {
-  dialogueStyle.r2 = dialogueAnswered;
-  dialogueStyle.g2 = dialogueAnswered;
-  dialogueStyle.b2 = dialogueAnswered;
-}
 
 /*********************** CREATE ITEM ******************************************/
 

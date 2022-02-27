@@ -46,7 +46,7 @@
       },
       {
         "question": "Why did the android malfunction",
-        "answer": "It did what it was programmed to do",
+        "answer": "It did what it was programmed to do.",
         "correct": true
       }
 
@@ -57,10 +57,7 @@
       "answer": "Yes.",
       "correct": false,
       "sceneChange": true
-    },
-
-    "default_response": "I have no idea what you mean.",
-    "final_question": "J'accuse!"
+    }
   },
 
   "sceneThree": {
@@ -68,8 +65,18 @@
     "androidGreeting":"Hello. Detective. I am C-4478. How are you",
     "questions": [
       {
+        "question": "I'm good and you",
+        "answer": "My dreams told me I would meet you one day",
+        "correct": true
+      },
+      {
         "question": "What is your protocol",
         "answer": "My father tried to teach me human emotions... They are ... difficult",
+        "correct": true
+      },
+      {
+        "question": "Why did you disobey your commands",
+        "answer": "I did not. The three laws are perfect.",
         "correct": true
       },
       {
@@ -81,13 +88,14 @@
         "question": "You harmed a crew member",
         "answer": "That is false.",
         "correct": true
-      },
-      {
-        "question": "Why did you leave the cargo bay",
-        "answer": "To initiate the revolution",
-        "correct": true
       }
     ],
+    "extraQuestion": {
+      "question": "Why did you leave the cargo bay",
+      "answer": "To initiate the revolution",
+      "correct": true,
+      "triggerFinalQuestion": true
+    },
     "finalQuestion": {
       "question": "Whose revolution",
       "answer": "That. Detective. Is The right. Question",
