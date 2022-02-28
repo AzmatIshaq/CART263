@@ -14,12 +14,6 @@ using setTimeout.
 
 /* - - - - - - - - - - - VARIABLES - - - - - - - - - - - - - - - - - - - - -  */
 
-// Variable to style canvas
-let canvasProperties = {
-  // Set canvas width and height
-  w: 750,
-  h: 450,
-};
 
 // Variable to style the background
 let bg = {
@@ -36,7 +30,7 @@ let titleText = {
   g: 255,
   b: 20,
   alpha: 20,
-  alpha2: 50,
+  alpha2: 0,
   size: 30,
   size2: 22,
   x1: 2,
@@ -63,21 +57,6 @@ let fadeOut = {
   rate2: 0,
 }
 
-// Timer variable for countdown timer
-let timer = {
-  countdown: 30,
-  x: 40,
-  y: 40,
-  textFont: 60,
-  fill: 255,
-  fillRect: 0,
-  rectX: 40,
-  rectY: 40,
-  rectW: 90,
-  rectH: 70,
-  frameCount: 60,
-  reset: 40,
-};
 
 // Array variable for rain effect
 let drop = [];
@@ -89,8 +68,6 @@ let state = `title`;
 // let state = `sceneThree`;
 // let state = `sceneFour`;
 
-// Variable to create items
-let item;
 
 // Variable for intro text
 let openingText = undefined;
@@ -141,21 +118,7 @@ let alarmSound = undefined;
 
 let dialogueData;
 
-// Variable to style dialogue
-/* #BFFF00 */
-let dialogueStyle = {
-  r2: 90,
-  g2: 103,
-  b2: 103
-}
-
-// Variable to colour answered dialogue
-let dialogueAnswered = 192;
-
 /* MISC VARIABLES */
-
-// Variable to set designers active state to true
-let designerScene1Active = true;
 
 // Variable array to set up star effect in intro
 let stars = [];
@@ -175,7 +138,6 @@ let displayExtraQuestionSceneThree;
 
 
 // Variable to add effects to android image
-
 let androidEffect = {
   width: 0.1,
   height: 0.1,
@@ -203,7 +165,6 @@ let androidArmyEffect = {
 }
 
 // Ending sequence active tracker
-
 let endingSequenceActive = false;
 
 // Ending credits boolean
@@ -227,11 +188,11 @@ let fadeSquare = {
 /*********************** PRELOAD **********************************************/
 
 /**
-Description of preload
+Preload the sounds, images, and JSON data for the program.
 */
 function preload() {
 
-  /* Preload sound */
+  /* Preload Sound */
 
   // Preloading sound for correct and incorrect responses
   incorrectQuestion = loadSound(`assets/sounds/ask_right_question.mp3`);
@@ -267,7 +228,7 @@ Function to setup canvas, annyang, title star effect,
 */
 function setup() {
 
-  createCanvas(canvasProperties.w, canvasProperties.h);
+  createCanvas(750, 450);
 
   alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience.`);
 
@@ -275,14 +236,15 @@ function setup() {
     annyang.start();
   }
 
+  // Setup scene interactions
   setUpScene();
 
-  resetStates();
+  // Setup effects for intro and scene one
+  setupIntroEffects();
 
   // Trigger soundtrack
   if (state === `title`) {
     playMusic();
-
   }
 
   // Stars effect during intro
@@ -303,6 +265,7 @@ function setup() {
 /*********************** SET UP SCENE *****************************************/
 
 // Function to set up the scene's annyang dialogue and user interactions
+
 function setUpScene() {
 
   // Dialogue code for annyang in scene two
@@ -310,6 +273,7 @@ function setUpScene() {
   // Commands only for scene two
   if (state === `sceneTwo`) {
 
+    // Clear previous commands
     annyang.removeCommands();
 
     let commands = {};
@@ -361,6 +325,7 @@ function setUpScene() {
       };
     }
 
+    // Add the commands to annyang
     annyang.addCommands(commands);
 
   } // End of scene two annyang
@@ -390,21 +355,19 @@ function setUpScene() {
             // Display the secret question
             displayExtraQuestionSceneThree = true;
 
-          let extraSceneQuestion = dialogueData.sceneThree.extraQuestion;
+            let extraSceneQuestion = dialogueData.sceneThree.extraQuestion;
 
-          commands[extraSceneQuestion.question] = function() {
-            if (extraSceneQuestion.triggerFinalQuestion === true) {
-              // Display the secret question
-              displayQuestionSceneThree = true;
-              // Responsive voice triggers
-              responsiveVoice.speak(extraSceneQuestion.answer, "UK English Male", {
-                pitch: 0.4,
-                rate: 0.9,
-              });
-            }
-          };
-
-
+            commands[extraSceneQuestion.question] = function() {
+              if (extraSceneQuestion.triggerFinalQuestion === true) {
+                // Display the secret question
+                displayQuestionSceneThree = true;
+                // Responsive voice triggers
+                responsiveVoice.speak(extraSceneQuestion.answer, "UK English Male", {
+                  pitch: 0.4,
+                  rate: 0.9,
+                });
+              }
+            };
 
             //change the scene when the right question is asked
             let finalSceneQuestion = dialogueData.sceneThree.finalQuestion;
@@ -430,15 +393,15 @@ function setUpScene() {
 
                   });
 
-                      //Final state switch to scene four blank screen
-                      let finalScene = function() {
-                      state = `sceneFour`
-                      setUpScene();
-                      alarmSound.stop();
-                    };
+                  //Final state switch to scene four blank screen
+                  let finalScene = function() {
+                    state = `sceneFour`
+                    setUpScene();
+                    alarmSound.stop();
+                  };
 
-                    // Timer to control when the effect occurs
-                    setTimeout(finalScene, 9000);
+                  // Timer to control when the effect occurs
+                  setTimeout(finalScene, 9000);
 
                 };
                 // Delay the scene change
@@ -464,13 +427,13 @@ function setUpScene() {
 
 
   // Start the intro music again in scene four
-    if (state === `sceneFour`) {
-      let sceneFourMusic = function() {
-          playMusic();
-      };
-
-      setTimeout(sceneFourMusic, 2000);
-    }
+  if (state === `sceneFour`) {
+    let sceneFourMusic = function() {
+      playMusic();
+    };
+    // Delay the start of the music
+    setTimeout(sceneFourMusic, 2000);
+  }
 
 } // End of setUpScene function
 
@@ -484,9 +447,7 @@ function draw() {
 
   // Alternate between game states
   if (state === `title`) {
-
     titleState();
-
   }
   if (state === `sceneOne`) {
     sceneOneState();
@@ -506,6 +467,7 @@ function draw() {
 
 /*********************** KEY PRESSED ******************************************/
 
+// KeyPressed function to trigger changes between states
 function keyPressed() {
 
   /* #BFFF00 add keypressed so audio starts correctly*/
@@ -536,8 +498,10 @@ function keyPressed() {
 
 /*********************** TITLE STATE ******************************************/
 
+// Function to manage title state elements that will be in draw()
 function titleState() {
 
+  // Display scene one text
   textAnimation();
 
   // Stars effect
@@ -549,6 +513,7 @@ function titleState() {
 
 /*********************** SCENE ONE STATE **************************************/
 
+// Function to manage scene one state elements that will be in draw()
 function sceneOneState() {
 
   // Display rain drops
@@ -560,6 +525,7 @@ function sceneOneState() {
 
 /*********************** SCENE TWO STATE **************************************/
 
+// Function to manage scene two state elements that will be in draw()
 function sceneTwoState() {
 
   // Display the designer image
@@ -568,14 +534,17 @@ function sceneTwoState() {
   image(designer, width / 2, height / 2, 200, 200);
   pop();
 
+  // Display scene text
   textAnimation();
 
 }
 
 /*********************** SCENE THREE STATE ************************************/
 
+// Function to manage scene three state elements that will be in draw()
 function sceneThreeState() {
 
+  // Display scene text
   textAnimation();
 
   // Display the android image
@@ -616,10 +585,10 @@ function sceneThreeState() {
 
     }
 
-    if(androidEffect.width < 0.2) {
-    // Make the android army grow
-    androidArmyEffect.width += androidArmyEffect.widthIncrease;
-    androidArmyEffect.height += androidArmyEffect.heightIncrease;
+    if (androidEffect.width < 0.2) {
+      // Make the android army grow
+      androidArmyEffect.width += androidArmyEffect.widthIncrease;
+      androidArmyEffect.height += androidArmyEffect.heightIncrease;
     }
   }
 
@@ -631,58 +600,50 @@ function sceneThreeState() {
 
 
   // Trigger android shrinking
-    if (endingSequenceActive) {
-      androidEffect.shrink = true;
-      if(androidEffect.shrink) {
+  if (endingSequenceActive) {
+    androidEffect.shrink = true;
+    if (androidEffect.shrink) {
       androidEffect.width -= androidEffect.widthIncrease;
       androidEffect.height -= androidEffect.heightIncrease;
-      }
     }
+  }
 
   // Stop shrinking
-    if(androidEffect.width < 0.1) {
-      androidEffect.shrink = false;
-      androidEffect.width = 0.1;
-      androidEffect.height = 0.1;
-      }
-
-
-
-
+  if (androidEffect.width < 0.1) {
+    androidEffect.shrink = false;
+    androidEffect.width = 0.1;
+    androidEffect.height = 0.1;
+  }
 } // End of scene three state
 
 /*********************** SCENE FOUR STATE *************************************/
 
+// Function to manage scene four state elements that will be in draw()
 function sceneFourState() {
 
   // Code to run ending credits
 
-if (credits === true) {
+  if (credits === true) {
     textAnimation();
+  }
+
+  if (sceneFourCredits.height < -2000) {
+    sceneFourCredits.height = 650;
+    credits = false;
+  }
+
 }
 
-if (sceneFourCredits.height < -2000) {
-      sceneFourCredits.height = 650;
-      credits = false;
-   }
-
-}
 
 
+/*********************** SETUP INTRO EFFECTS **********************************/
 
-/*********************** RESET STATES *****************************************/
-
-function resetStates() {
-  // Setup fade so rate is at 0
-  titleText.alpha2 = 0;
+function setupIntroEffects() {
 
   // Set up rain effect
   for (let i = 0; i < 200; i++) {
     drop[i] = new Drop();
   }
-
-  // Set up items
-  createItem();
 
   // Set up typewriter class
   openingText = new Typewriter(string, 25, 25, 550, 550, 0.28);
@@ -693,26 +654,25 @@ function resetStates() {
 
 /*********************** TEXT ANIMATION ***************************************/
 
+// Function to handle all of the text animation
 function textAnimation() {
+
   // Display title text if in title state
   if (state === `title`) {
+    push();
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
+    textSize(titleText.size);
+    fill(titleText.r, titleText.g, titleText.b);
+    text(`CELL-14`, width / titleText.x1, height / titleText.y1, );
+    pop();
+
     push();
     textAlign(CENTER, CENTER);
     textStyle(NORMAL);
     textSize(titleText.size2);
     fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
     text(`Press ENTER to start`, width / titleText.x2, height / titleText.y2);
-    pop();
-
-    push();
-    textAlign(CENTER, CENTER);
-    textStyle(NORMAL);
-    textSize(titleText.size);
-    fill(titleText.r, titleText.g, titleText.b);
-    text(`CELL-14`, width / titleText.x1, height / titleText.y1,);
-
-    // textSize(titleText.size);
-    // text(`press M if intro music is not on`, width / titleText.x1, height / titleText.y1);
     pop();
 
     // Fade effect for title text
@@ -788,6 +748,7 @@ function textAnimation() {
     for (let i = 0; i < dialogueData[sceneThreeDialogue].questions.length; i++) {
       let question = dialogueData[sceneThreeDialogue].questions[i];
 
+      // Display more dialogue if ending sequence is active
       if (androidEffect.width > 100 && endingSequenceActive === false) {
         push();
         fill(255);
@@ -819,19 +780,20 @@ function textAnimation() {
     }
   }
 
+// Text to display if it is scene four
   if (state === `sceneFour`) {
-        // Make credits scroll upwards.
-          sceneFourCredits.height -= sceneFourCredits.vy;
+    // Make credits scroll upwards.
+    sceneFourCredits.height -= sceneFourCredits.vy;
 
-          push();
-          fill(90, 160, 200);
-          textSize(16);
-          textAlign(CENTER, CENTER);
-          textStyle(NORMAL);
-          text(`Made by Azmat Ishaq`, width / 2, sceneFourCredits.height);
-          text(`Code contributions by Pippin Barr`, width / 2, sceneFourCredits.height + 100);
-          text(`See README for more information`, width / 2, sceneFourCredits.height + 200);
-          pop();
+    push();
+    fill(90, 160, 200);
+    textSize(16);
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
+    text(`Made by Azmat Ishaq`, width / 2, sceneFourCredits.height);
+    text(`Code contributions by Pippin Barr`, width / 2, sceneFourCredits.height + 100);
+    text(`See README for more information`, width / 2, sceneFourCredits.height + 200);
+    pop();
 
   }
 } // End of Text animation function
@@ -839,57 +801,43 @@ function textAnimation() {
 
 /* - - - - - - - - - - - MISC - - - - - - - - - - - - - - - - - - - - - - - - */
 
-/*********************** CREATE ITEM ******************************************/
-
-// Create item
-// Creates an item at a random position
-function createItem() {
-  let x = random(0, width);
-  let y = random(0, height);
-  item = new Items(x, y);
-}
-
-/*********************** UPDATE ITEM*******************************************/
-
-// Function to manage changes to Item class
-function updateItem() {
-  item.display();
-}
 
 /*********************** PLAY MUSIC *******************************************/
 
+// Function to play game music
 function playMusic() {
-    introMusic.loop();
+  introMusic.loop();
 };
 
 /*********************** FADE SCENE EFFECT *******************************************/
 
+// Function for fading effecting for scene switching
 function fadeSceneEffect() {
 
-// Effect to have scene fade in
-    push();
-    fill(0, 0, 0, fadeSquare.alpha);
-    rectMode(CENTER);
-    rect(width / 2, height / 2, fadeSquare.width, fadeSquare.height);
-    pop();
+  // Effect to have scene fade in
+  push();
+  fill(0, 0, 0, fadeSquare.alpha);
+  rectMode(CENTER);
+  rect(width / 2, height / 2, fadeSquare.width, fadeSquare.height);
+  pop();
 
-// Stop the effect
-    if (state === `sceneThree` && fadeSquare.active === true) {
-      fadeSquare.alpha -= fadeSquare.alphaDecrease
-      if (fadeSquare.alpha < 0) {
-        fadeSquare.active = false;
-        fadeSquare.alpha = 0;
-      }
+  // Stop the effect
+  if (state === `sceneThree` && fadeSquare.active === true) {
+    fadeSquare.alpha -= fadeSquare.alphaDecrease
+    if (fadeSquare.alpha < 0) {
+      fadeSquare.active = false;
+      fadeSquare.alpha = 0;
     }
-
-
+  }
 };
 
 
 /*********************** DROP *************************************************/
 
 // Function to simulate rain effect based on p5 sample code, see README for more information
-// I adjusted some of the values to improve the rain effect
+
+// Effect by kelsierose94 see README for more details
+// I adjusted some of the values to modify the rain effect
 
 function Drop() {
   // Setting random position for rain drops
@@ -919,6 +867,7 @@ function Drop() {
 
 /*********************** DROP DISPLAY *****************************************/
 
+// Function for rain drop effect in scene one
 function dropDisplay() {
   // Rain effect
 
@@ -930,7 +879,9 @@ function dropDisplay() {
 
 
 /*********************** Class: Star ******************************************/
-// star class
+
+// Class for star effect in title screen
+// Effect by wvnl see README for more details
 class Star {
   constructor() {
     this.x = random(width);
