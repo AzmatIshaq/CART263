@@ -23,7 +23,7 @@ let bg = {
   titleColour: 30,
 };
 
-// Variable to style title text displayed during title state
+// Variable to style title text displayed
 let titleText = {
   fill: 255,
   r: 255,
@@ -37,6 +37,29 @@ let titleText = {
   y1: 3,
   x2: 2,
   y2: 1.2
+};
+
+// Variable to style scene two text
+let sceneTwoText = {
+  fill: 255,
+  size: 30,
+  size2: 22,
+  x1: 2,
+  y1: 3,
+  x2: 2,
+  y2: 1.2,
+  headerSize: 23,
+  headerFill: 255,
+  headerW: 3.5,
+  headerH: 7,
+  directionsSize: 23,
+  directionsFill: 255,
+  directionsW: 3.5,
+  directionsH: 5,
+  dialogueW: 14,
+  dialogueH: 140,
+  dialogueSpacing: 25,
+
 };
 
 // Variable for fade effect
@@ -57,14 +80,13 @@ let fadeOut = {
   rate2: 0,
 }
 
-
 // Array variable for rain effect
 let drop = [];
 
 /* #BFFF00
 Variable to set starting state */
-let state = `title`;
-// let state = `sceneTwo`;
+// let state = `title`;
+let state = `sceneTwo`;
 // let state = `sceneThree`;
 // let state = `sceneFour`;
 
@@ -73,7 +95,7 @@ let state = `title`;
 let openingText = undefined;
 
 // Variable for intro Text string
-let string = `
+let sceneOneText = `
 Detective's log, Date 3471.
 
 I have been tasked with the investigation of a
@@ -95,9 +117,9 @@ preliminary interrogation.
 /* ~~~~ IMAGE VARIABLES ~~~~ */
 
 // Variable for designer character image
-let designer;
+let designer = undefined;
 
-// Variable for andoird character image
+// Variable for android character image
 let androidImage = undefined;
 
 /* ~~~~ SOUND VARIABLES ~~~~ */
@@ -111,39 +133,71 @@ let introMusic = undefined;
 
 // Variable for alarm sound in scene 3
 let alarmSound = undefined;
+let alarmSoundVolume = 0.1;
 
 /* ~~~~ JSON VARIABLES ~~~~ */
 
 // Variable for JSON dialogue data file
-
 let dialogueData;
+
+// Variables for JSON scene dialogue
+let sceneTwoDialogue = `sceneTwo`;
+let sceneThreeDialogue = `sceneThree`;
 
 /* MISC VARIABLES */
 
 // Variable array to set up star effect in intro
 let stars = [];
 
-// Variables for JSON scene dialogue
-let sceneTwoDialogue = `sceneTwo`;
-let sceneThreeDialogue = `sceneThree`;
+// Variable to pick amount of stars for intro
+let starsAmount = 1000;
+
+// Variable to set rain drops effects properties
+let dropEffects = {
+  amount: 200,
+};
+
+// Variable to set typerwriter effects properties
+let typewriter = {
+  x: 25,
+  y: 25,
+  w: 550,
+  h: 550,
+  rate: 0.28
+};
 
 // Variable to track correct answers
 let correctAnswerTracker1 = 0;
+let correctAnswerTracker1Trigger = 1;
 let correctAnswerTracker2 = 0;
+let correctAnswerTracker2Trigger = 1;
 
 // Variables to display questions for scene changes
 let displayQuestionSceneTwo;
 let displayQuestionSceneThree;
 let displayExtraQuestionSceneThree;
 
+// Variable for android voice effects
+
+let androidVoiceEffects = {
+  pitch: 0.4,
+  rate: 0.9
+};
 
 // Variable to add effects to android image
 let androidEffect = {
+  x: 2,
+  y: 2,
   width: 0.1,
+  width2: 0.2,
+  width3: 0.1,
+  width4: 0.1,
   height: 0.1,
+  height4: 0.1,
   widthIncrease: 0.4,
   heightIncrease: 0.4,
-  shrink: false
+  shrink: false,
+  size: 200
 };
 
 // Toggle the android effect
@@ -157,23 +211,29 @@ let androidArmyAmount = 10;
 
 // Android army effect
 let androidArmyEffect = {
+  x: 100,
+  x2: 500,
+  y: 2,
   width: 0.1,
   height: 0.1,
   widthIncrease: 0.1,
   heightIncrease: 0.1,
-  active: true
-}
+  active: true,
+  size: 200
+};
 
 // Ending sequence active tracker
 let endingSequenceActive = false;
 
-// Ending credits boolean
+// Variable to toggle end credits
 let credits = true;
 
 // Variable for credits in scene four
 let sceneFourCredits = {
   height: 500,
-  vy: 0.3
+  height2: 650,
+  vy: 0.3,
+  limit: -2000,
 };
 
 // Variable for fade effect into scene 3
@@ -183,6 +243,33 @@ let fadeSquare = {
   alpha: 245,
   alphaDecrease: 1,
   active: true
+};
+
+// Variable for detective alerts
+
+let alertMessage = {
+  pitch: 0.9,
+  rate: 0.75,
+};
+
+// Set timeout delays
+let delayAmount = {
+  finalScene: 9000,
+  endingSequence: 4000,
+  sceneFourMusic: 2000,
+  sceneOneMessage: 4000,
+  androidMeeting: 2000
+};
+
+// Variable to set intro music volume
+let introMusicVolume = 0.3;
+
+// Variable for designer image properties
+let designerImage = {
+  x: 2,
+  y: 2,
+  w: 200,
+  h: 200
 };
 
 /*********************** PRELOAD **********************************************/
@@ -248,15 +335,15 @@ function setup() {
   }
 
   // Stars effect during intro
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < starsAmount; i++) {
     stars[i] = new Star();
   }
 
   // For loop to set up android army amount and position
   for (let i = 0; i < androidArmyAmount; i++) {
     androidArmy.push({
-      x: random(100, 600),
-      y: height / 2
+      x: random(androidArmyEffect.x, androidArmyEffect.x2),
+      y: height / androidArmyEffect.y
     })
   }
 } // End of setup()
@@ -264,8 +351,7 @@ function setup() {
 
 /*********************** SET UP SCENE *****************************************/
 
-// Function to set up the scene's annyang dialogue and user interactions
-
+// Function to set up the scene's annyang dialogue, user interactions, and game audio
 function setUpScene() {
 
   // Dialogue code for annyang in scene two
@@ -275,7 +361,7 @@ function setUpScene() {
 
     // Clear previous commands
     annyang.removeCommands();
-
+    // Start with empty command properties
     let commands = {};
 
     // For loop to setup dialogue JSON data so that correct responses get an alert and
@@ -290,7 +376,7 @@ function setUpScene() {
 
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker1++
-          if (correctAnswerTracker1 === 5) {
+          if (correctAnswerTracker1 === correctAnswerTracker1Trigger) {
             displayQuestionSceneTwo = true;
 
             //change the scene when the right questions are asked
@@ -345,13 +431,13 @@ function setUpScene() {
       commands[question.question] = function() {
         if (question.correct === true) {
           responsiveVoice.speak(question.answer, "UK English Male", {
-            pitch: 0.4,
-            rate: 0.9,
+            pitch: androidVoiceEffects.pitch,
+            rate: androidVoiceEffects.rate,
           });
 
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker2++
-          if (correctAnswerTracker2 === 5) {
+          if (correctAnswerTracker2 === correctAnswerTracker2Trigger) {
             // Display the secret question
             displayExtraQuestionSceneThree = true;
 
@@ -363,8 +449,8 @@ function setUpScene() {
                 displayQuestionSceneThree = true;
                 // Responsive voice triggers
                 responsiveVoice.speak(extraSceneQuestion.answer, "UK English Male", {
-                  pitch: 0.4,
-                  rate: 0.9,
+                  pitch: androidVoiceEffects.pitch,
+                  rate: androidVoiceEffects.rate,
                 });
               }
             };
@@ -377,20 +463,19 @@ function setUpScene() {
                 endingSequenceActive = true;
                 annyang.removeCommands();
                 responsiveVoice.speak(finalSceneQuestion.answer, "UK English Male", {
-                  pitch: 0.4,
-                  rate: 0.9,
+                  pitch: androidVoiceEffects.pitch,
+                  rate: androidVoiceEffects.rate,
                 });
 
                 // Delay before initiating ending sequence
                 // Anonymouse function to manage delay elements
                 let endingSequenceDelay = function() {
-                  alarmSound.setVolume(0.1);
+                  alarmSound.setVolume(alarmSoundVolume);
                   alarmSound.loop();
                   // Trigger responsive voice message
                   responsiveVoice.speak(dialogueData.sceneThree.automatedMessage, "UK English Female", {
-                    pitch: 0.9,
-                    rate: 0.75,
-
+                    pitch: alertMessage.pitch,
+                    rate: alertMessage.rate,
                   });
 
                   //Final state switch to scene four blank screen
@@ -401,11 +486,11 @@ function setUpScene() {
                   };
 
                   // Timer to control when the effect occurs
-                  setTimeout(finalScene, 9000);
+                  setTimeout(finalScene, delayAmount.finalScene);
 
                 };
                 // Delay the scene change
-                setTimeout(endingSequenceDelay, 4000);
+                setTimeout(endingSequenceDelay, delayAmount.endingSequence);
               }
             }
 
@@ -420,8 +505,8 @@ function setUpScene() {
 
     // Trigger responsive void dialogue for android when it reaches correct size.
     responsiveVoice.speak(dialogueData[sceneThreeDialogue].androidGreeting, "UK English Male", {
-      pitch: 0.4,
-      rate: 0.9,
+      pitch: androidVoiceEffects.pitch,
+      rate: androidVoiceEffects.rate,
     });
   } // End of scene three setup
 
@@ -432,7 +517,7 @@ function setUpScene() {
       playMusic();
     };
     // Delay the start of the music
-    setTimeout(sceneFourMusic, 2000);
+    setTimeout(sceneFourMusic, delayAmount.sceneFourMusic);
   }
 
 } // End of setUpScene function
@@ -440,7 +525,7 @@ function setUpScene() {
 /*********************** DRAW *************************************************/
 
 /**
-Draw function to switch between states and alter background color.
+Draw function to switch between states and set background color.
 */
 function draw() {
   background(bg.titleColour);
@@ -470,16 +555,14 @@ function draw() {
 // KeyPressed function to trigger changes between states
 function keyPressed() {
 
-  /* #BFFF00 add keypressed so audio starts correctly*/
-
   // If the state is sceneOne and the user presses Enter then go to next state
   if (state === `sceneOne` && key === "Enter") {
     // Lower volume
-    introMusic.setVolume(0.3);
+    introMusic.setVolume(introMusicVolume);
     // Trigger responsive voice message
     responsiveVoice.speak(dialogueData.sceneOne.automatedMessage, "UK English Female", {
-      pitch: 0.9,
-      rate: 0.75,
+      pitch: alertMessage.pitch,
+      rate: alertMessage.rate,
     });
     // Delay before changing states
     // Anonymouse function to manage delay elements
@@ -487,7 +570,7 @@ function keyPressed() {
       state = `sceneTwo`;
       setUpScene();
     };
-    setTimeout(sceneOneMessage, 4000);
+    setTimeout(sceneOneMessage, delayAmount.sceneOneMessage);
   }
 
   // If the state is title and the user presses Enter then go to next state
@@ -531,12 +614,11 @@ function sceneTwoState() {
   // Display the designer image
   push();
   imageMode(CENTER);
-  image(designer, width / 2, height / 2, 200, 200);
+  image(designer, width / designerImage.x, height / designerImage.y, designerImage.w, designerImage.h);
   pop();
 
   // Display scene text
   textAnimation();
-
 }
 
 /*********************** SCENE THREE STATE ************************************/
@@ -550,12 +632,11 @@ function sceneThreeState() {
   // Display the android image
   push();
   imageMode(CENTER);
-  image(androidImage, width / 2, height / 2, androidEffect.width, androidEffect.height);
+  image(androidImage, width /  androidEffect.x, height / androidEffect.y, androidEffect.width, androidEffect.height);
   pop();
 
   // Effect to have scene fade in
   fadeSceneEffect();
-
 
   // Effect to have android incrase in size
   let androidMeeting = function() {
@@ -567,13 +648,12 @@ function sceneThreeState() {
   }
 
   // Timer to control when the effect occurs
-  setTimeout(androidMeeting, 2000);
+  setTimeout(androidMeeting, delayAmount.androidMeeting);
 
   // Limit the size of the image
-  if (androidEffect.width > 200) {
+  if (androidEffect.width > androidEffect.size) {
     androidEffectActive = false;
-    androidEffect.width = 200;
-    // androidEffect.height = 200;
+    androidEffect.width = androidEffect.size;
   }
 
   // Trigger to display multiple androids
@@ -582,10 +662,9 @@ function sceneThreeState() {
     // Display the android army
     for (let i = 0; i < androidArmyAmount; i++) {
       image(androidImage, androidArmy[i].x, androidArmy[i].y, androidArmyEffect.width, androidArmyEffect.height);
-
     }
 
-    if (androidEffect.width < 0.2) {
+    if (androidEffect.width < androidEffect.width2) {
       // Make the android army grow
       androidArmyEffect.width += androidArmyEffect.widthIncrease;
       androidArmyEffect.height += androidArmyEffect.heightIncrease;
@@ -593,9 +672,9 @@ function sceneThreeState() {
   }
 
   // Stop android army from growing
-  if (androidArmyEffect.width > 200) {
-    androidArmyEffect.width = 200;
-    androidArmyEffect.height = 200;
+  if (androidArmyEffect.width > androidArmyEffect.size) {
+    androidArmyEffect.width = androidArmyEffect.size;
+    androidArmyEffect.height = androidArmyEffect.size;
   }
 
 
@@ -609,10 +688,10 @@ function sceneThreeState() {
   }
 
   // Stop shrinking
-  if (androidEffect.width < 0.1) {
+  if (androidEffect.width < androidEffect.width3) {
     androidEffect.shrink = false;
-    androidEffect.width = 0.1;
-    androidEffect.height = 0.1;
+    androidEffect.width = androidEffect.width4;
+    androidEffect.height = androidEffect.height4;
   }
 } // End of scene three state
 
@@ -622,32 +701,27 @@ function sceneThreeState() {
 function sceneFourState() {
 
   // Code to run ending credits
-
   if (credits === true) {
     textAnimation();
   }
-
-  if (sceneFourCredits.height < -2000) {
-    sceneFourCredits.height = 650;
+  // stop credits scrolling when text no longer in view
+  if (sceneFourCredits.height < sceneFourCredits.limit) {
+    sceneFourCredits.height = sceneFourCredits.height2;
     credits = false;
   }
-
 }
-
-
 
 /*********************** SETUP INTRO EFFECTS **********************************/
 
 function setupIntroEffects() {
 
   // Set up rain effect
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < dropEffects.amount; i++) {
     drop[i] = new Drop();
   }
 
   // Set up typewriter class
-  openingText = new Typewriter(string, 25, 25, 550, 550, 0.28);
-
+  openingText = new Typewriter(sceneOneText, typewriter.x, typewriter.y, typewriter.w, typewriter.h, typewriter.rate);
 }
 
 /* - - - - - - - - - - - TEXT - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -693,7 +767,6 @@ function textAnimation() {
 
     // To display opening text
     openingText.update();
-
   }
 
   // Text to display if it is scene two
@@ -701,25 +774,26 @@ function textAnimation() {
 
     // Header text for scene two
     push();
-    fill(255);
-    textSize(23);
-    text(dialogueData[sceneTwoDialogue].intro, width / 3.5, height / 7);
+    fill(sceneTwoText.headerFill);
+    textSize(sceneTwoText.headerSize);
+    text(dialogueData[sceneTwoDialogue].intro, width / sceneTwoText.headerW, height / sceneTwoText.headerH);
     pop();
 
     // User direction text for scene two
     push();
-    fill(255);
-    textSize(23);
-    text(dialogueData[sceneTwoDialogue].userDirection, width / 3.5, height / 5);
+    fill(sceneTwoText.directionsFill);
+    textSize(sceneTwoText.directionsSize);
+    text(dialogueData[sceneTwoDialogue].userDirection, width / sceneTwoText.directionsW, height / sceneTwoText.directionsH);
     pop();
 
     // Dialogue text for scene two
     for (let i = 0; i < dialogueData[sceneTwoDialogue].questions.length; i++) {
       let question = dialogueData[sceneTwoDialogue].questions[i];
       push();
-      fill(255);
-      text(question.question + `?`, width / 14, 140 + i * 25);
+      fill(sceneTwoText.fill);
+      text(question.question + `?`, width / sceneTwoText.dialogueW, sceneTwoText.dialogueH + i * sceneTwoText.dialogueSpacing);
       pop();
+
     }
 
     // Text to display if user has met the conditions
@@ -780,7 +854,7 @@ function textAnimation() {
     }
   }
 
-// Text to display if it is scene four
+  // Text to display if it is scene four
   if (state === `sceneFour`) {
     // Make credits scroll upwards.
     sceneFourCredits.height -= sceneFourCredits.vy;
@@ -811,7 +885,7 @@ function playMusic() {
 
 /*********************** FADE SCENE EFFECT *******************************************/
 
-// Function for fading effecting for scene switching
+// Function for fading effect for scene switching
 function fadeSceneEffect() {
 
   // Effect to have scene fade in
@@ -834,10 +908,10 @@ function fadeSceneEffect() {
 
 /*********************** DROP *************************************************/
 
-// Function to simulate rain effect based on p5 sample code, see README for more information
+// Function to simulate rain effect
 
 // Effect by kelsierose94 see README for more details
-// I adjusted some of the values to modify the rain effect
+// I adjusted some of the values to modify the effect
 
 function Drop() {
   // Setting random position for rain drops
@@ -867,7 +941,7 @@ function Drop() {
 
 /*********************** DROP DISPLAY *****************************************/
 
-// Function for rain drop effect in scene one
+// Function to display rain drop effect in scene one
 function dropDisplay() {
   // Rain effect
 
