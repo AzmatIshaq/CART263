@@ -56,7 +56,7 @@ It escaped after injuring a crew member.
 
 The crew stated it got "angry"...
 
-C-4478 now sits in Cell 14 waiting for my
+C-4478 now sits in CELL-14 waiting for my
 preliminary interrogation.
 
 . . .`;
@@ -404,7 +404,8 @@ function setup() {
 
   createCanvas(750, 450);
 
-
+  // Initialize audio
+  userStartAudio();
 
   if (annyang) {
     annyang.start();
@@ -415,9 +416,6 @@ function setup() {
 
   // Setup effects for intro and scene one
   setupIntroEffects();
-
-  // Initialize audio
-  userStartAudio();
 
   // Trigger soundtrack and provide program info to user
   if (state === `activateAudio`) {
@@ -654,6 +652,8 @@ function keyPressed() {
   //start in audio activation state to make sure intro music plays correctly
   if (state === `activateAudio` && key === "i") {
     state = `title`;
+    // Setup scene interactions
+    setUpScene();
   }
 
   // If the state is sceneOne and the user presses Enter then go to next state
@@ -720,6 +720,7 @@ function sceneOneState() {
 
 // Function to manage scene two state elements that will be in draw()
 function sceneTwoState() {
+
 
   // Display the designer image
   push();
