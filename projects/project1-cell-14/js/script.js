@@ -21,6 +21,8 @@ let bg = {
   g: 0,
   b: 0,
   titleColour: 30,
+  alertColour: 0,
+  main: 30,
 };
 
 // Variable to style title text displayed
@@ -141,6 +143,13 @@ let sceneFourCredits = {
   spacing2: 200,
 };
 
+// Variable to manage text for audio activation state
+let audioActivation = {
+  fill: 255,
+  x: 2,
+  y: 2
+};
+
 // Variable for fade effect
 let fadeOut = {
   // Limit for how high the alpha fade effect will go
@@ -164,9 +173,10 @@ let drop = [];
 
 /* #BFFF00
 Variable to set starting state */
+let state = `activateAudio`;
 // let state = `title`;
 // let state = `sceneTwo`;
-let state = `sceneThree`;
+// let state = `sceneThree`;
 // let state = `sceneFour`;
 
 
@@ -250,9 +260,9 @@ let typewriter = {
 
 // Variable to track correct answers
 let correctAnswerTracker1 = 0;
-let correctAnswerTracker1Trigger = 1;
+let correctAnswerTracker1Trigger = 5;
 let correctAnswerTracker2 = 0;
-let correctAnswerTracker2Trigger = 1;
+let correctAnswerTracker2Trigger = 5;
 
 // Variables to display questions for scene changes
 let displayFinalQuestionSceneTwo;
@@ -394,7 +404,7 @@ function setup() {
 
   createCanvas(750, 450);
 
-  alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience.`);
+
 
   if (annyang) {
     annyang.start();
@@ -406,10 +416,15 @@ function setup() {
   // Setup effects for intro and scene one
   setupIntroEffects();
 
-  // Trigger soundtrack
-  if (state === `title`) {
-    playMusic();
-  }
+  // Initialize audio
+  userStartAudio();
+
+  // Trigger soundtrack and provide program info to user
+  if (state === `activateAudio`) {
+      alert(`Please use Google Chrome. Other browsers may not load the content correctly. Also be sure to allow Microphone and Audio access to get the full experience.`);
+      playMusic();
+    }
+
 
   // Stars effect during intro
   for (let i = 0; i < starsEffects.amount; i++) {
@@ -607,9 +622,12 @@ function setUpScene() {
 Draw function to switch between states and set background color.
 */
 function draw() {
-  background(bg.titleColour);
+  background(bg.main);
 
   // Alternate between game states
+  if (state === `activateAudio`) {
+    activateAudioState();
+  }
   if (state === `title`) {
     titleState();
   }
@@ -633,6 +651,10 @@ function draw() {
 
 // KeyPressed function to trigger changes between states
 function keyPressed() {
+  //start in audio activation state to make sure intro music plays correctly
+  if (state === `activateAudio` && key === "i") {
+    state = `title`;
+  }
 
   // If the state is sceneOne and the user presses Enter then go to next state
   if (state === `sceneOne` && key === "Enter") {
@@ -658,10 +680,19 @@ function keyPressed() {
   }
 }
 
+
+function activateAudioState() {
+  textAnimation();
+  // Set background to black
+    bg.main = bg.alertColour;
+}
+
 /*********************** TITLE STATE ******************************************/
 
 // Function to manage title state elements that will be in draw()
 function titleState() {
+  // Set background to black
+    bg.main = bg.titleColour;
 
   // Stars effect
   for (var i = 0; i < stars.length; i++) {
@@ -810,6 +841,18 @@ function setupIntroEffects() {
 
 // Function to handle all of the text animation
 function textAnimation() {
+
+  // Display audio activation state
+if (state === `activateAudio`) {
+    push();
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
+    textSize(titleText.size2);
+    fill(audioActivation.fill);
+    text(`Press i to initiate program`, width / audioActivation.x, height / audioActivation.y);
+    pop();
+  }
+
 
   // Display title text if in title state
   if (state === `title`) {
