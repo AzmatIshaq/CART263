@@ -41,26 +41,6 @@ let titleText = {
   y2: 1.2
 };
 
-// Variable for intro Text typewriter effect string
-let sceneOneText = `
-Detective's log, Date 3471.
-
-I have been tasked with the investigation of a
-malfunctioning android: C-4478.
-
-It was detected damaging some equipment on board the Starship Endeavour 2.
-
-The android was sent to Cargo Bay 3 to be repaired.
-
-It escaped after injuring a crew member.
-
-The crew stated it got "angry"...
-
-C-4478 now sits in CELL-14 waiting for my
-preliminary interrogation.
-
-. . .`;
-
 // Variable to style scene two text
 let sceneTwoText = {
   fill: 255,
@@ -72,75 +52,16 @@ let sceneTwoText = {
   y2: 1.2,
   headerSize: 23,
   headerFill: 255,
-  headerX: 3.5,
-  headerY: 7,
+  headerW: 3.5,
+  headerH: 7,
   directionsSize: 23,
   directionsFill: 255,
-  directionsX: 3.5,
-  directionsY: 5,
-  dialogueX: 14,
-  dialogueY: 140,
+  directionsW: 3.5,
+  directionsH: 5,
+  dialogueW: 14,
+  dialogueH: 140,
   dialogueSpacing: 25,
-  finalQuestion: {
-    r: 90,
-    g: 160,
-    b: 255,
-    size: 20,
-    x: 5.5,
-    y: 1.2,
-  },
-};
 
-
-// Variable to style scene three text
-let sceneThreeText = {
-  fill: {
-    r:255,
-    g: 255,
-    b: 255
-  },
-    size: 12,
-    x: 14,
-    y: 200,
-    spacing: 25,
-  headerSize: 23,
-  headerFill: {
-    r: 255,
-    g: 20,
-    b: 20
-  },
-  headerX: 3.5,
-  headerY: 7,
-  dialogueX: 14,
-  dialogueY: 140,
-  dialogueSpacing: 25,
-  finalQuestion: {
-    r: 90,
-    g: 160,
-    b: 255,
-    size: 20,
-    x: 4,
-    y: 1.1,
-    x2: 4,
-    y2: 1.2,
-    spacing: 25
-  },
-  trigger: 100
-};
-
-// Variable for credits in scene four
-let sceneFourCredits = {
-  r: 90,
-  g: 160,
-  b: 200,
-  size: 16,
-  x: 2,
-  y: 500,
-  y2: 800,
-  vy: 0.3,
-  limit: -2000,
-  spacing: 100,
-  spacing2: 200,
 };
 
 // Variable to manage text for audio activation state
@@ -183,7 +104,25 @@ let state = `activateAudio`;
 // Variable for intro text
 let openingText = undefined;
 
+// Variable for intro Text string
+let sceneOneText = `
+Detective's log, Date 3471.
 
+I have been tasked with the investigation of a
+malfunctioning android: C-4478.
+
+It was detected damaging some equipment on board the Starship Endeavour 2.
+
+The android was sent to Cargo Bay 3 to be repaired.
+
+It escaped after injuring a crew member.
+
+The crew stated it got "angry"...
+
+C-4478 now sits in CELL-14 waiting for my
+preliminary interrogation.
+
+. . .`;
 
 /* ~~~~ IMAGE VARIABLES ~~~~ */
 
@@ -221,32 +160,11 @@ let sceneThreeDialogue = `sceneThree`;
 let stars = [];
 
 // Variable to pick amount of stars for intro
-let starsEffects = {
-  size1: 0.25,
-  size2: 3,
-  amount: 1000,
-  pulseRate: 0.1,
-  scaleProperty: 2
-}
+let starsAmount = 1000;
 
 // Variable to set rain drops effects properties
 let dropEffects = {
   amount: 200,
-  r: 50,
-  g: 50,
-  b: 255,
-  x1: 2,
-  y1: 0,
-  w1: 5,
-  w2: 10,
-  h1: 5,
-  h2: 10,
-  speed1: 5,
-  speed2: 10,
-  gravity: 1.05,
-  gravityReset: 0,
-  reset: 0,
-  amount: 200
 };
 
 // Variable to set typerwriter effects properties
@@ -265,8 +183,8 @@ let correctAnswerTracker2 = 0;
 let correctAnswerTracker2Trigger = 5;
 
 // Variables to display questions for scene changes
-let displayFinalQuestionSceneTwo;
-let displayFinalQuestionSceneThree;
+let displayQuestionSceneTwo;
+let displayQuestionSceneThree;
 let displayExtraQuestionSceneThree;
 
 // Variable for android voice effects
@@ -320,20 +238,25 @@ let endingSequenceActive = false;
 // Variable to toggle end credits
 let credits = true;
 
+// Variable for credits in scene four
+let sceneFourCredits = {
+  height: 500,
+  height2: 650,
+  vy: 0.3,
+  limit: -2000,
+};
+
 // Variable for fade effect into scene 3
 let fadeSquare = {
-  fill: 0,
-  x: 2,
-  y: 2,
   width: 750,
   height: 450,
   alpha: 245,
   alphaDecrease: 1,
-  active: true,
-  limit: 0,
+  active: true
 };
 
 // Variable for detective alerts
+
 let alertMessage = {
   pitch: 0.9,
   rate: 0.75,
@@ -425,7 +348,7 @@ function setup() {
 
 
   // Stars effect during intro
-  for (let i = 0; i < starsEffects.amount; i++) {
+  for (let i = 0; i < starsAmount; i++) {
     stars[i] = new Star();
   }
 
@@ -436,8 +359,6 @@ function setup() {
       y: height / androidArmyEffect.y
     })
   }
-
-
 } // End of setup()
 
 
@@ -469,7 +390,7 @@ function setUpScene() {
           // Tracker to tally correct answers to be able to move to the next scene.
           correctAnswerTracker1++
           if (correctAnswerTracker1 === correctAnswerTracker1Trigger) {
-            displayFinalQuestionSceneTwo = true;
+            displayQuestionSceneTwo = true;
 
             //change the scene when the right questions are asked
             let finalSceneQuestion = dialogueData.sceneTwo.finalQuestion;
@@ -538,7 +459,7 @@ function setUpScene() {
             commands[extraSceneQuestion.question] = function() {
               if (extraSceneQuestion.triggerFinalQuestion === true) {
                 // Display the secret question
-                displayFinalQuestionSceneThree = true;
+                displayQuestionSceneThree = true;
                 // Responsive voice triggers
                 responsiveVoice.speak(extraSceneQuestion.answer, "UK English Male", {
                   pitch: androidVoiceEffects.pitch,
@@ -694,13 +615,13 @@ function titleState() {
   // Set background to black
     bg.main = bg.titleColour;
 
+  // Display scene one text
+  textAnimation();
+
   // Stars effect
   for (var i = 0; i < stars.length; i++) {
     stars[i].draw();
   }
-
-  // Display scene one text
-  textAnimation();
 
 } // End of title state
 
@@ -772,7 +693,6 @@ function sceneThreeState() {
 
     // Display the android army
     for (let i = 0; i < androidArmyAmount; i++) {
-
       image(androidImage, androidArmy[i].x, androidArmy[i].y, androidArmyEffect.width, androidArmyEffect.height);
     }
 
@@ -817,8 +737,8 @@ function sceneFourState() {
     textAnimation();
   }
   // stop credits scrolling when text no longer in view
-  if (sceneFourCredits.y < sceneFourCredits.limit) {
-    sceneFourCredits.y = sceneFourCredits.y2;
+  if (sceneFourCredits.height < sceneFourCredits.limit) {
+    sceneFourCredits.height = sceneFourCredits.height2;
     credits = false;
   }
 }
@@ -900,14 +820,14 @@ if (state === `activateAudio`) {
     push();
     fill(sceneTwoText.headerFill);
     textSize(sceneTwoText.headerSize);
-    text(dialogueData[sceneTwoDialogue].intro, width / sceneTwoText.headerX, height / sceneTwoText.headerY);
+    text(dialogueData[sceneTwoDialogue].intro, width / sceneTwoText.headerW, height / sceneTwoText.headerH);
     pop();
 
     // User direction text for scene two
     push();
     fill(sceneTwoText.directionsFill);
     textSize(sceneTwoText.directionsSize);
-    text(dialogueData[sceneTwoDialogue].userDirection, width / sceneTwoText.directionsX, height / sceneTwoText.directionsY);
+    text(dialogueData[sceneTwoDialogue].userDirection, width / sceneTwoText.directionsW, height / sceneTwoText.directionsH);
     pop();
 
     // Dialogue text for scene two
@@ -915,18 +835,19 @@ if (state === `activateAudio`) {
       let question = dialogueData[sceneTwoDialogue].questions[i];
       push();
       fill(sceneTwoText.fill);
-      text(question.question + `?`, width / sceneTwoText.dialogueX, sceneTwoText.dialogueY + i * sceneTwoText.dialogueSpacing);
+      text(question.question + `?`, width / sceneTwoText.dialogueW, sceneTwoText.dialogueH + i * sceneTwoText.dialogueSpacing);
       pop();
+
     }
 
     // Text to display if user has met the conditions
-    if (displayFinalQuestionSceneTwo === true) {
+    if (displayQuestionSceneTwo === true) {
       push();
-      fill(sceneTwoText.finalQuestion.r, sceneTwoText.finalQuestion.g, sceneTwoText.finalQuestion.b);
-      textSize(sceneTwoText.finalQuestion.size);
+      fill(90, 160, 200);
+      textSize(20);
       textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData.sceneTwo.finalQuestion.question + `?`, width / sceneTwoText.finalQuestion.x, height / sceneTwoText.finalQuestion.y);
+      text(dialogueData.sceneTwo.finalQuestion.question + `?`, width / 5.5, height / 1.2);
       pop();
     }
   }
@@ -936,9 +857,9 @@ if (state === `activateAudio`) {
 
     // Header text for scene three
     push();
-    fill(sceneThreeText.headerFill.r, sceneThreeText.headerFill.g, sceneThreeText.headerFill.b);
-    textSize(sceneThreeText.headerSize);
-    text(dialogueData[sceneThreeDialogue].intro, width / sceneThreeText.headerX, height / sceneThreeText.headerY);
+    fill(255, 20, 20);
+    textSize(23);
+    text(dialogueData[sceneThreeDialogue].intro, width / 4, height / 6);
     pop();
 
     // Dialogue text for scene two
@@ -946,11 +867,10 @@ if (state === `activateAudio`) {
       let question = dialogueData[sceneThreeDialogue].questions[i];
 
       // Display more dialogue if ending sequence is active
-      if (androidEffect.width > sceneThreeText.trigger && endingSequenceActive === false) {
+      if (androidEffect.width > 100 && endingSequenceActive === false) {
         push();
-        fill(sceneThreeText.fill.r, sceneThreeText.fill.g, sceneThreeText.fill.b);
-        textSize(sceneThreeText.size);
-        text(question.question + `?`, width /sceneThreeText.x, sceneThreeText.y + i * sceneThreeText.spacing);
+        fill(255);
+        text(question.question + `?`, width / 14, 200 + i * 25);
         pop();
       }
     }
@@ -958,22 +878,22 @@ if (state === `activateAudio`) {
     // Text to display if user has met the conditions
     if (displayExtraQuestionSceneThree === true && endingSequenceActive === false) {
       push();
-      fill(sceneThreeText.finalQuestion.r,sceneThreeText.finalQuestion.g,sceneThreeText.finalQuestion.b);
-      textSize(sceneThreeText.finalQuestion.size);
+      fill(90, 160, 200);
+      textSize(20);
       // textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData.sceneThree.extraQuestion.question + `?`, width / sceneThreeText.finalQuestion.x2, height / sceneThreeText.finalQuestion.y2);
+      text(dialogueData.sceneThree.extraQuestion.question + `?`, width / 4, height / 1.2);
       pop();
     }
 
     // Text to display if user has met the conditions
-    if (displayFinalQuestionSceneThree === true) {
+    if (displayQuestionSceneThree === true) {
       push();
-      fill(sceneThreeText.finalQuestion.r,sceneThreeText.finalQuestion.g,sceneThreeText.finalQuestion.b);
-      textSize(sceneThreeText.finalQuestion.size);
+      fill(90, 160, 200);
+      textSize(20);
       // textAlign(CENTER, CENTER);
       textStyle(NORMAL);
-      text(dialogueData.sceneThree.finalQuestion.question + `?`, width / sceneThreeText.finalQuestion.x, height / sceneThreeText.finalQuestion.y);
+      text(dialogueData.sceneThree.finalQuestion.question + `?`, width / 4, height / 1.1);
       pop();
     }
   }
@@ -981,16 +901,16 @@ if (state === `activateAudio`) {
   // Text to display if it is scene four
   if (state === `sceneFour`) {
     // Make credits scroll upwards.
-    sceneFourCredits.y -= sceneFourCredits.vy;
+    sceneFourCredits.height -= sceneFourCredits.vy;
 
     push();
-    fill(sceneFourCredits.r, sceneFourCredits.g, sceneFourCredits.b);
-    textSize(sceneFourCredits.size);
+    fill(90, 160, 200);
+    textSize(16);
     textAlign(CENTER, CENTER);
     textStyle(NORMAL);
-    text(`Made by Azmat Ishaq`, width / sceneFourCredits.x, sceneFourCredits.y);
-    text(`Code contributions by Pippin Barr`, width / sceneFourCredits.x, sceneFourCredits.y + sceneFourCredits.spacing);
-    text(`See README for more information`, width / sceneFourCredits.x, sceneFourCredits.y + sceneFourCredits.spacing2);
+    text(`Made by Azmat Ishaq`, width / 2, sceneFourCredits.height);
+    text(`Code contributions by Pippin Barr`, width / 2, sceneFourCredits.height + 100);
+    text(`See README for more information`, width / 2, sceneFourCredits.height + 200);
     pop();
 
   }
@@ -1014,17 +934,17 @@ function fadeSceneEffect() {
 
   // Effect to have scene fade in
   push();
-  fill(fadeSquare.fill, fadeSquare.fill, fadeSquare.fill, fadeSquare.alpha);
+  fill(0, 0, 0, fadeSquare.alpha);
   rectMode(CENTER);
-  rect(width / fadeSquare.x, height / fadeSquare.y, fadeSquare.width, fadeSquare.height);
+  rect(width / 2, height / 2, fadeSquare.width, fadeSquare.height);
   pop();
 
   // Stop the effect
   if (state === `sceneThree` && fadeSquare.active === true) {
     fadeSquare.alpha -= fadeSquare.alphaDecrease
-    if (fadeSquare.alpha < fadeSquare.limit) {
+    if (fadeSquare.alpha < 0) {
       fadeSquare.active = false;
-      fadeSquare.alpha = fadeSquare.limit;
+      fadeSquare.alpha = 0;
     }
   }
 };
@@ -1039,26 +959,26 @@ function fadeSceneEffect() {
 
 function Drop() {
   // Setting random position for rain drops
-  this.x = random(dropEffects.x1, width);
-  this.y = random(dropEffects.y1, -height);
+  this.x = random(0, width);
+  this.y = random(0, -height);
 
   // Using anonymous function to display rain drop
   this.show = function() {
     noStroke();
-    fill(dropEffects.r, dropEffects.g, dropEffects.b);
-    ellipse(this.x, this.y, random(dropEffects.w1, dropEffects.w2), random(dropEffects.h1, dropEffects.h2));
+    fill(50, 50, 255);
+    ellipse(this.x, this.y, random(5, 10), random(5, 10));
   }
 
   // Using anonymous function to manage rain physics
   this.update = function() {
-    this.speed = random(dropEffects.speed1, dropEffects.speed2);
-    this.gravity = dropEffects.gravity;
+    this.speed = random(5, 10);
+    this.gravity = 1.05;
     this.y = this.y + this.speed * this.gravity;
 
     // Resetting the raindrops to fall continuously
     if (this.y > height) {
-      this.y = random(dropEffects.reset, -height);
-      this.gravity = dropEffects.gravityReset;
+      this.y = random(0, -height);
+      this.gravity = 0;
     }
   }
 } // End of Drop function
@@ -1069,7 +989,7 @@ function Drop() {
 function dropDisplay() {
   // Rain effect
 
-  for (var i = 0; i < dropEffects.amount; i++) {
+  for (var i = 0; i < 200; i++) {
     drop[i].show();
     drop[i].update();
   }
@@ -1084,13 +1004,13 @@ class Star {
   constructor() {
     this.x = random(width);
     this.y = random(height);
-    this.size = random(starsEffects.size1, starsEffects.size2);
+    this.size = random(0.25, 3);
     this.t = random(TAU);
   }
 
   draw() {
-    this.t += starsEffects.pulseRate;
-    let scale = this.size + sin(this.t) * starsEffects.scaleProperty;
+    this.t += 0.1;
+    let scale = this.size + sin(this.t) * 2;
     noStroke();
     ellipse(this.x, this.y, scale, scale);
   }
