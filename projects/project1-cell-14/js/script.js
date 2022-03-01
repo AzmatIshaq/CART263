@@ -42,14 +42,21 @@ let titleText = {
 // Variable for intro Text typewriter effect string
 let sceneOneText = `
 Detective's log, Date 3471.
+
 I have been tasked with the investigation of a
 malfunctioning android: C-4478.
+
 It was detected damaging some equipment on board the Starship Endeavour 2.
+
 The android was sent to Cargo Bay 3 to be repaired.
+
 It escaped after injuring a crew member.
+
 The crew stated it got "angry"...
-C-4478 now sits in Cell 14 waiting for my
+
+C-4478 now sits in CELL-14 waiting for my
 preliminary interrogation.
+
 . . .`;
 
 // Variable to style scene two text
@@ -62,7 +69,11 @@ let sceneTwoText = {
   x2: 2,
   y2: 1.2,
   headerSize: 23,
-  headerFill: 255,
+  headerFill: {
+    r: 25,
+    g: 180,
+    b: 180
+  },
   headerX: 3.5,
   headerY: 7,
   directionsSize: 23,
@@ -77,7 +88,7 @@ let sceneTwoText = {
     g: 160,
     b: 255,
     size: 20,
-    x: 5.5,
+    x: 2.6,
     y: 1.2,
   },
 };
@@ -100,7 +111,7 @@ let sceneThreeText = {
     g: 20,
     b: 20
   },
-  headerX: 3.5,
+  headerX: 2,
   headerY: 7,
   dialogueX: 14,
   dialogueY: 140,
@@ -110,9 +121,9 @@ let sceneThreeText = {
     g: 160,
     b: 255,
     size: 20,
-    x: 4,
+    x: 3.4,
     y: 1.1,
-    x2: 4,
+    x2: 3.4,
     y2: 1.2,
     spacing: 25
   },
@@ -162,8 +173,7 @@ let fadeOut = {
 // Array variable for rain effect
 let drop = [];
 
-/* #BFFF00
-Variable to set starting state */
+/* Variable to set starting state */
 let state = `activateAudio`;
 // let state = `title`;
 // let state = `sceneTwo`;
@@ -173,7 +183,6 @@ let state = `activateAudio`;
 
 // Variable for intro text
 let openingText = undefined;
-
 
 
 /* ~~~~ IMAGE VARIABLES ~~~~ */
@@ -844,7 +853,6 @@ if (state === `activateAudio`) {
     pop();
   }
 
-
   // Display title text if in title state
   if (state === `title`) {
     push();
@@ -888,7 +896,7 @@ if (state === `activateAudio`) {
 
     // Header text for scene two
     push();
-    fill(sceneTwoText.headerFill);
+    fill(sceneTwoText.headerFill.r, sceneTwoText.headerFill.g, sceneTwoText.headerFill.b);
     textSize(sceneTwoText.headerSize);
     text(dialogueData[sceneTwoDialogue].intro, width / sceneTwoText.headerX, height / sceneTwoText.headerY);
     pop();
@@ -914,7 +922,7 @@ if (state === `activateAudio`) {
       push();
       fill(sceneTwoText.finalQuestion.r, sceneTwoText.finalQuestion.g, sceneTwoText.finalQuestion.b);
       textSize(sceneTwoText.finalQuestion.size);
-      textAlign(CENTER, CENTER);
+      // textAlign(CENTER, CENTER);
       textStyle(NORMAL);
       text(dialogueData.sceneTwo.finalQuestion.question + `?`, width / sceneTwoText.finalQuestion.x, height / sceneTwoText.finalQuestion.y);
       pop();
@@ -927,6 +935,8 @@ if (state === `activateAudio`) {
     // Header text for scene three
     push();
     fill(sceneThreeText.headerFill.r, sceneThreeText.headerFill.g, sceneThreeText.headerFill.b);
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
     textSize(sceneThreeText.headerSize);
     text(dialogueData[sceneThreeDialogue].intro, width / sceneThreeText.headerX, height / sceneThreeText.headerY);
     pop();
