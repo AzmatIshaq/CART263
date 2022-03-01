@@ -1,7 +1,9 @@
 # Project 1 - CELL 14
 
 Project 1 - Night at The Movies - CELL 14
+
 by Azmat Ishaq
+
 Code contributions from Pippin Barr.
 
 Artist Statement:
@@ -22,7 +24,7 @@ Link to online project
 https://azmatishaq.github.io/CART263/project/project1-cell-14
 
 
-Sources:
+**Sources**:
 
 Android Image: https://www.emojipng.com/preview/13304379
 

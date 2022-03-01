@@ -173,7 +173,7 @@ let fadeOut = {
 // Array variable for rain effect
 let drop = [];
 
-/* Variable to set starting state */
+/* Variables to set starting state */
 let state = `activateAudio`;
 // let state = `title`;
 // let state = `sceneTwo`;
