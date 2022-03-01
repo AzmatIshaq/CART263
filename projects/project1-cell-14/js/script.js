@@ -88,7 +88,7 @@ let sceneTwoText = {
     g: 160,
     b: 255,
     size: 20,
-    x: 2.6,
+    x: 14,
     y: 1.2,
   },
 };
@@ -121,9 +121,9 @@ let sceneThreeText = {
     g: 160,
     b: 255,
     size: 20,
-    x: 3.4,
+    x: 14,
     y: 1.1,
-    x2: 3.4,
+    x2: 14,
     y2: 1.2,
     spacing: 25
   },
@@ -908,7 +908,7 @@ if (state === `activateAudio`) {
     text(dialogueData[sceneTwoDialogue].userDirection, width / sceneTwoText.directionsX, height / sceneTwoText.directionsY);
     pop();
 
-    // Dialogue text for scene two
+    // Dialogue questions text for scene two
     for (let i = 0; i < dialogueData[sceneTwoDialogue].questions.length; i++) {
       let question = dialogueData[sceneTwoDialogue].questions[i];
       push();
