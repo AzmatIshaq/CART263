@@ -1,20 +1,25 @@
-/*********************************************
 
-Here is a description of any special CSS used.
-In this case it's just padding and margin to 0
-and then centring the canvas (and anything else)
-using the CSS Grid.
-
-Also hides overflow.
-
-**********************************************/
+/* CSS styling for Code Taker Plus Plus */
 
 body {
-  padding: 0;
-  margin: 0;
-  display: grid; /* Set up the grid and justify/align to center */
-  justify-content: center;
-  align-content: center;
-  height: 100vh; /* Body is the height of the viewport */
-  overflow: hidden; /* Hide anything that goes off the window size */
+  background-color: hsla(187, 68%, 43%, 0.9);
+  font-family: 'Garamond', serif;
+}
+
+
+/* Some Very Basic Styling */
+
+#message {
+  font-size: 1.5rem;
+}
+
+#answer {
+  font-size: 2rem;
+  margin-top: 2rem;
+  height: 2rem;
+  border: 1px solid black;
+}
+
+.found {
+  color: red;
 }
