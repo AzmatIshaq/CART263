@@ -2,8 +2,9 @@
 /* CSS styling for Code Taker Plus Plus */
 
 body {
-  background-color: hsla(187, 68%, 43%, 0.9);
+  background-color: #292929;
   font-family: 'Garamond', serif;
+  color: #292929;
 }
 
 
@@ -18,8 +19,10 @@ body {
   margin-top: 1.8rem;
   height: 1.8rem;
   border: 1px solid black;
+  color: #eeeeee;
+  background-color: #395f5b;
 }
 
 .found {
-  color: red;
+  color: #fbc0c0;
 }
