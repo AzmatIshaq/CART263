@@ -14,10 +14,13 @@ https://jqueryui.com
 "use strict";
 
 // The secret answer we're looking for (including capitalization)
-let secret = `Theremin`;
+let secret = `eaten breakfast`;
 
 // Dialog box to instruct the user on what they should do
-$(`#instructions_dialogue`).dialog();
+$(`#instructions_dialogue`).dialog({
+  modal: true,
+  resizable: false
+});
 
 // Turn the dialog div into an actual dialog
 $(`#solved-dialog`).dialog({
@@ -59,5 +62,6 @@ $(`#answer`).droppable({
       // If they did, display the dialog!
       $(`#solved-dialog`).dialog(`open`);
     }
+    $(this).append(` `);
   }
 });
