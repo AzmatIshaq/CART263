@@ -1,3 +1,9 @@
-# Template p5 project
+# Code Taker Plus Plus
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+Code Taker Plus Plus by Azmat Ishaq
+
+Based on code by Pippin Barr:
+  "The user can uncover secret letters in the poem by mousing over them. Once found
+  they can drag the letters in the correct order to the answer area to find the name of an amazing instrument (the theremin) and receive congratulations."
+
+I altered it to words instead of letters. The words also now have to be discovered by hovering over them. A dialogue modal was also added at the beginning. There are also hints and encouragements which utilize alerts and Jquery dialogue boxes.
