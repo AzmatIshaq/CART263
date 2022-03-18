@@ -48,9 +48,9 @@ $(`.secret`).draggable({
 $(`#answer`).droppable({
   drop: function(event, ui) {
     // Get the letter in the dragged element
-    let letter = ui.draggable.text();
+    let word = ui.draggable.text();
     // Add it to the answer box
-    $(this).append(letter);
+    $(this).append(word);
     // Disable dragging for this letter
     ui.draggable.draggable(`disable`);
     // Remove the highlighting of this letter

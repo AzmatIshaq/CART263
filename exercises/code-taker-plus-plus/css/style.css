@@ -10,13 +10,13 @@ body {
 /* Some Very Basic Styling */
 
 #message {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 #answer {
-  font-size: 2rem;
-  margin-top: 2rem;
-  height: 2rem;
+  font-size: 1.8rem;
+  margin-top: 1.8rem;
+  height: 1.8rem;
   border: 1px solid black;
 }
 
