@@ -4,7 +4,7 @@ Based on code by Pippin Barr:
   "The user can uncover secret letters in the poem by mousing over them. Once found
   they can drag the letters in the correct order to the answer area to find the name of an amazing instrument (the theremin) and receive congratulations."
 
-I altered it to words instead of letters. The words also now have to be discovered by hovering over them. A dialogue modal was also added at the beginning. There are also hints and encouragement which utilize alerts and Jquery dialogue boxes. 
+I altered it to words instead of letters. The words also now have to be discovered by hovering over them. A dialogue modal was also added at the beginning. There are also hints and encouragement which utilize alerts and Jquery dialogue boxes.
 
   -Azmat
 
@@ -84,6 +84,8 @@ $(`#answer`).droppable({
     if ($(`#answer`).text() === secret5){
       // If they did, display the dialog!
       $(`#solved-dialog`).dialog(`open`);
+      // Reveal the entire poem
+      document.body.style.backgroundColor = "#03a9f4";
     }
     // Add a space between the words
     $(this).append(` `);
