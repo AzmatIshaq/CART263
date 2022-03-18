@@ -27,6 +27,9 @@ let secret3 = `This eaten breakfast`;
 let secret4 = `This eaten breakfast was`;
 let secret5 = `This eaten breakfast was delicious`;
 
+// Set the puzzle to active so effects can happen
+let puzzleActive = true;
+
 // Dialog box to instruct the user on what they should do
 $(`#instructions_dialogue`).dialog({
   modal: true,
@@ -52,9 +55,11 @@ $(`.secret`).on(`mouseover`, function(event) {
 });
 
 // Let the user drag secret words via a clone helper
-$(`.secret`).draggable({
-  helper: `clone`
-});
+if (puzzleActive) {
+  $(`.secret`).draggable({
+    helper: `clone`
+  });
+}
 
 
 // When the user drops a word on the answer...
@@ -77,20 +82,24 @@ $(`#answer`).droppable({
         || $(`#answer`).text() === secret4) {
           // Show encouraging dialogue
         $(`#keep-going`).dialog(`open`);
-    } else if ($(`#answer`).text() != secret5) { // Otherwise tell user to start over
+    } else if ($(`#answer`).text() != secret5 && puzzleActive === true) { // Otherwise tell user to start over
       alert(`WRONG! Start over please.`)
     }
-    // If the final sentence is discovered show the winning text
+    // If the final sentence is discovered, show the winning text
     if ($(`#answer`).text() === secret5){
       // If they did, display the dialog!
       $(`#solved-dialog`).dialog(`open`);
       // Reveal the entire poem
       document.body.style.backgroundColor = "#03a9f4";
+      // Turn off the puzzle to stop effects
+      puzzleActive = false;
     }
     // Add a space between the words
     $(this).append(` `);
   }
 });
+
+
 
   // Jquery dialoge box to confirm correct answers for user
   $(`#keep-going`).dialog({
@@ -114,13 +123,13 @@ $(`#answer`).droppable({
     if ($(`#answer`).text() === secret1 + ` `) {
         alert(secret2);
     }
-    if ($(`#answer`).text() === secret2 + ` `){
+    if ($(`#answer`).text() === secret2 + ` `) {
         alert(secret3);
     }
-    if ($(`#answer`).text() === secret3 + ` `){
+    if ($(`#answer`).text() === secret3 + ` `) {
         alert(secret4);
     }
-    if ($(`#answer`).text() === secret4 + ` `){
+    if ($(`#answer`).text() === secret4 + ` `) {
         alert(`No more hints!`);
     }
 });
