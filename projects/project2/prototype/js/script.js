@@ -8,7 +8,13 @@ author, and this description to match your project!
 
 "use strict";
 
-let prisonCafeteria;
+//Image variables
+let cafeteriaImg;
+let prisonImg;
+
+// states
+
+let state = `title`;
 
 /**
 Description of preload
@@ -16,7 +22,9 @@ Description of preload
 function preload() {
 
   // Preload the cafeteria image
-  prisonCafeteria = loadImage('../assets/images/prison-cafeteria.png');
+  cafeteriaImg = loadImage('../assets/images/prison-cafeteria.png');
+  // Preload the prison image
+  prisonImg = loadImage('../assets/images/prison_main.png');
 
 }
 
@@ -25,7 +33,7 @@ function preload() {
 Description of setup
 */
 function setup() {
-  let canvas = createCanvas(550, 400);
+  let canvas = createCanvas(850, 400);
   canvas.parent(`#game-canvas`);
 
 }
@@ -36,12 +44,40 @@ Description of draw()
 */
 function draw() {
   background(0);
-  image(prisonCafeteria, 0, 0, 550, 400);
+
+  if (state === `cafteria`) {
+      image(cafeteriaImg, 0, 0, 550, 400);
+    }
+
+  if (state === `title`) {
+      image(prisonImg, 0, 0, 550, 400);
+    }
+
 }
 
-
 // JQuery
-
-$(`#items`).draggable({
+// Make the trade items draggable.
+$(".items").draggable({
 
   });
+
+
+// Function to manage trading
+function makeTrade(event, ui) {
+
+  if (state = `sceneOne`) {
+
+  }
+
+} // End of draw
+
+
+function keyPressed() {
+
+  // Switch from title to scene one.
+  if (state === `title` && key = keyCode === ENTER) {
+
+    state = `sceneOne`;
+
+  }
+}
