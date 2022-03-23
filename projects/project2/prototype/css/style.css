@@ -1,0 +1,53 @@
+/*********************************************
+
+Here is a description of any special CSS used.
+In this case it's just padding and margin to 0
+and then centring the canvas (and anything else)
+using the CSS Grid.
+
+Also hides overflow.
+
+**********************************************/
+
+body {
+  padding: 0;
+  margin: 0;
+  display: grid; /* Set up the grid and justify/align to center */
+  justify-content: center;
+  align-content: center;
+  /* height: 100vh;  */
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-text: center;
+  justify-content: center;
+}
+
+#trade-container {
+  display: flex;
+}
+
+
+
+#trade-screen-1 {
+  width: 20vw;
+  height: 20vw;
+
+  border: 5px dashed black;
+  margin: 2px;
+  /* display: flex;
+  justify-content: center;
+  align-content: center; */
+}
+
+#trade-screen-2 {
+  width: 20vw;
+  height: 20vw;
+  margin: 2px;
+  border: 5px dashed black;
+  /* display: grid;
+  justify-content: center;
+  align-content: center; */
+}
