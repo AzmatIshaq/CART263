@@ -14,8 +14,10 @@ let prisonCafeteria;
 Description of preload
 */
 function preload() {
+
   // Preload the cafeteria image
   prisonCafeteria = loadImage('../assets/images/prison-cafeteria.png');
+
 }
 
 
@@ -40,6 +42,6 @@ function draw() {
 
 // JQuery
 
-  $(`.items`).draggable({
-    
-  }
+$(`#items`).draggable({
+
+  });
