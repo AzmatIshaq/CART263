@@ -25,27 +25,30 @@ h1 {
   justify-content: center;
 }
 
+.items {
+  
+}
+
 #trade-container {
   display: flex;
 }
 
 
-
 #trade-screen-1 {
-  width: 20vw;
+  width: 25vw;
   height: 20vw;
 
   border: 5px dashed black;
-  margin: 2px;
+  margin-right: 73px;
   /* display: flex;
   justify-content: center;
   align-content: center; */
 }
 
 #trade-screen-2 {
-  width: 20vw;
+  width: 25vw;
   height: 20vw;
-  margin: 2px;
+  margin-left: 20px;
   border: 5px dashed black;
   /* display: grid;
   justify-content: center;
