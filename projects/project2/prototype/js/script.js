@@ -13,8 +13,9 @@ let cafeteriaImg;
 let prisonImg;
 
 // states
+// let state = `title`;
 
-let state = `title`;
+let state = `sceneOneCafeteria`;
 
 /**
 Description of preload
@@ -45,7 +46,7 @@ Description of draw()
 function draw() {
   background(0);
 
-  if (state === `cafteria`) {
+  if (state === `sceneOneCafeteria`) {
       image(cafeteriaImg, 0, 0, 550, 400);
     }
 
@@ -65,9 +66,10 @@ $(".items").draggable({
 // Function to manage trading
 function makeTrade(event, ui) {
 
-  if (state = `sceneOne`) {
+  if (state = `sceneOneCafteria`) {
 
   }
+
 
 } // End of draw
 
@@ -75,9 +77,7 @@ function makeTrade(event, ui) {
 function keyPressed() {
 
   // Switch from title to scene one.
-  if (state === `title` && key = keyCode === ENTER) {
-
-    state = `sceneOne`;
-
+  if (state === `title` && keyCode === ENTER) {
+    state = `sceneOneCafeteria`;
   }
 }
