@@ -5,8 +5,11 @@ for the avatar. Adds collisions and overlaps to handle physics and thumbs
 down collection.
 */
 
+// Set the Original burn state to false
 let burn = false;
 
+let score = 0;
+let scoreText;
 
 class Play extends Phaser.Scene {
 
@@ -24,6 +27,11 @@ class Play extends Phaser.Scene {
   as well as setting physics handlers and listening to the arrow keys.
   */
   create() {
+
+    // Game score
+
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#ffffff' });
+
     // Create the avatar and make it collide with the "walls"
   if (burn) {
     this.avatar = this.physics.add.sprite(0, 400, `fire-emoji`);
@@ -35,7 +43,6 @@ class Play extends Phaser.Scene {
 
     // Create a sadness emoji in a random position
     this.sadness = this.physics.add.sprite(0, 0, `thumbs-down`);
-
 
 
     // Note how we can use RandomRectangle() here if we put the object we want
@@ -61,9 +68,9 @@ class Play extends Phaser.Scene {
 
 
     // Physics for fire
-    this.fireEmoji = this.physics.add.group({
+    this.waterEmoji = this.physics.add.group({
       // Image key to use
-      key: `fire-emoji`,
+      key: `water`,
       // How many
       quantity: 1,
       width: 0.1,
@@ -78,11 +85,6 @@ class Play extends Phaser.Scene {
       setScale: { x: 0.1, y: 0.1}
 
     });
-
-    // fireEmoji.setScale(0.5);
-
-
-
 
 
     // Position all the members of the group randomly within a rectangle the same
@@ -102,10 +104,14 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.happiness, this.happiness);
 
     // Light the emoji on fire when he collides with the fire
-    this.physics.add.collider(this.avatar, this.fire);
+    // this.physics.add.collider(this.avatar, this.fire);
 
-    // Handle the overlap between the vatar and the fireEmoji
-    this.physics.add.overlap(this.avatar, this.fireEmoji, this.getHappy, null, this);
+    // Handle the overlap between the avatar and the waterEmoji
+    this.physics.add.overlap(this.avatar, this.waterEmoji, this.getHappy, null, this);
+
+    // Handle the overlap with fire.
+    this.physics.add.overlap(this.avatar, this.fire, this.getBurnt, null, this);
+
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -125,11 +131,12 @@ class Play extends Phaser.Scene {
 
     // Group to manage spinning fire
 
-    this.fire = this.add.group();
+    this.fire = this.physics.add.group();
 
        for (let i = 0; i < 32; i++)
        {
-           this.fire.create(i * 32, i * 2, 'fire').setScale(0.1);
+           this.fire.create(i * 32, i * 2, 'fire');
+           // .setScale(0.1);
        }
 
 
@@ -145,13 +152,15 @@ class Play extends Phaser.Scene {
   }
 
 // Called when user overlaps fire emoji
-  getHappy(avatar, fireEmoji) {
+  getHappy(avatar, waterEmoji) {
     // Note how we can use RandomRectangle() again here if we put the object we want
     // to reposition randomly in an array!
-    Phaser.Actions.RandomRectangle([fireEmoji], this.physics.world.bounds);
+    Phaser.Actions.RandomRectangle([waterEmoji], this.physics.world.bounds);
     // Audio on collision
     let boopSound = this.sound.add('boop');
     boopSound.play();
+
+    burn = false;
 
   }
 
@@ -161,7 +170,7 @@ class Play extends Phaser.Scene {
   update() {
     this.handleInput();
 
-    Phaser.Actions.RotateAroundDistance(this.fire.getChildren(), { x: 400, y: 300 }, 0.02, 200);
+    // Phaser.Actions.RotateAroundDistance(this.fire.getChildren(), { x: 400, y: 300 }, 0.02, 200);
   }
 
   /**
@@ -188,5 +197,12 @@ class Play extends Phaser.Scene {
     else {
       this.avatar.setAcceleration(0);
     }
+
+  }
+
+
+  getBurnt() {
+    burn = true;
+    console.log(burn);
   }
 }
