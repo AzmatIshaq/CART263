@@ -11,6 +11,8 @@ let burn = false;
 let health = 1000;
 let healthText;
 
+let happy = 0;
+
 // alert(`Welcome to Fire Emoji. Don't get burnt!`);
 
 class Play extends Phaser.Scene {
@@ -47,7 +49,7 @@ class Play extends Phaser.Scene {
     // to reposition randomly in an array!
     Phaser.Actions.RandomRectangle([this.sadness], this.physics.world.bounds);
 
-    // Create a group of hapiness emojis with some basic
+    // Create a group of happiness emojis with some basic
     // physics configuration
     this.happiness = this.physics.add.group({
       // Image key to use
@@ -57,11 +59,11 @@ class Play extends Phaser.Scene {
       // Collide with the "walls"
       collideWorldBounds: true,
       // How much to they bounce when they hit something?
-      bounceX: 0.5,
-      bounceY: 0.5,
+      bounceX: .7,
+      bounceY: .7,
       // How quickly do they slow down while moving?
-      dragX: 50,
-      dragY: 50
+      dragX: 40,
+      dragY: 40
     });
 
 
@@ -118,7 +120,10 @@ class Play extends Phaser.Scene {
     // Handle the overlap with fire.
     this.physics.add.overlap(this.avatar, this.fire, this.getBurnt, null, this);
 
+    // Handle collision between happiness and water
+    this.physics.add.overlap(this.waterEmoji, this.happiness, this.collectHappy, null, this);
 
+    // Handle cursor input
     this.cursors = this.input.keyboard.createCursorKeys();
 
 
@@ -163,6 +168,12 @@ class Play extends Phaser.Scene {
     health = health + 100;
   }
 
+  collectHappy() {
+    // Increase health if it is collected
+    health = health + 100;
+    // Phaser.Actions.RandomRectangle([this.happiness], this.physics.world.bounds);
+  }
+
   /**
   Listens for user input
   */
@@ -204,7 +215,7 @@ class Play extends Phaser.Scene {
     burn = true;
     this.avatar.setTexture(`fire-emoji`);
     health--;
-
-
   }
+
+
 }
