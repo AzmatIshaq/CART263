@@ -8,8 +8,10 @@ down collection.
 // Set the Original burn state to false
 let burn = false;
 
-let score = 0;
-let scoreText;
+let health = 1000;
+let healthText;
+
+// alert(`Welcome to Fire Emoji. Don't get burnt!`);
 
 class Play extends Phaser.Scene {
 
@@ -28,17 +30,13 @@ class Play extends Phaser.Scene {
   */
   create() {
 
-    // Game score
-
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#ffffff' });
+    // Game health
+    healthText = this.add.text(16, 16, `Health: 0`, { fontSize: '32px', fill: '#ffffff' });
 
     // Create the avatar and make it collide with the "walls"
-  if (burn) {
-    this.avatar = this.physics.add.sprite(0, 400, `fire-emoji`);
-  } else {
     this.avatar = this.physics.add.sprite(0, 400, `avatar`);
 
-  }
+
     this.avatar.setCollideWorldBounds(true);
 
     // Create a sadness emoji in a random position
@@ -86,13 +84,21 @@ class Play extends Phaser.Scene {
 
     });
 
-
     // Position all the members of the group randomly within a rectangle the same
     // dimensions and position as the world's bounds (e.g. the canvas)
 
     // Contain all the thumbs up inside a ring of fire
     const rect = new Phaser.Geom.Rectangle(360, 250, 100, 50);
     Phaser.Actions.RandomRectangle(this.happiness.getChildren(), rect);
+
+    // Group to manage spinning fire
+
+    this.fire = this.physics.add.group();
+
+       for (let i = 0; i < 32; i++)
+       {
+           this.fire.create(i * 32, i * 2, 'fire').setScale(0.1);
+       }
 
     // Listen for when the avatar overlaps the thumbs up and handle it,
     // remembering to set "this" so that we can use "this" in the method it calls
@@ -128,18 +134,6 @@ class Play extends Phaser.Scene {
     //  Pass in a basic style object with the constructor
     this.add.text(250, 10, gameDescription, style);
 
-
-    // Group to manage spinning fire
-
-    this.fire = this.physics.add.group();
-
-       for (let i = 0; i < 32; i++)
-       {
-           this.fire.create(i * 32, i * 2, 'fire');
-           // .setScale(0.1);
-       }
-
-
   } // End of create
 
   /**
@@ -149,6 +143,8 @@ class Play extends Phaser.Scene {
     // Note how we can use RandomRectangle() again here if we put the object we want
     // to reposition randomly in an array!
     Phaser.Actions.RandomRectangle([sadness], this.physics.world.bounds);
+    // Lower health;
+    health = health - 300;
   }
 
 // Called when user overlaps fire emoji
@@ -160,8 +156,11 @@ class Play extends Phaser.Scene {
     let boopSound = this.sound.add('boop');
     boopSound.play();
 
+    // Set burn state to false
     burn = false;
-
+    // Change the avatar back to normal
+    this.avatar.setTexture(`avatar`);
+    health = health + 100;
   }
 
   /**
@@ -169,8 +168,9 @@ class Play extends Phaser.Scene {
   */
   update() {
     this.handleInput();
-
-    // Phaser.Actions.RotateAroundDistance(this.fire.getChildren(), { x: 400, y: 300 }, 0.02, 200);
+    Phaser.Actions.RotateAroundDistance(this.fire.getChildren(), { x: 400, y: 300 }, 0.02, 200);
+    // Update health amount;
+    healthText.setText('Health: ' + health);
   }
 
   /**
@@ -197,12 +197,14 @@ class Play extends Phaser.Scene {
     else {
       this.avatar.setAcceleration(0);
     }
-
   }
 
 
   getBurnt() {
     burn = true;
-    console.log(burn);
+    this.avatar.setTexture(`fire-emoji`);
+    health--;
+
+
   }
 }
