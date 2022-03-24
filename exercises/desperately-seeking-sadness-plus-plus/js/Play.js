@@ -5,6 +5,9 @@ for the avatar. Adds collisions and overlaps to handle physics and thumbs
 down collection.
 */
 
+let burn = false;
+
+
 class Play extends Phaser.Scene {
 
   /**
@@ -22,15 +25,17 @@ class Play extends Phaser.Scene {
   */
   create() {
     // Create the avatar and make it collide with the "walls"
-    this.avatar = this.physics.add.sprite(400, 400, `avatar`);
+  if (burn) {
+    this.avatar = this.physics.add.sprite(0, 400, `fire-emoji`);
+  } else {
+    this.avatar = this.physics.add.sprite(0, 400, `avatar`);
+
+  }
     this.avatar.setCollideWorldBounds(true);
 
     // Create a sadness emoji in a random position
     this.sadness = this.physics.add.sprite(0, 0, `thumbs-down`);
 
-    // Create a fire emoji in a random position
-    // this.fire = game.add.
-    // this.fire = this.physics.add.sprite(0, 0, `fire`)
 
 
     // Note how we can use RandomRectangle() here if we put the object we want
@@ -43,7 +48,7 @@ class Play extends Phaser.Scene {
       // Image key to use
       key: `thumbs-up`,
       // How many
-      quantity: 120,
+      quantity: 10,
       // Collide with the "walls"
       collideWorldBounds: true,
       // How much to they bounce when they hit something?
@@ -56,20 +61,27 @@ class Play extends Phaser.Scene {
 
 
     // Physics for fire
-    // this.fire = this.physics.add.group({
-    //   // Image key to use
-    //   key: `fire`,
-    //   // How many
-    //   quantity: 1,
-    //   // Collide with the "walls"
-    //   collideWorldBounds: true,
-    //   // How much to they bounce when they hit something?
-    //   bounceX: 0.5,
-    //   bounceY: 0.5,
-    //   // How quickly do they slow down while moving?
-    //   dragX: 50,
-    //   dragY: 50
-    // });
+    this.fireEmoji = this.physics.add.group({
+      // Image key to use
+      key: `fire-emoji`,
+      // How many
+      quantity: 1,
+      width: 0.1,
+          // Collide with the "walls"
+      collideWorldBounds: true,
+      // How much to they bounce when they hit something?
+      bounceX: 0.5,
+      bounceY: 0.5,
+      // How quickly do they slow down while moving?
+      dragX: 50,
+      dragY: 50,
+      setScale: { x: 0.1, y: 0.1}
+
+    });
+
+    // fireEmoji.setScale(0.5);
+
+
 
 
 
@@ -83,6 +95,7 @@ class Play extends Phaser.Scene {
     // Listen for when the avatar overlaps the thumbs up and handle it,
     // remembering to set "this" so that we can use "this" in the method it calls
     this.physics.add.overlap(this.avatar, this.sadness, this.getSad, null, this);
+
     // Add colliders between the avatar and the happiness, and the happiness and itself
     // so that we get lots of fun bouncy physics for free!
     this.physics.add.collider(this.avatar, this.happiness);
@@ -90,6 +103,9 @@ class Play extends Phaser.Scene {
 
     // Light the emoji on fire when he collides with the fire
     this.physics.add.collider(this.avatar, this.fire);
+
+    // Handle the overlap between the vatar and the fireEmoji
+    this.physics.add.overlap(this.avatar, this.fireEmoji, this.getHappy, null, this);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -116,18 +132,6 @@ class Play extends Phaser.Scene {
            this.fire.create(i * 32, i * 2, 'fire').setScale(0.1);
        }
 
-       //   // Image key to use
-       //   key: `fire`,
-       //   // How many
-       //   quantity: 1,
-       //   // Collide with the "walls"
-       //   collideWorldBounds: true,
-       //   // How much to they bounce when they hit something?
-       //   bounceX: 0.5,
-       //   bounceY: 0.5,
-       //   // How quickly do they slow down while moving?
-       //   dragX: 50,
-       //   dragY: 50
 
   } // End of create
 
@@ -138,6 +142,17 @@ class Play extends Phaser.Scene {
     // Note how we can use RandomRectangle() again here if we put the object we want
     // to reposition randomly in an array!
     Phaser.Actions.RandomRectangle([sadness], this.physics.world.bounds);
+  }
+
+// Called when user overlaps fire emoji
+  getHappy(avatar, fireEmoji) {
+    // Note how we can use RandomRectangle() again here if we put the object we want
+    // to reposition randomly in an array!
+    Phaser.Actions.RandomRectangle([fireEmoji], this.physics.world.bounds);
+    // Audio on collision
+    let boopSound = this.sound.add('boop');
+    boopSound.play();
+
   }
 
   /**
