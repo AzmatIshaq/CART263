@@ -77,7 +77,18 @@ class Play extends Phaser.Scene {
     let gameDescription = `Fire Emoji!`;
     //  Pass in a basic style object with the constructor
     this.add.text(250, 10, gameDescription, style);
-  }
+
+
+    // Group to manage spinning fire
+
+    this.group = this.add.group();
+
+       for (let i = 0; i < 32; i++)
+       {
+           this.group.create(i * 32, i * 2, 'fire');
+       }
+
+  } // End of create
 
   /**
   Called when the avatar overlaps the sadness, moves the sadness to a new random position.
@@ -93,6 +104,8 @@ class Play extends Phaser.Scene {
   */
   update() {
     this.handleInput();
+
+    Phaser.Actions.RotateAroundDistance(this.group.getChildren(), { x: 400, y: 300 }, 0.02, 200);
   }
 
   /**
