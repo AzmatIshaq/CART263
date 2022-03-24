@@ -29,7 +29,9 @@ class Play extends Phaser.Scene {
     this.sadness = this.physics.add.sprite(0, 0, `thumbs-down`);
 
     // Create a fire emoji in a random position
-    this.fire = this.physics.add.sprite(0, 0, `fire`);
+    // this.fire = game.add.
+    // this.fire = this.physics.add.sprite(0, 0, `fire`)
+
 
     // Note how we can use RandomRectangle() here if we put the object we want
     // to reposition randomly in an array!
@@ -51,9 +53,32 @@ class Play extends Phaser.Scene {
       dragX: 50,
       dragY: 50
     });
+
+
+    // Physics for fire
+    // this.fire = this.physics.add.group({
+    //   // Image key to use
+    //   key: `fire`,
+    //   // How many
+    //   quantity: 1,
+    //   // Collide with the "walls"
+    //   collideWorldBounds: true,
+    //   // How much to they bounce when they hit something?
+    //   bounceX: 0.5,
+    //   bounceY: 0.5,
+    //   // How quickly do they slow down while moving?
+    //   dragX: 50,
+    //   dragY: 50
+    // });
+
+
+
     // Position all the members of the group randomly within a rectangle the same
     // dimensions and position as the world's bounds (e.g. the canvas)
-    Phaser.Actions.RandomRectangle(this.happiness.getChildren(), this.physics.world.bounds);
+
+    // Contain all the thumbs up inside a ring of fire
+    const rect = new Phaser.Geom.Rectangle(360, 250, 100, 50);
+    Phaser.Actions.RandomRectangle(this.happiness.getChildren(), rect);
 
     // Listen for when the avatar overlaps the thumbs up and handle it,
     // remembering to set "this" so that we can use "this" in the method it calls
@@ -62,6 +87,9 @@ class Play extends Phaser.Scene {
     // so that we get lots of fun bouncy physics for free!
     this.physics.add.collider(this.avatar, this.happiness);
     this.physics.add.collider(this.happiness, this.happiness);
+
+    // Light the emoji on fire when he collides with the fire
+    this.physics.add.collider(this.avatar, this.fire);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -81,12 +109,25 @@ class Play extends Phaser.Scene {
 
     // Group to manage spinning fire
 
-    this.group = this.add.group();
+    this.fire = this.add.group();
 
        for (let i = 0; i < 32; i++)
        {
-           this.group.create(i * 32, i * 2, 'fire');
+           this.fire.create(i * 32, i * 2, 'fire').setScale(0.1);
        }
+
+       //   // Image key to use
+       //   key: `fire`,
+       //   // How many
+       //   quantity: 1,
+       //   // Collide with the "walls"
+       //   collideWorldBounds: true,
+       //   // How much to they bounce when they hit something?
+       //   bounceX: 0.5,
+       //   bounceY: 0.5,
+       //   // How quickly do they slow down while moving?
+       //   dragX: 50,
+       //   dragY: 50
 
   } // End of create
 
@@ -105,7 +146,7 @@ class Play extends Phaser.Scene {
   update() {
     this.handleInput();
 
-    Phaser.Actions.RotateAroundDistance(this.group.getChildren(), { x: 400, y: 300 }, 0.02, 200);
+    Phaser.Actions.RotateAroundDistance(this.fire.getChildren(), { x: 400, y: 300 }, 0.02, 200);
   }
 
   /**
