@@ -30,7 +30,7 @@ Description of preload
 function preload() {
 
   // // Preload images
-  // cafeteriaImg = loadImage('../assets/images/prison-cafeteria.png');
+  cafeteriaImg = loadImage('../assets/images/prison-cafeteria.png');
   // prisonImg = loadImage('../assets/images/prison_main.png');
   // hallImg = loadImage('../assets/images/prison-hall.jpg');
   // cellImg = loadImage('../assets/images/prison-cell-scene.jpg');
@@ -58,12 +58,12 @@ function draw() {
   background(0);
 
   if (state === `sceneOneCafeteria`) {
-      // image(cafeteriaImg, 0, 0, 550, 400);
-      // push();
-      // fill(255);
-      // textSize(12);
-      // text(gameTextData.sceneOne.cafeteria, 580, 40);
-      // pop();
+      image(cafeteriaImg, 0, 0, 550, 400);
+      push();
+      fill(255);
+      textSize(12);
+      text(gameTextData.sceneOne.cafeteria, 580, 40);
+      pop();
     }
 
   if (state === `sceneOneHall`) {
