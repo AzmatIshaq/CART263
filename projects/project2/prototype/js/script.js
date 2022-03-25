@@ -29,15 +29,15 @@ Description of preload
 */
 function preload() {
 
-  // // Preload images
+  // Preload images
   cafeteriaImg = loadImage('assets/images/prison-cafeteria.png');
-  // prisonImg = loadImage('../assets/images/prison_main.png');
-  // hallImg = loadImage('../assets/images/prison-hall.jpg');
-  // cellImg = loadImage('../assets/images/prison-cell-scene.jpg');
+  prisonImg = loadImage('assets/images/prison_main.png');
+  hallImg = loadImage('assets/images/prison-hall.jpg');
+  cellImg = loadImage('assets/images/prison-cell-scene.jpg');
+
+  // Preload JSON game text
   //
-  // // Preload JSON game text
-  //
-  // gameTextData = loadJSON(`../assets/data/game-text.JSON`);
+  gameTextData = loadJSON(`assets/data/game-text.JSON`);
 }
 
 
@@ -67,21 +67,21 @@ function draw() {
     }
 
   if (state === `sceneOneHall`) {
-      // image(hallImg, 0, 0, 550, 400);
-      //
-      // push();
-      // fill(255);
-      // textSize(12);
-      // text(gameTextData.sceneOne.hall, 580, 40);
-      // pop();
+      image(hallImg, 0, 0, 550, 400);
+
+      push();
+      fill(255);
+      textSize(12);
+      text(gameTextData.sceneOne.hall, 580, 40);
+      pop();
     }
 
   if (state === `sceneOneCell`) {
-      // image(cellImg, 0, 0, 550, 400);
+      image(cellImg, 0, 0, 550, 400);
     }
 
   if (state === `title`) {
-      // image(prisonImg, 0, 0, 550, 400);
+      image(prisonImg, 0, 0, 550, 400);
     }
 
 } // End of draw
