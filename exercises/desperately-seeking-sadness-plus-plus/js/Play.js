@@ -18,7 +18,7 @@ let winText = `You Win!`;
 
 
 // Alert to communicate game rules
-alert(`Increase your health to more than 3000 to win! The Water Droplet gives health. Hint: Push the Thumbs Ups on the Water Droplet for maximum effect!`);
+alert(`WELCOME to Fire Emoji! Increase your health to more than 3000 to win! The Water Droplet gives health. Hint: Push the Thumbs Ups on the Water Droplet for maximum effect!`);
 
 // alert(`Welcome to Fire Emoji. Don't get burnt!`);
 
