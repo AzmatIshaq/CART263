@@ -44,7 +44,7 @@ class Play extends Phaser.Scene {
     });
 
     // Create the avatar and make it collide with the "walls"
-    this.avatar = this.physics.add.sprite(0, 400, `avatar`);
+    this.avatar = this.physics.add.sprite(0, 200, `avatar`);
 
 
     this.avatar.setCollideWorldBounds(true);
@@ -81,7 +81,6 @@ class Play extends Phaser.Scene {
       key: `water`,
       // How many
       quantity: 1,
-      width: 0.1,
       // Collide with the "walls"
       collideWorldBounds: true,
       // How much to they bounce when they hit something?
@@ -96,6 +95,11 @@ class Play extends Phaser.Scene {
       }
 
     });
+
+    // Contain all the water to a section of the canvas
+    const rect2 = new Phaser.Geom.Rectangle(10, 450, 100, 100);
+    // Position water randomly
+    Phaser.Actions.RandomRectangle(this.waterEmoji.getChildren(), rect2);
 
     // Position all the members of the group randomly within a rectangle the same
     // dimensions and position as the world's bounds (e.g. the canvas)
