@@ -20,8 +20,6 @@ let winText = `You Win!`;
 // Alert to communicate game rules
 alert(`WELCOME to Fire Emoji! Increase your health to more than 3000 to win! The Water Droplet gives health. Hint: Push the Thumbs Ups on the Water Droplet for maximum effect!`);
 
-// alert(`Welcome to Fire Emoji. Don't get burnt!`);
-
 class Play extends Phaser.Scene {
 
   /**
@@ -123,9 +121,6 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.avatar, this.happiness);
     this.physics.add.collider(this.happiness, this.happiness);
 
-    // Light the emoji on fire when he collides with the fire
-    // this.physics.add.collider(this.avatar, this.fire);
-
     // Handle the overlap between the avatar and the waterEmoji
     this.physics.add.overlap(this.avatar, this.waterEmoji, this.getHappy, null, this);
 
@@ -183,7 +178,6 @@ class Play extends Phaser.Scene {
   collectHappy() {
     // Increase health if it is collected
     health = health + 30;
-    // Phaser.Actions.RandomRectangle([this.happiness], this.physics.world.bounds);
   }
 
   /**
