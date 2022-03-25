@@ -5,7 +5,7 @@ for the avatar. Adds collisions and overlaps to handle physics and thumbs
 down collection.
 */
 
-// Set the Original burn state to false
+// Set the original burn state to false
 let burn = false;
 
 // Variable to set starting health
@@ -232,13 +232,12 @@ class Play extends Phaser.Scene {
     }
   }
 
-
+// Adds an effect when player is burned
   getBurnt() {
     burn = true;
+    // Display burning emoji face
     this.avatar.setTexture(`fire-emoji`);
+    // Decrease health when burned
     health--;
-
   }
-
-
 }
