@@ -30,7 +30,7 @@ Description of preload
 function preload() {
 
   // // Preload images
-  cafeteriaImg = loadImage('../assets/images/prison-cafeteria.png');
+  cafeteriaImg = loadImage('assets/images/prison-cafeteria.png');
   // prisonImg = loadImage('../assets/images/prison_main.png');
   // hallImg = loadImage('../assets/images/prison-hall.jpg');
   // cellImg = loadImage('../assets/images/prison-cell-scene.jpg');
