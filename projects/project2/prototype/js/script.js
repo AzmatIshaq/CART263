@@ -11,22 +11,33 @@ author, and this description to match your project!
 //Image variables
 let cafeteriaImg;
 let prisonImg;
+let hallImg;
+let cellImg;
 
 // states
 // let state = `title`;
-
 let state = `sceneOneCafeteria`;
+
+// Variable for JSON data
+
+let gameTextData; 
+
+
 
 /**
 Description of preload
 */
 function preload() {
 
-  // Preload the cafeteria image
+  // Preload images
   cafeteriaImg = loadImage('../assets/images/prison-cafeteria.png');
-  // Preload the prison image
   prisonImg = loadImage('../assets/images/prison_main.png');
+  hallImg = loadImage('../assets/images/prison-hall.jpg');
+  cellImg = loadImage('../assets/images/prison-cell-scene.jpg');
 
+  // Preload JSON game text
+
+  gameTextData = loadJSON(`assets/data/game-text.JSON`);
 }
 
 
@@ -50,34 +61,77 @@ function draw() {
       image(cafeteriaImg, 0, 0, 550, 400);
     }
 
+  if (state === `sceneOneHall`) {
+      image(hallImg, 0, 0, 550, 400);
+
+      push();
+      fill(255);
+      textSize(12);
+      text(dialogueData[sceneTwoDialogue].intro, 700, 100);
+      pop();
+    }
+
+  if (state === `sceneOneCell`) {
+      image(cellImg, 0, 0, 550, 400);
+    }
+
   if (state === `title`) {
       image(prisonImg, 0, 0, 550, 400);
     }
 
-}
+} // End of draw
 
-// JQuery
+// jQuery
+
 // Make the trade items draggable.
 $(".items").draggable({
 
   });
 
+$(`#trade-screen-2`).droppable({
+  drop: makeTrade
+});
 
-// Function to manage trading
+
+// Will utilize this for scene switching and event triggering as well
+// $(`#go-to-dining`).on(`click`, function() {
+//   state = `dining`;
+// });
+
 function makeTrade(event, ui) {
-
-  if (state = `sceneOneCafteria`) {
-
+  if (state === `sceneOneCafeteria`) {
+    if (ui.draggable.attr(`id`) === `gum`) {
+      alert(`succesful trade!`);
+      state = `sceneOneHall`;
+      // Successful trade!
+      // Add something cool to the player's inventory
+      // Display a message(s) from the cellmate
+    }
+    else {
+      // Unsuccessful trade!
+      // Say something generic about how this isn't the object
+      // Maybe give the player a hint about what they need
+    }
   }
-
-
-} // End of draw
-
-
-function keyPressed() {
-
-  // Switch from title to scene one.
-  if (state === `title` && keyCode === ENTER) {
-    state = `sceneOneCafeteria`;
+  else if (state === `dining`) {
+    if (ui.draggable.attr(`id`) === `spork`) {
+      // Successful trade!
+      // Add something cool to the player's inventory
+      // Display a message(s) from the cellmate
+    }
+    else {
+      // Unsuccessful trade!
+      // Say something generic about how this isn't the object
+      // Maybe give the player a hint about what they need
+    }
   }
 }
+
+
+// function keyPressed() {
+//
+//   // Switch from title to scene one.
+//   if (state === `title` && keyCode === ENTER) {
+//     state = `sceneOneCafeteria`;
+//   }
+// }
