@@ -13,6 +13,8 @@ let cafeteriaImg;
 let prisonImg;
 let hallImg;
 let cellImg;
+let warden;
+
 
 // states
 // let state = `title`;
@@ -34,6 +36,7 @@ function preload() {
   prisonImg = loadImage('assets/images/prison_main.png');
   hallImg = loadImage('assets/images/prison-hall.jpg');
   cellImg = loadImage('assets/images/prison-cell-scene.jpg');
+  warden = loadImage('assets/images/warden.png');
 
   // Preload JSON game text
   //
@@ -69,10 +72,12 @@ function draw() {
   if (state === `sceneOneHall`) {
       image(hallImg, 0, 0, 550, 400);
 
+      image(warden, 620, 10, 150, 150);
+
       push();
       fill(255);
       textSize(12);
-      text(gameTextData.sceneOne.hall, 580, 40);
+      text(gameTextData.sceneOne.hall, 645, 200);
       pop();
     }
 
