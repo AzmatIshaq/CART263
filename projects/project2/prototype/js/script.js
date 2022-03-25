@@ -20,7 +20,7 @@ let state = `sceneOneCafeteria`;
 
 // Variable for JSON data
 
-let gameTextData; 
+let gameTextData;
 
 
 
@@ -37,7 +37,7 @@ function preload() {
 
   // Preload JSON game text
 
-  gameTextData = loadJSON(`assets/data/game-text.JSON`);
+  gameTextData = loadJSON(`../assets/data/game-text.JSON`);
 }
 
 
@@ -59,6 +59,11 @@ function draw() {
 
   if (state === `sceneOneCafeteria`) {
       image(cafeteriaImg, 0, 0, 550, 400);
+      push();
+      fill(255);
+      textSize(12);
+      text(gameTextData.sceneOne.cafeteria, 580, 40);
+      pop();
     }
 
   if (state === `sceneOneHall`) {
@@ -67,7 +72,7 @@ function draw() {
       push();
       fill(255);
       textSize(12);
-      text(dialogueData[sceneTwoDialogue].intro, 700, 100);
+      text(gameTextData.sceneOne.hall, 580, 40);
       pop();
     }
 
@@ -100,7 +105,7 @@ $(`#trade-screen-2`).droppable({
 
 function makeTrade(event, ui) {
   if (state === `sceneOneCafeteria`) {
-    if (ui.draggable.attr(`id`) === `gum`) {
+    if (ui.draggable.attr(`id`) === `ramen`) {
       alert(`succesful trade!`);
       state = `sceneOneHall`;
       // Successful trade!
