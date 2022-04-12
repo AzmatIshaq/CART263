@@ -1,0 +1,22 @@
+{
+  "sceneOne": {
+    "title": "CELL - 14",
+    "cafeteria": "Try trading some ramen",
+    "hall": "Good trade kid!",
+    "hall2": "Well kid, if you wanna make a real deal you gotta have something worth trading"
+  },
+  "sceneTwo": {
+    "intro": " ",
+    "questions": [
+      {
+        "question": " ",
+        "answer": " "
+      },
+      {
+        "question": " ",
+        "answer": " ",
+        "correct": false
+      }
+    ]
+  }
+}

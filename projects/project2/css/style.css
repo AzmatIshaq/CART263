@@ -15,6 +15,43 @@ body {
   display: grid; /* Set up the grid and justify/align to center */
   justify-content: center;
   align-content: center;
-  height: 100vh; /* Body is the height of the viewport */
-  overflow: hidden; /* Hide anything that goes off the window size */
+  /* height: 100vh;  */
+  background: beige;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-text: center;
+  justify-content: center;
+}
+
+.items img {
+  width: 50%;
+}
+
+#trade-container {
+  display: flex;
+}
+
+
+#trade-screen-1 {
+  width: 25vw;
+  height: 20vw;
+
+  border: 5px dashed black;
+  margin-right: 73px;
+  /* display: flex;
+  justify-content: center;
+  align-content: center; */
+}
+
+#trade-screen-2 {
+  width: 25vw;
+  height: 20vw;
+  margin-left: 20px;
+  border: 5px dashed black;
+  /* display: grid;
+  justify-content: center;
+  align-content: center; */
 }
