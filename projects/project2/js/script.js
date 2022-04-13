@@ -15,6 +15,22 @@ let hallBgImg;
 let cellBgImg;
 let wardenCharImg;
 
+  // Items image variables
+
+let ramenImg;
+let gumImg;
+let swissArmyImg;
+
+// Item position
+
+let ramen = {
+  x: 850 / 5,
+  y: 400 /2,
+  width: 50,
+  height: 50,
+  size:  50
+
+}
 
 // states
 // let state = `title`;
@@ -25,10 +41,19 @@ let state = `sceneOneCafeteria`;
 
 let gameTextData;
 
-// Variables to manage trades
+// Variables to activate trade moments
 
-let tradeActive = false;
+let tradeActive = true;
 
+// Variables to verify trade completion between scenes
+
+let tradeCompleteSceneOne = false;
+let tradeCompleteSceneTwo = false;
+let tradeCompleteSceneThree = false;
+
+// Variables to manage item collection
+
+let ramenCollected = false;
 
 /**
 Description of preload
@@ -42,6 +67,10 @@ function preload() {
   cellBgImg = loadImage('assets/images/prison-cell-scene.jpg');
   wardenCharImg = loadImage('assets/images/warden.png');
 
+  // Preload item images
+  ramenImg = loadImage('assets/images/ramen2.png');
+  gumImg = loadImage('assets/images/bubble_gum.png');
+  swissArmyImg = loadImage('assets/images/swiss_army.png');
   // Preload JSON game text
   //
   gameTextData = loadJSON(`assets/data/game-text.JSON`);
@@ -68,45 +97,32 @@ function draw() {
 
   if (state === `sceneOne`) {
       sceneOne();
-      animation();
+
     }
 
 
   if (state === `sceneOneCell`) {
       sceneTwo();
-      animation();
+
     }
 
   if (state === `title`) {
       sceneThree();
-      animation();
+
     }
+
+
+    // Animation effects
+    animation();
+
+    // Inventory management
+    inventory();
 
 } // End of draw
 
 
 /* - - - - - - - - - - - TRADING - - - - - - - - - - - - - - - - - - - - - -  */
 
-if (tradeActive === false && state === `sceneOneCafeteria`) {
-
-    // jQuery
-    // Make the trade items draggable.
-    $(".items").draggable({
-
-      });
-
-    $(`#trade-screen-2`).droppable({
-      drop: makeTrade
-    });
-
-
-    // Will utilize this for scene switching and event triggering as well
-
-    $(`#go-to-dining`).on(`click`, function() {
-      state = `dining`;
-    });
-
-}
 
 
 
@@ -115,11 +131,16 @@ if (tradeActive === false && state === `sceneOneCafeteria`) {
 function makeTrade(event, ui) {
   if (state === `sceneOneCafeteria`) {
     if (ui.draggable.attr(`id`) === `ramen`) {
-      alert(`succesful trade!`);
+      alert(`successful trade!`);
       state = `sceneOneHall`;
+
+      // Register completed trade
+      tradeCompleteSceneOne = true;
+
       // Successful trade!
       // Add something cool to the player's inventory
       // Display a message(s) from the cellmate
+      $("id").attr("gum", "ramen");
     }
     else {
       // Unsuccessful trade!
@@ -149,15 +170,33 @@ function titleState() {
 
 function sceneOne() {
 
-  // Scene One - Cafeteria
-    if (state === `sceneOneCafeteria`) {
-      image(cafeteriaBgImg, 0, 0, 550, 400);
-      push();
-      fill(255);
-      textSize(12);
-      text(gameTextData.sceneOne.cafeteria, 580, 40);
-      pop();
-    }
+  if (tradeActive === true && state === `sceneOneCafeteria`) {
+
+      // jQuery
+      // Make the trade items draggable.
+      $(".items").draggable({
+
+        });
+
+      $(`#trade-screen-2`).droppable({
+        drop: makeTrade
+      });
+
+
+      // Will utilize this for scene switching and event triggering as well
+
+      $(`#go-to-dining`).on(`click`, function() {
+        state = `dining`;
+      });
+
+
+      if (tradeCompleteSceneOne) {
+        $( this ).switchClass( "active-item", "hidden-item", 1000, "easeInOutQuad" );
+      }
+
+
+  }
+
 
   // Scene One - Hall
 
@@ -178,7 +217,6 @@ function sceneOne() {
       if (state === `sceneOneCell`) {
         image(cellBgImg, 0, 0, 550, 400);
       }
-
 }
 
 
@@ -189,26 +227,66 @@ function sceneTwo() {
 
 function animation() {
 
-  if (state === `sceneOneHall`) {
-      image(hallBgImg, 0, 0, 550, 400);
+  // Animation for sceneOne
+  if (state === `sceneOneCafeteria`) {
 
-      image(wardenCharImg, 620, 10, 150, 150);
+    // Scene Venue image
+    image(cafeteriaBgImg, 0, 0, 550, 400);
 
-      push();
-      fill(255);
-      textSize(12);
-      text(gameTextData.sceneOne.hall, 645, 200);
-      pop();
+    // If the ramen hasn't been collected don't display it
+    if (ramenCollected === false) {
+    // Ramen Img
+    image(ramenImg, ramen.x, ramen.y, ramen.width, ramen.height)
     }
+
+    // Scene Dialogue
+    push();
+    fill(255);
+    textSize(12);
+    text(gameTextData.sceneOne.cafeteria, 580, 40);
+    pop();
+  }
+
+  if (state === `sceneOneHall`) {
+
+    //  Scene Venue
+    image(hallBgImg, 0, 0, 550, 400);
+
+    // Scene Characters
+    image(wardenCharImg, 620, 10, 150, 150);
+
+    // Scen Dialogue
+    push();
+    fill(255);
+    textSize(12);
+    text(gameTextData.sceneOne.hall, 645, 200);
+    pop();
+  }
+
+  // Animation for scene two
+
 }
 
 
+// Mouseclicked events
+
+function mouseClicked() {
+
+  if (state === `sceneOneCafeteria` && ramenCollected === false) {
+
+    if (dist(mouseX, mouseY, ramen.x, ramen.y) <= 50) {
+      alert(`hello`);
+    }
+  }
+}
 
 
+function inventory() {
 
-
-
-
+  if (ramenCollected === true) {
+      $( `ramen` ).switchClass( "hidden-item", "active-item", 1000, "easeInOutQuad" );
+  }
+}
 
 
 

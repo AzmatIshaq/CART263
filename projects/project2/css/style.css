@@ -9,6 +9,11 @@ Also hides overflow.
 
 **********************************************/
 
+*:hover {
+  outline: 5px solid dodgerblue;
+}
+
+
 body {
   padding: 0;
   margin: 0;
@@ -26,14 +31,26 @@ h1 {
   justify-content: center;
 }
 
-.items img {
+.items {
+  /* display: inline-block; */
   width: 50%;
+}
+
+.items img {
+  width: 100%;
 }
 
 #trade-container {
   display: flex;
 }
 
+.hidden-item {
+  display: none;
+}
+
+.active-item {
+  display: block;
+}
 
 #trade-screen-1 {
   width: 25vw;
