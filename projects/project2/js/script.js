@@ -86,6 +86,16 @@ function setup() {
   let canvas = createCanvas(850, 400);
   canvas.parent(`#game-canvas`);
 
+  // jQuery
+  // Make the trade items draggable.
+  $(".items").draggable({
+    });
+
+  $(`#trade-screen-2`).droppable({
+    drop: makeTrade
+  });
+
+
 }
 
 
@@ -140,7 +150,9 @@ function makeTrade(event, ui) {
       // Successful trade!
       // Add something cool to the player's inventory
       // Display a message(s) from the cellmate
-      $("id").attr("gum", "ramen");
+      $("#gum-trader").hide();
+      $("#gum-player").show();
+      $(".items").draggable("disable");
     }
     else {
       // Unsuccessful trade!
@@ -172,15 +184,6 @@ function sceneOne() {
 
   if (tradeActive === true && state === `sceneOneCafeteria`) {
 
-      // jQuery
-      // Make the trade items draggable.
-      $(".items").draggable({
-
-        });
-
-      $(`#trade-screen-2`).droppable({
-        drop: makeTrade
-      });
 
 
       // Will utilize this for scene switching and event triggering as well
@@ -193,8 +196,6 @@ function sceneOne() {
       if (tradeCompleteSceneOne) {
         $( this ).switchClass( "active-item", "hidden-item", 1000, "easeInOutQuad" );
       }
-
-
   }
 
 
@@ -236,7 +237,10 @@ function animation() {
     // If the ramen hasn't been collected don't display it
     if (ramenCollected === false) {
     // Ramen Img
+    push();
+    imageMode(CENTER);
     image(ramenImg, ramen.x, ramen.y, ramen.width, ramen.height)
+    pop();
     }
 
     // Scene Dialogue
@@ -253,7 +257,10 @@ function animation() {
     image(hallBgImg, 0, 0, 550, 400);
 
     // Scene Characters
+    push();
+    imageMode(CENTER);
     image(wardenCharImg, 620, 10, 150, 150);
+    pop();
 
     // Scen Dialogue
     push();
@@ -274,8 +281,12 @@ function mouseClicked() {
 
   if (state === `sceneOneCafeteria` && ramenCollected === false) {
 
-    if (dist(mouseX, mouseY, ramen.x, ramen.y) <= 50) {
-      alert(`hello`);
+    if (dist(mouseX, mouseY, ramen.x, ramen.y) <= ramen.size / 2) {
+      // alert(`hello`);
+      ramenCollected = true;
+      // $( `#ramen` ).switchClass( "hidden-item", "active-item");
+      $(`#ramen`).removeClass("hidden-item")
+      $(`#ramen`).addClass("active-item")
     }
   }
 }
@@ -284,7 +295,7 @@ function mouseClicked() {
 function inventory() {
 
   if (ramenCollected === true) {
-      $( `ramen` ).switchClass( "hidden-item", "active-item", 1000, "easeInOutQuad" );
+
   }
 }
 
