@@ -4,38 +4,64 @@ Author Name
 
 This is a template. You must fill in the title,
 author, and this description to match your project!
+
+Color Palette:
+
+#0D0D0D     (13, 13, 13)
+#0D0D0D     (38, 38, 38)
+#A6826D     (166, 130, 109)
+#BF895A     (191, 137, 90)
+#D99A4E     (217, 154, 78)
+#F2D5A0     (242, 213, 160)
+
+#1e90ff     (30, 144, 255)
+
 */
 
 "use strict";
 
-// Image variables
+// Venue image variables
 let cafeteriaBgImg;
 let prisonBgImg;
 let hallBgImg;
 let cellBgImg;
+
+// Character image variables
+
 let wardenCharImg;
 
-  // Items image variables
+// Items image variables
 
 let ramenImg;
 let gumImg;
 let swissArmyImg;
+
+// Misc image variables
+
+let inventoryImg;
 
 // Item position
 
 let ramen = {
   x: 850 / 5,
   y: 400 /2,
+  xInventory: 100,
+  yInventory: 100,
   width: 50,
   height: 50,
   size:  50
-
 }
 
 // states
 // let state = `title`;
 // let state = ``;
 let state = `sceneOneCafeteria`;
+
+// Inventory variables
+// Tracks if inventory interface is open
+let inventoryActive = true;
+// Limites access to display inventory based on scene
+let inventoryDisplay = false;
 
 // Variable for JSON data
 
@@ -65,12 +91,18 @@ function preload() {
   prisonBgImg = loadImage('assets/images/prison_main.png');
   hallBgImg = loadImage('assets/images/prison-hall.jpg');
   cellBgImg = loadImage('assets/images/prison-cell-scene.jpg');
+
+  // Preload character images
   wardenCharImg = loadImage('assets/images/warden.png');
 
   // Preload item images
   ramenImg = loadImage('assets/images/ramen2.png');
   gumImg = loadImage('assets/images/bubble_gum.png');
   swissArmyImg = loadImage('assets/images/swiss_army.png');
+
+  // Preload inventory images
+  // inventoryImg = loadImage(`assets/images/`)
+
   // Preload JSON game text
   //
   gameTextData = loadJSON(`assets/data/game-text.JSON`);
@@ -107,20 +139,15 @@ function draw() {
 
   if (state === `sceneOne`) {
       sceneOne();
-
     }
 
-
-  if (state === `sceneOneCell`) {
+  if (state === `sceneTwo`) {
       sceneTwo();
-
     }
 
-  if (state === `title`) {
+  if (state === `sceneThree`) {
       sceneThree();
-
     }
-
 
     // Animation effects
     animation();
@@ -133,16 +160,13 @@ function draw() {
 
 /* - - - - - - - - - - - TRADING - - - - - - - - - - - - - - - - - - - - - -  */
 
-
-
-
 // Function to manage trades
 
 function makeTrade(event, ui) {
   if (state === `sceneOneCafeteria`) {
     if (ui.draggable.attr(`id`) === `ramen`) {
       alert(`successful trade!`);
-      state = `sceneOneHall`;
+
 
       // Register completed trade
       tradeCompleteSceneOne = true;
@@ -184,17 +208,14 @@ function sceneOne() {
 
   if (tradeActive === true && state === `sceneOneCafeteria`) {
 
-
-
       // Will utilize this for scene switching and event triggering as well
 
       $(`#go-to-dining`).on(`click`, function() {
         state = `dining`;
       });
 
-
       if (tradeCompleteSceneOne) {
-        $( this ).switchClass( "active-item", "hidden-item", 1000, "easeInOutQuad" );
+        state = `sceneTwo`;
       }
   }
 
@@ -291,22 +312,33 @@ function mouseClicked() {
   }
 }
 
-
 function inventory() {
 
-  if (ramenCollected === true) {
+  if (inventoryActive === true && inventoryDisplay === true) {
 
-  }
+    push();
+    rectMode(CENTER);
+    noStroke();
+    fill(190, 50, 20)
+    rect(30, 20, 55, 55);
+    pop();
+
+
+    if (ramenCollected === true) {
+      push();
+      imageMode(CENTER);
+      image(ramenImg, ramen.x, ramen.y, ramen.width, ramen.height)
+      pop();
+      }
+    }
 }
 
+function keyPressed() {
 
-
-
-
-// function keyPressed() {
-//
-//   // Switch from title to scene one.
-//   if (state === `title` && keyCode === ENTER) {
-//     state = `sceneOneCafeteria`;
-//   }
-// }
+  // Display inventory
+  if (state === `sceneOneCafeteria` && keyCode === 73 && inventoryDisplay === false) {
+    inventoryDisplay = true;
+  } else {
+    inventoryDisplay = false;
+  }
+}
