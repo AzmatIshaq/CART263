@@ -108,8 +108,8 @@ let ramen = {
 // states
 // let state = `title`;
 // let state = ``;
-// let state = `sceneOnePrelude`;
-let state = `sceneOneCafeteria`;
+let state = `sceneOnePrelude`;
+// let state = `sceneOneCafeteria`;
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -188,7 +188,7 @@ function preload() {
   smokeyCharImg = loadImage('assets/images/smokey_inmate_night.jpg');
 
   // Preload character images
-  wardenCharImg = loadImage('assets/images/warden.png');
+  wardenCharImg = loadImage('assets/images/warden_night.jpg');
 
   // Preload item images
   ramenImg = loadImage('assets/images/ramen2.png');
@@ -259,7 +259,7 @@ function makeTrade(event, ui) {
   // Succesful trades for Scene One Cafeteria
   if (state === `sceneOneCafeteria` && tradeActive === true) {
     if (ui.draggable.attr(`id`) === `ramen`) {
-      alert(`Successful trade! Alright Teddy, you got a deal.`);
+      alert(`Huh? Alright I'll take it but find me some smokes!`);
 
       // Register completed trade
       tradesCompleteSceneOne = true;
@@ -363,19 +363,7 @@ function animation() {
   // Animation for sceneOne
   if (state === `sceneOneCafeteria`) {
 
-      // Player dialog text
-      push();
-      fill(255);
-      textSize(dialogDisplay.size);
-      text(activePlayerDialog, dialogDisplay.playerX, dialogDisplay.playerY, dialogDisplay.playerWidth, dialogDisplay.playerHeight);
-      pop();
 
-      // Npc dialog text
-      push();
-      fill(255);
-      textSize(dialogDisplay.size);
-      text(activeNpcDialog, width / dialogDisplay.npcX, height / dialogDisplay.npcY, dialogDisplay.npcWidth, dialogDisplay.npcHeight);
-      pop();
 
       // Scene Venue image
       image(cafeteriaBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
@@ -385,6 +373,14 @@ function animation() {
 
       // Starting player dialogue
       let activePlayerDialog = gameTextData.sceneOne.cafeteria[0].player
+
+      // Player dialog text
+      push();
+      fill(255);
+      textSize(dialogDisplay.size);
+      text(activePlayerDialog, dialogDisplay.playerX, dialogDisplay.playerY, dialogDisplay.playerWidth, dialogDisplay.playerHeight);
+      pop();
+
 
       // Ramen Img
       push();
@@ -397,12 +393,24 @@ function animation() {
 // Trade Scene Dialogue
     if (ramenCollected) {
     let activeNpcDialog = gameTextData.sceneOne.cafeteria[1].inmateSmokey;
-      push();
-      image(smokeyCharImg, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
-      pop();
-    }
+    // Display scene character
+    push();
+    image(smokeyCharImg, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
+    pop();
+
+    // Npc dialog text
+    push();
+    fill(255);
+    textSize(dialogDisplay.size);
+    text(activeNpcDialog, width / dialogDisplay.npcX, height / dialogDisplay.npcY, dialogDisplay.npcWidth, dialogDisplay.npcHeight);
+    pop();
   }
 
+
+}
+
+
+// Scene one Hall State
   if (state === `sceneOneHall`) {
 
     //  Scene Venue
@@ -425,7 +433,6 @@ function animation() {
   // Animation for scene two
 
 }
-
 
 // Mouseclicked events
 
@@ -472,6 +479,7 @@ function inventory() {
     }
 }
 
+// Keypressed to manage inventory and trigger game events
 function keyPressed() {
 
   if (state === `sceneOnePrelude` && keyCode === ENTER) {
@@ -479,7 +487,7 @@ function keyPressed() {
   }
 
   // Display inventory
-  if (state === `sceneOneCafeteria` && keyCode === 73 && inventoryDisplay === false) {
+  if (inventoryActive && keyCode === 73 && inventoryDisplay === false) {
     inventoryDisplay = true;
   } else {
     inventoryDisplay = false;
@@ -498,6 +506,8 @@ function sceneComplete() {
 
 // Function to manage characters
 
-function characters(name) {
-
-}
+// function character(name, x, y, width, height) {
+//   push();
+//   image(smokeyCharImg, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
+//   pop();
+// }
