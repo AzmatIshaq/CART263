@@ -1,8 +1,34 @@
 {
+  "title": "CELL - 14",
   "sceneOne": {
-    "prelude": "I've been in this prison for 4 years now. I'm done here. It's time for a change. Either I break out, or die trying. Ever since I got here, I stuck to myself writing in my cell. It reminded the other prisoners of Ted Kaczynski so they started calling me 'Teddy'. I'm done with that. No more holes, no more writing, no more Teddy. If I want to get out of here It's time to make some moves. I'm gonna start a trading business so I can get the tools I need to break out of this hell.",
-    "title": "CELL - 14",
-    "cafeteria": "Try trading some ramen",
+    "prelude": "I've been in this prison for 4 years now. I'm done here. It's time for a change. Either I break out, or die trying. Ever since I got here, I stuck to myself writing in my cell. It reminded the other inmates of Ted Kaczynski, so they started calling me 'Teddy'. I'm done with that. No more holes, no more writing, no more Teddy. If I want to get out of here, it's time to make some moves. I'm gonna start a trading business so I can get the tools I need to break out of this hell. When they let me out of the hole today, I'm never looking back.",
+    "cafeteria": [
+      {
+        "player": "They finally let me out today. Lemme see if I can collect something to trade from the cafeteria. I'll just pick up whatever's lying around"
+      },
+      {
+        "inmateSmokey": "Hey Teddy! How long were you in the hole?",
+        "player": "3 weeks..."
+      },
+      {
+        "inmateSmokey": "I hear you're trading now, how about a pack of smokes?",
+        "player": "Don't got any, but I bagged some ramen from the mess hall."
+      },
+      {
+        "inmateSmokey": "Alright, but if you find some smokes I get em first.",
+        "guard": "Teddy! Warden wants to see you NOW!"
+      }
+    ],
+    "wardensOffice": [
+      {
+        "warden": "Hello Mosely. I called you in today to make sure you wouldn't end up in the hole again. Fighting with other inmates is not good for the moral of anyone here.",
+        "player": "Understood sir"
+      },
+      {
+        "warden": "Oh and Mosely. Trading is a dangerous business. You have 10 years left on your sentence, if you keep out of trouble, you can make it out safely. Keep that in mind.",
+        "player": "Yes sir"
+      }
+    ],
     "hall": "Good trade kid!",
     "hall2": "Well kid, if you wanna make a real deal you gotta have something worth trading"
   },
