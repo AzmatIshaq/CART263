@@ -1,10 +1,10 @@
 {
   "title": "CELL - 14",
   "sceneOne": {
-    "prelude": "I've been in this prison for 4 years now. I'm done here. It's time for a change. Either I break out, or die trying. Ever since I got here, I stuck to myself writing in my cell. It reminded the other inmates of Ted Kaczynski, so they started calling me 'Teddy'. I'm done with that. No more holes, no more writing, no more Teddy. If I want to get out of here, it's time to make some moves. I'm gonna start a trading business so I can get the tools I need to break out of this hell. When they let me out of the hole today, I'm never looking back.",
+    "prelude": "I've been in this prison for 4 years. I'm done here. It's time for a change. Either I break out, or die trying. Ever since I got here, I stuck to myself writing in my cell. It reminded the other inmates of Ted Kaczynski, so they started calling me 'Teddy'. I'm done with that. No more holes, no more writing, no more Teddy. If I want to get out of here, it's time to make some moves. I've started a trading business so I can get the tools I need to break out of this hell. When they let me out of the hole today, I'm never looking back.",
     "cafeteria": [
       {
-        "player": "I'm out... Lemme see if I can collect something to trade from the cafeteria. I'll just pick up whatever's lying around"
+        "player": "Guess they let me out early... Lemme see if I can collect something to trade from the cafeteria. I'll just pick up whatever's lying around"
       },
       {
         "inmateSmokey": "Hey Teddy! How long were you in the hole? \n \n 3 weeks huh? Well I hear you're trading now, how bout' a pack of smoke?",

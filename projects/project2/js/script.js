@@ -74,6 +74,7 @@ let holePreludeImg;
 // Character image variables
 let wardenCharImg;
 let smokeyCharImg;
+let guardCharImg;
 
 // Items image variables
 let ramenImg;
@@ -110,6 +111,7 @@ let ramen = {
 // let state = ``;
 let state = `sceneOnePrelude`;
 // let state = `sceneOneCafeteria`;
+// let state = `sceneOneWarden`
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -125,7 +127,7 @@ let dialogDisplay = {
   size: 16,
   playerX: 580,
   playerY: 50,
-  playerWidth: 250,
+  playerWidth: 260,
   playerHeight: 350,
   npcX: 1.45,
   npcY: 2,
@@ -149,6 +151,10 @@ let bgDisplay = {
   height: 400
 }
 
+// Character image variable to change which character is displayed
+
+let sceneOneCharImg;
+let sceneTwoCharImg;
 
 // Variable to manage JSON for the npc dialogue that is active
 let activeNpcDialog;
@@ -162,6 +168,7 @@ let tradeActive = true;
 // Variables to verify trade completion between scenes
 
 let tradesCompleteSceneOne = false;
+let tradesCompleteSceneOneCafeteria = false;
 let tradesCompleteSceneTwo = false;
 let tradesCompleteSceneThree = false;
 
@@ -175,7 +182,7 @@ let ramenTraded = false;
 let gumTraded = false;
 
 /**
-Description of preload
+Preload game images and audio
 */
 function preload() {
 
@@ -186,6 +193,8 @@ function preload() {
   cellBgImg = loadImage('assets/images/prison-cell-scene.jpg');
   holePreludeImg = loadImage('assets/images/hole_1_filter_night.jpg');
   smokeyCharImg = loadImage('assets/images/smokey_inmate_night.jpg');
+  guardCharImg = loadImage('assets/images/guard_1.png');
+
 
   // Preload character images
   wardenCharImg = loadImage('assets/images/warden_night.jpg');
@@ -262,7 +271,7 @@ function makeTrade(event, ui) {
       alert(`Huh? Alright I'll take it but find me some smokes!`);
 
       // Register completed trade
-      tradesCompleteSceneOne = true;
+      tradesCompleteSceneOneCafeteria = true;
 
       // Register item trade
       ramenTraded = true;
@@ -285,6 +294,21 @@ function makeTrade(event, ui) {
       // Unsuccessful trade!
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
     }
+
+
+    // Trigger scene change
+    if (tradesCompleteSceneOneCafeteria) {
+      $(`#warden`).on(`click`, function() {
+        state = `sceneOneWarden`;
+      });
+    }
+
+    if(tradesCompleteSceneOne) {
+        state = `sceneTwo`;
+    }
+
+
+
   }
   else if (state === `sceneTwoCell`) {
     if (ui.draggable.attr(`id`) === `spork`) {
@@ -312,8 +336,14 @@ function sceneOne() {
   if (tradeActive === true && state === `sceneOneCafeteria`) {
       // Will utilize this for scene switching and event triggering as well
 
-      $(`#go-to-dining`).on(`click`, function() {
-        state = `dining`;
+      $(`#warden`).on(`click`, function() {
+        state = `sceneOneWarden`;
+        alert(`yes`);
+      });
+
+      $(`#trade-container`).on(`click`, function() {
+        state = `sceneOneWarden`;
+        alert(`yes`);
       });
 
       if (tradesCompleteSceneOne) {
@@ -323,15 +353,15 @@ function sceneOne() {
 
   // Scene One - Hall
 
-      if (state === `sceneOneHall`) {
-          image(hallBgImg, 0, 0, 550, 400);
+    if (state === `sceneOneHall`) {
+        image(hallBgImg, 0, 0, 550, 400);
 
-          push();
-          fill(255);
-          textSize(12);
-          text(gameTextData.sceneOne.hall, 645, 200);
-          pop();
-        }
+        push();
+        fill(255);
+        textSize(12);
+        text(gameTextData.sceneOne.hall, 645, 200);
+        pop();
+      }
 
   // Scene One Cell
 
@@ -346,6 +376,8 @@ function sceneTwo() {
 }
 
 function animation() {
+
+
 
   if (state === `sceneOnePrelude`) {
     push();
@@ -363,15 +395,13 @@ function animation() {
   // Animation for sceneOne
   if (state === `sceneOneCafeteria`) {
 
-
-
       // Scene Venue image
       image(cafeteriaBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
 
       // Ramen trade event
       if (ramenCollected === false ) {
 
-      // Starting player dialogue
+          // Starting player dialogue
       let activePlayerDialog = gameTextData.sceneOne.cafeteria[0].player
 
       // Player dialog text
@@ -380,7 +410,6 @@ function animation() {
       textSize(dialogDisplay.size);
       text(activePlayerDialog, dialogDisplay.playerX, dialogDisplay.playerY, dialogDisplay.playerWidth, dialogDisplay.playerHeight);
       pop();
-
 
       // Ramen Img
       push();
@@ -391,11 +420,16 @@ function animation() {
       }
 
 // Trade Scene Dialogue
-    if (ramenCollected) {
+    if (ramenCollected && !tradesCompleteSceneOneCafeteria) {
+
+    // Display inmate image
+    sceneOneCharImg = smokeyCharImg;
+    // Display inmate dialogue
     let activeNpcDialog = gameTextData.sceneOne.cafeteria[1].inmateSmokey;
+
     // Display scene character
     push();
-    image(smokeyCharImg, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
+    image(sceneOneCharImg, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
     pop();
 
     // Npc dialog text
@@ -404,8 +438,26 @@ function animation() {
     textSize(dialogDisplay.size);
     text(activeNpcDialog, width / dialogDisplay.npcX, height / dialogDisplay.npcY, dialogDisplay.npcWidth, dialogDisplay.npcHeight);
     pop();
+
+
   }
 
+  if (ramenCollected && tradesCompleteSceneOneCafeteria) {
+      let activeNpcDialog = gameTextData.sceneOne.cafeteria[3].guard;
+      sceneOneCharImg = guardCharImg;
+
+      // Display scene character
+      push();
+      image(sceneOneCharImg, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
+      pop();
+
+      // Npc dialog text
+      push();
+      fill(255);
+      textSize(dialogDisplay.size);
+      text(activeNpcDialog, width / dialogDisplay.npcX, height / dialogDisplay.npcY, dialogDisplay.npcWidth, dialogDisplay.npcHeight);
+      pop();
+    }
 
 }
 
@@ -470,12 +522,12 @@ function inventory() {
       pop();
       }
 
-      if (gumCollected === true && gumTraded === false) {
-        push();
-        imageMode(CENTER);
-        image(gumImg, width / gum.xInventory, height /gum.yInventory, gum.width, gum.height)
-        pop();
-        }
+      // if (gumCollected === true && gumTraded === false) {
+      //   push();
+      //   imageMode(CENTER);
+      //   image(gumImg, width / gum.xInventory, height /gum.yInventory, gum.width, gum.height)
+      //   pop();
+      //   }
     }
 }
 

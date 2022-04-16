@@ -83,6 +83,22 @@ h1 {
   align-content: center; */
 }
 
+.btn-group button {
+  background-color: #262626;
+  /* border: 1px solid green;  */
+  color: #262626;
+  padding: 2px 60px; /* Some padding */
+  margin-left: 10px;
+  cursor: hand; /* Pointer/hand icon */
+  width: 10%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+}
+
+#btn-active button {
+  color: #1e90ff;
+}
+
+
 .ramen {
 
 }
