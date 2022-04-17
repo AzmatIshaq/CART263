@@ -59,7 +59,6 @@ h1 {
 
 .active-item {
   display: block;
-
 }
 
 #trade-screen-1 {
@@ -99,6 +98,15 @@ h1 {
 }
 
 
-.ramen {
+/* Items individual styling */
 
+#smokes-player, #smokes-trader {
+  /* width: 100%;
+  height: auto; */
+  /* margin-right: -400px; */
+}
+
+#smokes-player img, #smokes-trader img {
+  width: 40%;
+  height: 40%;
 }
