@@ -1,6 +1,6 @@
 /**
-Title of Project
-Author Name
+Project 2
+Azmat Ishaq
 
 This is a template. You must fill in the title,
 author, and this description to match your project!
@@ -76,6 +76,7 @@ let wardenBgImg
 let wardenCharImg;
 let smokeyCharImg;
 let guardCharImg;
+let duaneCharImg;
 
 // Items image variables
 let ramenImg;
@@ -178,7 +179,6 @@ let activeNpcDialog;
 // Variable to manage JSON for player dialogue that is active
 let activePlayerDialog;
 
-
 // Variables to activate trade moments
 let tradeActive = true;
 
@@ -207,14 +207,16 @@ function preload() {
   cafeteriaBgImg = loadImage('assets/images/prison-cafeteria.png');
   prisonBgImg = loadImage('assets/images/prison_main.png');
   hallBgImg = loadImage('assets/images/prison-hall.jpg');
-  cellBgImg = loadImage('assets/images/prison-cell-scene.jpg');
+  cellBgImg = loadImage('assets/images/prison-cell.jpg');
   holePreludeImg = loadImage('assets/images/hole_1_filter_night.jpg');
-  smokeyCharImg = loadImage('assets/images/smokey_inmate_night.jpg');
-  guardCharImg = loadImage('assets/images/guard_1.png');
-  wardenBgImg = loadImage(`assets/images/warden-office-night.jpg`)
+   wardenBgImg = loadImage(`assets/images/warden-office-night.jpg`)
+
 
   // Preload character images
   wardenCharImg = loadImage('assets/images/warden_night.jpg');
+  smokeyCharImg = loadImage('assets/images/smokey_inmate_night.jpg');
+  guardCharImg = loadImage('assets/images/guard_1.png');
+  duaneCharImg = loadImage('assets/images/warden_night.jpg');
 
   // Preload item images
   ramenImg = loadImage('assets/images/ramen2.png');
@@ -240,7 +242,7 @@ function setup() {
   canvas.parent(`#game-canvas`);
 
   // jQuery
-  // Make the trade items draggable.
+  // Make the trade items draggable and droppable in traders inventory.
   $(".my-items").draggable({
      containment: "#trade-container"
     });
@@ -274,6 +276,8 @@ function draw() {
     // Inventory management
     inventory();
 
+    // Navigate prison
+    navigatePrison();
 } // End of draw
 
 
@@ -313,10 +317,6 @@ function makeTrade(event, ui) {
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
     }
 
-    // Function to navigation prison using sidebar
-    navigatePrison();
-
-
 
   }
 
@@ -335,11 +335,9 @@ function makeTrade(event, ui) {
     }
   }
 
-
-
-      if(tradesCompleteSceneOne) {
-          state = `sceneTwo`;
-      }
+    if(tradesCompleteSceneOne) {
+        state = `sceneTwo`;
+    }
 }
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
@@ -351,23 +349,23 @@ function titleState() {
 // Function to manage trades for each scene
 function sceneOne() {
 
-  if (tradeActive === true && state === `sceneOneCafeteria`) {
-      // Will utilize this for scene switching and event triggering as well
-
-      $(`#warden`).on(`click`, function() {
-        state = `sceneOneWarden`;
-        alert(`yes`);
-      });
-
-      $(`#trade-container`).on(`click`, function() {
-        state = `sceneOneWarden`;
-        alert(`yes`);
-      });
-
-      if (tradesCompleteSceneOne) {
-        state = `sceneTwo`;
-      }
-  }
+  // if (tradeActive === true && state === `sceneOneCafeteria`) {
+  //     // Will utilize this for scene switching and event triggering as well
+  //
+  //     $(`#warden`).on(`click`, function() {
+  //       state = `sceneOneWarden`;
+  //       alert(`yes`);
+  //     });
+  //
+  //     $(`#trade-container`).on(`click`, function() {
+  //       state = `sceneOneWarden`;
+  //       alert(`yes`);
+  //     });
+  //
+  //     if (tradesCompleteSceneOne) {
+  //       state = `sceneTwo`;
+  //     }
+  // }
 
   // Scene One - Hall
 
@@ -388,10 +386,6 @@ function sceneOne() {
       }
 }
 
-
-function sceneTwo() {
-
-}
 
 function animation() {
 
@@ -419,7 +413,7 @@ function animation() {
       // Ramen trade event
       if (ramenCollected === false ) {
 
-          // Starting player dialogue
+      // Starting player dialogue
       let activePlayerDialog = gameTextData.sceneOne.cafeteria[0].player
 
       // Player dialog text
@@ -472,9 +466,8 @@ if (state === `sceneOneWarden`) {
      containment: "#trade-screen-1"
     });
 
-
-  // Scene Venue image
-  image(wardenBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
+    // Display sene venue
+    sceneVenue(wardenBgImg);
 
   if (smokesCollected === false) {
     // Smokes Img
@@ -495,6 +488,16 @@ if (state === `sceneOneWarden`) {
       dialogText(activeNpcDialog);
 }
 
+  if (state === `sceneOneCell`) {
+    // Display sene venue
+    sceneVenue(cellBgImg);
+
+    // Display inmate image
+    sceneOneCharImg = wardenCharImg;
+    // Display inmate dialogue
+    activeNpcDialog = gameTextData.sceneOne.wardensOffice[0].warden;
+
+  }
 
 
 // Scene one Hall State
@@ -511,9 +514,8 @@ if (state === `sceneOneWarden`) {
 
   }
 
-  // Animation for scene two
 
-}
+} // End of animation function
 
 // Mouseclicked events
 
@@ -598,11 +600,10 @@ function sceneComplete() {
 }
 
 
-function sceneVenues(x) {
-  if (venue === x) {
-  // Scene Venue image
-  image(wardenBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
-  }
+function sceneVenue(venueBgImg) {
+
+  image(venueBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
+
 }
 
 function characterDisplay(character) {
@@ -640,9 +641,9 @@ function navigatePrison() {
     });
   }
 
-
-  $(`#warden`).on(`click`, function() {
-    venue = `wardenoffice`;
+if (state === `sceneOneWarden` && smokesCollected)
+  $(`#cell`).on(`click`, function() {
+    state = `sceneOneCell`
   });
 
 }
