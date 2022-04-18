@@ -138,6 +138,10 @@ let inventoryActive = true;
 // Limites access to display inventory based on scene
 let inventoryDisplay = false;
 
+// Variable to manage item class
+let items;
+
+
 // Variable for JSON data
 let gameTextData;
 
@@ -244,6 +248,8 @@ function setup() {
   let canvas = createCanvas(850, 400);
   canvas.parent(`#game-canvas`);
 
+
+// Setup trade
   // jQuery
   // Make the trade items draggable and droppable in traders inventory.
   $(".my-items").draggable({
@@ -256,6 +262,8 @@ function setup() {
 
   // Starting Scene
   scene = `sceneOne`;
+
+  items = new Items();
 }
 
 /**
@@ -284,6 +292,12 @@ function draw() {
 
     // Navigate prison
     navigatePrison();
+
+if (scene === `sceneOne`) {
+
+    makeTrade(event, ui);
+  }
+
 } // End of draw
 
 
@@ -322,12 +336,13 @@ function makeTrade(event, ui) {
       // Unsuccessful trade!
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
     }
-
-
   }
 
-  if (state === `sceneOneWarden`) {
-        alert(`test`);
+
+if (state === `sceneOneWarden`) {
+
+    $(".my-items").draggable("enable");
+      $("#ramen-player").show();
 
     if (ui.draggable.attr(`id`) === `gum`) {
       // Successful trade!
@@ -340,7 +355,7 @@ function makeTrade(event, ui) {
       // Maybe give the player a hint about what they need
     }
   }
-}
+} // End of makeTrade function
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
 
@@ -362,6 +377,8 @@ function animation() {
   // }
 
 if (scene === `sceneOne`) {
+
+
   if (state === `sceneOnePrelude`) {
     push();
     image(holePreludeImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
@@ -393,6 +410,8 @@ if (scene === `sceneOne`) {
     playerDialogText(activePlayerDialog);
 
     // Ramen Img
+    items.display();
+
     push();
     imageMode(CENTER);
     image(ramenImg, width / ramen.x, height / ramen.y, ramen.width, ramen.height)
@@ -434,6 +453,7 @@ if (scene === `sceneOne`) {
     $(".my-items").draggable({
        containment: "#trade-screen-1"
       });
+
 
       // Display scene venue
       sceneVenue(wardenBgImg);
@@ -656,37 +676,35 @@ function playerDialogText(playerDialog) {
 
 function navigatePrison() {
 
+
 // Limit navigation areas based on trade completition
 if (scene === `sceneOne`) {
 
-  // Trigger scene change
-  if (tradesCompleteSceneOneCafeteria) {
-    $(`#warden`).on(`click`, function() {
-      state = `sceneOneWarden`;
-    });
+    // Trigger scene change
+    if (tradesCompleteSceneOneCafeteria) {
+      $(`#warden`).on(`click`, function() {
+        state = `sceneOneWarden`;
+      });
+    }
+
+    if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
+      $(`#cell`).on(`click`, function() {
+        scene = `sceneTwo`;
+        state = `sceneTwoCell`;
+      });
+    }
+
   }
 
-if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
-  $(`#cell`).on(`click`, function() {
-    scene = `sceneTwo`;
-    state = `sceneTwoCell`;
-  });
-}
-  // $(`#cafeteria`).on(`click`, function() {
-  //   scene=`sceneTwo`
-  //   state = `sceneTwoCafeteria`
-  // });
-
-}
-
-
-
-if (scene === `sceneTwo`) {
-
-}
+  // if (scene === `sceneOne` || scene === `sceneTwo` || scene === `sceneThree`) {
+  //   $(`#cell`).on(`click`, function() {
+  //     sceneVenue(cellBgImg, `Nothing seems to be happening right now`);
+  //   });
 
   // $(`#cell`).on(`click`, function() {
   //   state = `sceneOneCell`
   // });
+  // }
+
 
 }
