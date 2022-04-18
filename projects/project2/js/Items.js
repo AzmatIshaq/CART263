@@ -4,7 +4,7 @@ Items class
 
 class Items {
 
-    constructor(image, w, h, x, y, size, name) {
+    constructor(image, x, y, w, h, size, name) {
       this.width = w;
       this.height = h;
       this.x = x;
@@ -15,7 +15,11 @@ class Items {
       // this.collected = true;
     }
 
-    update() {
+    display() {
+      if (state === sceneOneCafeteria && !ramenCollected) {
+
+
+      }
 
     }
 
