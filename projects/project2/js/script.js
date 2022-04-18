@@ -196,12 +196,14 @@ let tradeActive = true;
 let tradesCompleteSceneOne = false;
 let tradesCompleteSceneOneCafeteria = false;
 let tradesCompleteSceneTwo = false;
+let tradesCompleteSceneTwoCafeteria = false;
 let tradesCompleteSceneThree = false;
 
 // Variables to manage item collection
 let ramenCollected = false;
 let gumCollected = false;
 let smokesCollected = false;
+let smokesTraded = false;
 
 // Variables to register trades
 let ramenTraded = false;
@@ -341,17 +343,19 @@ function makeTrade(event, ui) {
   }
 
 
-if (state === `sceneOneWarden`) {
+if (state === `sceneTwoCafeteria`) {
 
-
-
-
-    if (ui.draggable.attr(`id`) === `gum`) {
+    if (ui.draggable.attr(`id`) === `smokes-player`) {
+      // Register completed trade
+      tradesCompleteSceneTwoCafeteria = true;
+      smokesTraded = true;
       // Successful trade!
       // Add something cool to the player's inventory
       // Display a message(s) from the cellmate
     }
     else {
+      // Unsuccessful trade!
+      alert(`Trade rejected! Hey fool, how about something I actually need?`);
       // Unsuccessful trade!
       // Say something generic about how this isn't the object
       // Maybe give the player a hint about what they need
@@ -399,8 +403,6 @@ if (scene === `sceneOne`) {
   if (state === `sceneOneCafeteria`) {
 
     // Scene Venue image
-    // image(cafeteriaBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
-
     sceneVenue(cafeteriaBgImg);
 
     // Ramen trade event
@@ -453,8 +455,6 @@ if (scene === `sceneOne`) {
   if (state === `sceneOneWarden`) {
 
     $("#ramen-player").hide();
-
-
 
       // Display scene venue
       sceneVenue(wardenBgImg);
@@ -614,6 +614,19 @@ if(state === `sceneOneWarden`) {
 
 }
 
+
+if(state === `sceneTwoCafeteria`) {
+
+  $(".my-items").draggable("enable");
+
+  $(".my-items").draggable({
+     containment: "#trade-container"
+    });
+
+
+
+}
+
   // if (inventoryActive === true && inventoryDisplay === true) {
   //
   //     // Inventory interface
@@ -639,7 +652,7 @@ if(state === `sceneOneWarden`) {
       //   pop();
       //   }
 
-    
+
 }
 
 // Keypressed to manage inventory and trigger game events
