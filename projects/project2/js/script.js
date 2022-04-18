@@ -130,6 +130,7 @@ let smokes = {
 let state = `sceneOnePrelude`;
 // let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`
+let scene;
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -252,6 +253,9 @@ function setup() {
   $(`#trade-screen-2`).droppable({
     drop: makeTrade
   });
+
+  // Starting Scene
+  scene = `sceneOne`;
 }
 
 /**
@@ -353,6 +357,11 @@ function sceneOne() {
 function animation() {
 
 
+  // if(!tradesCompleteSceneOne) {
+  //
+  // }
+
+if (scene === `sceneOne`) {
   if (state === `sceneOnePrelude`) {
     push();
     image(holePreludeImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
@@ -418,7 +427,6 @@ function animation() {
         // Display scene character
         characterDisplay(activeCharImg);
       }
-
 }
 
   if (state === `sceneOneWarden`) {
@@ -429,6 +437,10 @@ function animation() {
 
       // Display scene venue
       sceneVenue(wardenBgImg);
+      // Display inmate image
+      activeCharImg = wardenCharImg;
+      // Display scene character
+      characterDisplay(activeCharImg);
 
     if (smokesCollected === false) {
         // Smokes Img
@@ -436,29 +448,48 @@ function animation() {
         imageMode(CENTER);
         image(smokesImg, width / smokes.x, height / smokes.y, smokes.width, smokes.height)
         pop();
-      }
 
-        // Display inmate image
-        activeCharImg = wardenCharImg;
-        // Display scene character
-        characterDisplay(activeCharImg);
         // Display inmate dialogue
         activeNpcDialog = gameTextData.sceneOne.wardensOffice[0].warden;
         // Display dialogue
         dialogText(activeNpcDialog);
+      }
 
+      if (smokesCollected === true) {
+        activeNpcDialog = gameTextData.sceneOne.wardensOffice[1].warden;
+        // Display dialogue
+        dialogText(activeNpcDialog);
+      }
     }
 
-    if (state === `sceneOneCell`) {
+    // if (state === `sceneOneCell`) {
+    //   // Display scene venue
+    //   sceneVenue(cellBgImg);
+    //   // Display inmate dialogue
+    //   activePlayerDialog = gameTextData.sceneOne.cell[0].player;
+    //   // Display dialogue
+    //   playerDialogText(activePlayerDialog);
+    // }
+
+  } // End of Scene One
+
+
+  // Animation for second scene
+
+// if(tradesCompleteSceneOne) {
+//     scene = `sceneTwo`;
+//     state =`sceneTwoCell;`
+// }
+
+if (scene === `sceneTwo`) {
+    if (state === `sceneTwoCell`) {
       // Display scene venue
       sceneVenue(cellBgImg);
       // Display inmate dialogue
-      activeNpcDialog = gameTextData.sceneOne.cell[0].player;
+      activePlayerDialog = gameTextData.sceneOne.cell[0].player;
       // Display dialogue
-      dialogText(activeNpcDialog);
+      playerDialogText(activePlayerDialog);
     }
-
-  // Animation for second scene
 
     // Scene one Hall animation
     if (state === `sceneTwoCafeteria`) {
@@ -502,10 +533,9 @@ function animation() {
       // Display dialogue
       dialogText(activeNpcDialog);
     }
+  } // End of Scene Two
 
-    if(tradesCompleteSceneOne) {
-        state = `sceneTwo`;
-    }
+
 
 } // End of animation function
 
@@ -526,12 +556,12 @@ function mouseClicked(item, collectedStatus) {
     }
   }
 
-
   if (state === `sceneOneWarden` && smokesCollected === false) {
 
     if (dist(mouseX, mouseY, width / smokes.x, height / smokes.y) <= smokes.size / 2) {
       // alert(`hello`);
       smokesCollected = true;
+      tradesCompleteSceneOne = true;
       // $( `#ramen` ).switchClass( "hidden-item", "active-item");
       $(`#smokes-player`).removeClass("hidden-item")
       $(`#smokes-player`).addClass("active-item")
@@ -565,6 +595,7 @@ function inventory() {
       //   image(gumImg, width / gum.xInventory, height /gum.yInventory, gum.width, gum.height)
       //   pop();
       //   }
+
     }
 }
 
@@ -584,18 +615,9 @@ function keyPressed() {
 }
 
 
-// Function to manage scene completions
-function sceneComplete() {
-
-  if (tradesCompleteSceneOne) {
-
-  }
-
-}
-
-
 function sceneVenue(venueBgImg, venueText) {
 
+  // Scene venue image
   image(venueBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
 
   push();
@@ -607,7 +629,7 @@ function sceneVenue(venueBgImg, venueText) {
 }
 
 function characterDisplay(character) {
-  // Display scene character
+  // To display scene character
   push();
   image(character, charDisplay.x, charDisplay.y, charDisplay.width, charDisplay.height);
   pop();
@@ -626,7 +648,7 @@ function dialogText(dialog) {
 function playerDialogText(playerDialog) {
   // Player dialog text
   push();
-  fill(255);
+  fill(colorPalette.r3, colorPalette.g3, colorPalette.b3);
   textSize(dialogDisplay.size);
   text(playerDialog, dialogDisplay.playerX, dialogDisplay.playerY, dialogDisplay.playerWidth, dialogDisplay.playerHeight);
   pop();
@@ -635,26 +657,33 @@ function playerDialogText(playerDialog) {
 function navigatePrison() {
 
 // Limit navigation areas based on trade completition
-if (!tradesCompleteSceneOne) {
+if (scene === `sceneOne`) {
 
-}
+  // Trigger scene change
+  if (tradesCompleteSceneOneCafeteria) {
+    $(`#warden`).on(`click`, function() {
+      state = `sceneOneWarden`;
+    });
+  }
 
-// Trigger scene change
-if (tradesCompleteSceneOneCafeteria) {
-  $(`#warden`).on(`click`, function() {
-    state = `sceneOneWarden`;
-  });
-}
-
-if (state === `sceneOneWarden` && smokesCollected)
+if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
   $(`#cell`).on(`click`, function() {
-    state = `sceneOneCell`
+    scene = `sceneTwo`;
+    state = `sceneTwoCell`;
   });
+}
+  // $(`#cafeteria`).on(`click`, function() {
+  //   scene=`sceneTwo`
+  //   state = `sceneTwoCafeteria`
+  // });
 
-if (state === `sceneOneCell` && smokesCollected)
-  $(`#cafeteria`).on(`click`, function() {
-    state = `sceneTwoCafeteria`
-  });
+}
+
+
+
+if (scene === `sceneTwo`) {
+
+}
 
   // $(`#cell`).on(`click`, function() {
   //   state = `sceneOneCell`
