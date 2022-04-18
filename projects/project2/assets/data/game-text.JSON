@@ -7,7 +7,7 @@
         "player": "I guess they let me out early... Lemme see if I can collect something to trade from the cafeteria. I'll just pick up whatever's lying around"
       },
       {
-        "inmateSmokey": "Hey Teddy! How long were you in the hole?\n\n3 weeks huh? Well I hear you're trading now, how bout' a pack of smokes?",
+        "inmateSmokey": "Smokey:\n\nHey Teddy! How long were you in the hole?\n\n3 weeks huh? Well I hear you're trading now, how bout' a pack of smokes?",
         "player": "3 weeks..."
       },
       {
@@ -21,7 +21,7 @@
     ],
     "wardensOffice": [
       {
-        "warden": "Hello Mosely. I called you in today to assure that you would not find yourself in the hole again.\n\nPhysical altercations are detrimental to the moral of my inmates.",
+        "warden": "Warden:\n\nHello Mosely. I called you in today to assure that you would not find yourself in the hole again.\n\nPhysical altercations are detrimental to the moral of my inmates.",
         "player": "Understood sir"
       },
       {
@@ -29,20 +29,21 @@
         "player": "Yes sir"
       }
     ],
-    "hall": "Good trade kid!",
-    "hall2": "Well kid, if you wanna make a real deal you gotta have something worth trading"
+    "cell": [
+      {
+        "player": "Alright lemme see if I can get some pliers. Maybe Smokey will trade for them..."
+      }
+    ],
+    "hall": "Good trade kid!"
   },
   "sceneTwo": {
     "intro": " ",
-    "questions": [
+    "cafeteria": [
       {
-        "question": " ",
-        "answer": " "
+        "inmateSmokey": "Clippers? I don't have any, but if you gimme those cigarettes I can give you the name of someone who can get em."
       },
       {
-        "question": " ",
-        "answer": " ",
-        "correct": false
+        "inmateSmokey": "See Devon, he's at the rec center"
       }
     ]
   }
