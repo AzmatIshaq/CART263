@@ -112,12 +112,12 @@ let inventoryGui = {
 // Ramen item properties
 let ramen = {
   x: 5,
-  y: 2,
+  y: 1.5,
   xInventory: 2,
   yInventory: 2,
-  width: 50,
-  height: 50,
-  size:  50
+  width: 40,
+  height: 40,
+  size:  40
 };
 
 // Chess item properties
@@ -129,14 +129,25 @@ let chess = {
   yInventory: 2,
   width: 20,
   height: 20,
-  size:  50
+  size:  20
 };
 
 // Smokes item properties
-
 let smokes = {
   x: 2,
   y: 1.5,
+  xInventory: 2,
+  yInventory: 2,
+  width: 30,
+  height: 30,
+  size:  30
+};
+
+// Swiss army knife item properties
+
+let swissArmyKnife = {
+  x: 2,
+  y: 1.75,
   xInventory: 2,
   yInventory: 2,
   width: 30,
@@ -151,7 +162,8 @@ let smokes = {
 // let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
-let state = `sceneTwoRec`;
+let state = `sceneTwoCell`;
+// let state = `sceneTwoRec`;
 // let scene = `sceneOne`;
 let scene = `sceneTwo`;
 
@@ -163,7 +175,6 @@ let inventoryDisplay = false;
 
 // Variable to manage item class
 let items;
-
 
 // Variable for JSON data
 let gameTextData;
@@ -550,6 +561,12 @@ if (scene === `sceneTwo`) {
       activePlayerDialog = gameTextData.sceneOne.cell[0].player;
       // Display dialogue
       playerDialogText(activePlayerDialog);
+
+      // Display swiss army knife in cell
+      push();
+      imageMode(CENTER);
+      image(swissArmyImg, width / swissArmyKnife.x, height / swissArmyKnife.y, swissArmyKnife.width, swissArmyKnife.height)
+      pop();
     }
 
     // Scene one Hall animation
@@ -650,7 +667,7 @@ if (scene === `sceneTwo`) {
 
 // Mouseclicked events
 
-function mouseClicked(item, collectedStatus) {
+function mouseClicked() {
 
   // if item && itemcollected = false <- set this up
 
@@ -665,8 +682,22 @@ function mouseClicked(item, collectedStatus) {
     }
   }
 
-  if (state === `sceneOneWarden` && smokesCollected === false) {
+  if (state === `sceneTwoCell`) {
 
+  if(!chessTraded) {
+    if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
+      alert(`I don't need this just yet`);
+      }
+    }
+
+  if(chessTraded) {
+    if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
+        $(`#swiss-knife-player`).addClass("active-item")
+      }
+    }
+  }
+
+  if (state === `sceneOneWarden` && smokesCollected === false) {
     if (dist(mouseX, mouseY, width / smokes.x, height / smokes.y) <= smokes.size / 2) {
       // alert(`hello`);
       smokesCollected = true;
@@ -687,7 +718,7 @@ function mouseClicked(item, collectedStatus) {
       $(`#chess-player`).addClass("active-item")
     }
   }
-}
+} // End of mouseClicked function
 
 // Function to manage inventory absed on game state
 function inventory() {
@@ -705,7 +736,10 @@ if(state === `sceneOneWarden`) {
 // Manage inventory for sceneTwoCafeteria
 if(state === `sceneTwoCafeteria`) {
 
+  // Allow dragability if deal is not complete
+  if (!tradesCompleteSceneTwoCafeteria) {
   $(".my-items").draggable("enable");
+  }
 
   $(".my-items").draggable({
      containment: "#trade-container"
@@ -765,6 +799,7 @@ if(state === `sceneTwoCommon`) {
 // Keypressed to manage inventory and trigger game events
 function keyPressed() {
 
+  //Key press to get out of prelude state
   if (state === `sceneOnePrelude` && keyCode === ENTER) {
     state = `sceneOneCafeteria`;
   }
@@ -777,7 +812,7 @@ function keyPressed() {
   }
 }
 
-
+// Function manage displaying venues
 function sceneVenue(venueBgImg, venueText) {
 
   // Scene venue image
@@ -791,6 +826,7 @@ function sceneVenue(venueBgImg, venueText) {
 
 }
 
+// Function to manage displaying character images
 function characterDisplay(character) {
   // To display scene character
   push();

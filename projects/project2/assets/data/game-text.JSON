@@ -39,13 +39,13 @@
     ],
     "recYard": [
       {
-        "devon": "If you want clippers, go find my missing chess piece. I mighta' lost it in the hall or the common area"
+        "devon": "Devon:\n\nIf you want clippers, go find my missing chess piece. I mighta' lost it in the hall or the common area"
       },
       {
-        "devon": "It'll cost you more than a chess piece to finish this trade. I got some information for you about tonight."
+        "devon": "It'll cost you more than a chess piece to finish this trade. If you get me something worthwhile I'll give you the cutters. I also got some information for you about tonight..."
       },
       {
-        "devon": "The lights are going out after chow. Another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I heard there aren't any guards near fence B tonight.\n\nWatchout for that guard tower though"
+        "devon": "Aight, I'll take it. The lights are going out after chow, the cell blocks are gonna fight. Also, another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I would do it tonight. There aren't any guards near fence B after dark.\n\nWatchout for that guard tower though"
       }
     ],
     "hall": {
@@ -53,10 +53,10 @@
     },
     "commonArea": [
             {
-      "duane": "Duane:\n\nChess piece? I may have seen a knight laying around by the stairs..."
+      "duane": "Duane:\n\nChess piece? I may have seen a knight laying around by the stairs... I also heard Devon wanted a swiss army knife."
       },
       {
-      "duane": "Nice find... I'll see you back at the cell tonight. I hear the lights are going out"
+      "duane": "Nice find...\n\n Hey Teddy. Heads up, the lights are gonna be sabotaged tonight. Inmates are gonna fight..."
       }
     ]
   }
