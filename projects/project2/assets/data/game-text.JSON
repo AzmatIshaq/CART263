@@ -4,37 +4,28 @@
     "prelude": "I've been in this prison for 4 years. I'm done here. It's time for a change. Either I break out, or die trying. Ever since I got here, I stuck to myself writing in my cell. It reminded the other inmates of Ted Kaczynski, so they started calling me 'Teddy'. I'm done with that. No more holes, no more writing, no more Teddy. If I want to get out of here, it's time to make some moves. I've started a trading business so I can get the tools I need to break out of this hell. When they let me out of the hole today, I'm never looking back.",
     "cafeteria": [
       {
-        "player": "I guess they let me out early... Lemme see if I can collect something to trade from the cafeteria. I'll just pick up whatever's lying around"
+        "player": "I guess they let me out of the hole early... Lemme see if I can collect something to trade from the cafeteria. I'll just pick up whatever's lying around"
       },
       {
-        "inmateSmokey": "Smokey:\n\nHey Teddy! How long were you in the hole?\n\n3 weeks huh? Well I hear you're trading now, how bout' a pack of smokes?",
-        "player": "3 weeks..."
+        "inmateSmokey": "Smokey:\n\nHey Teddy! How long were you in the hole?\n\n3 weeks huh? Well I hear you're trading now, how bout' a pack of smokes?"
       },
       {
-        "inmateSmokey": "I hear you're trading now, how about a pack of smokes?",
-        "player": "Don't got any, but I bagged some ramen from the mess hall."
-      },
-      {
-        "inmateSmokey": "Alright, but if you find some smokes I get em first.",
         "guard": "Teddy! The warden wants to see you NOW!"
       }
     ],
     "wardensOffice": [
       {
-        "warden": "Warden:\n\nHello Mosely. I called you in today to assure that you would not find yourself in the hole again.\n\nPhysical altercations are detrimental to the moral of my inmates.",
-        "player": "Understood sir"
+        "warden": "Warden:\n\nHello Mosely. I called you in today to assure that you would not find yourself in the hole again.\n\nPhysical altercations are detrimental to the moral of my inmates."
       },
       {
-        "warden": "Oh and Mosely. Trading is a dangerous business. You have 15 years left on your sentence, if you keep out of trouble, you can make it out safely. Keep that in mind.\n\nNow get back to your cell.",
-        "player": "Yes sir"
+        "warden": "Oh and Mosely. Trading is a dangerous business. You have 15 years left on your sentence, if you keep out of trouble, you can make it out safely. Keep that in mind.\n\nNow get back to your cell."
       }
     ],
     "cell": [
       {
-        "player": "Alright lemme see if I can get some pliers. Maybe Smokey will trade for them..."
+        "player": "Alright lemme see if I can get some wire cutters. Maybe Smokey will trade for them..."
       }
-    ],
-    "hall": "Good trade kid!"
+    ]
   },
   "sceneTwo": {
     "intro": " ",
@@ -43,8 +34,22 @@
         "inmateSmokey": "Clippers? I don't have any, but if you gimme those cigarettes I can give you the name of someone who can get em."
       },
       {
-        "inmateSmokey": "See Devon, he's at the rec center"
+        "inmateSmokey": "See Devon, he's at the rec yard"
       }
-    ]
+    ],
+    "recYard": [
+      {
+        "devon": "If you want clippers, go find my missing chess piece. I mighta' lost it in the hall or the common area"
+      },
+      {
+        "devon": "It's a deal. Just know if you're breaking out for real, you gotta get good with the guards."
+      }
+    ],
+    "hall": {
+      "player": "Hmm, seems pretty empty. Not much to find..."
+    },
+    "commonArea": {
+      "duane": "Duane:\n\nChess piece? I may have seen a knight laying around by the stairs..."
+    }
   }
 }

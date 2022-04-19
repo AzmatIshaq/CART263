@@ -72,6 +72,11 @@ let cellBgImg;
 let holePreludeImg;
 let wardenBgImg;
 let recBgImg;
+let commonBgImg;
+
+// Dialog box images
+
+let noEscapeImg;
 
 // Character image variables
 let wardenCharImg;
@@ -85,6 +90,8 @@ let ramenImg;
 let gumImg;
 let swissArmyImg;
 let smokesImg;
+let chessImg;
+
 
 // Misc image variables
 let inventoryImg;
@@ -102,8 +109,7 @@ let inventoryGui = {
   alpha: 210,
 };
 
-// Ramen item position
-
+// Ramen item properties
 let ramen = {
   x: 5,
   y: 2,
@@ -114,7 +120,19 @@ let ramen = {
   size:  50
 };
 
-// Smokes item position
+// Chess item properties
+
+let chess = {
+  x: 1.3,
+  y: 2,
+  xInventory: 2,
+  yInventory: 2,
+  width: 50,
+  height: 50,
+  size:  50
+};
+
+// Smokes item properties
 
 let smokes = {
   x: 2,
@@ -129,10 +147,13 @@ let smokes = {
 // states
 // let state = `title`;
 // let state = ``;
-let state = `sceneOnePrelude`;
-// let state = `sceneOneCafeteria`;
-// let state = `sceneOneWarden`
-let scene;
+// let state = `sceneOnePrelude`;
+let state = `sceneOneCafeteria`;
+// let state = `sceneOneWarden`;
+// let state = `sceneTwoCafeteria`;
+// let state =  `sceneTwoRec`;
+let scene = `sceneOne`;
+// let scene = `sceneTwo`;
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -177,9 +198,9 @@ let bgDisplay = {
 }
 
 // Character image variable to change which character is displayed
-
-let sceneOneCharImg;
-let sceneTwoCharImg;
+//
+// let sceneOneCharImg;
+// let sceneTwoCharImg;
 
 // Variable to manage JSON for the npc dialogue that is active
 let activeNpcDialog;
@@ -217,20 +238,21 @@ Preload game images and audio
 function preload() {
 
   // Preload venue images
-  cafeteriaBgImg = loadImage('assets/images/prison-cafeteria.png');
+  cafeteriaBgImg = loadImage('assets/images/cafeteria-edited.jpg');
   prisonBgImg = loadImage('assets/images/prison_main.png');
-  hallBgImg = loadImage('assets/images/prison-hall.jpg');
+  hallBgImg = loadImage('assets/images/prison-hall-edited-3.jpg');
   cellBgImg = loadImage('assets/images/prison-cell.jpg');
   holePreludeImg = loadImage('assets/images/hole_1_filter_night.jpg');
   wardenBgImg = loadImage(`assets/images/warden-office-night.jpg`)
-  recBgImg = loadImage(`assets/images/rec-area-2.jpg`)
+  recBgImg = loadImage(`assets/images/rec-area-2-b.jpg`)
+  commonBgImg = loadImage(`assets/images/common-area-edited.jpg`)
 
 
   // Preload character images
   wardenCharImg = loadImage('assets/images/warden_night.jpg');
   smokeyCharImg = loadImage('assets/images/smokey_inmate_night.jpg');
   guardCharImg = loadImage('assets/images/guard_1.png');
-  duaneCharImg = loadImage('assets/images/warden_night.jpg');
+  duaneCharImg = loadImage('assets/images/cellmate-duane.jpg');
   devonCharImg = loadImage(`assets/images/inmate-trader-bures.jpg`)
 
   // Preload item images
@@ -238,8 +260,10 @@ function preload() {
   gumImg = loadImage('assets/images/bubble_gum.png');
   swissArmyImg = loadImage('assets/images/swiss_army.png');
   smokesImg = loadImage(`assets/images/cigarettes.png`);
+  chessImg = loadImage(`assets/images/chess-knight.png`)
 
-  // Preload inventory images
+  // Preload misc images
+  noEscapeImg = loadImage(`assets/images/player-no-escape.jpg`);
 
   // Preload JSON game text
   //
@@ -269,9 +293,9 @@ function setup() {
   });
 
   // Starting Scene
-  scene = `sceneOne`;
+  // scene = `sceneOne`;
 
-  items = new Items();
+  // items = new Items();
 }
 
 /**
@@ -301,20 +325,27 @@ function draw() {
     // Navigate prison
     navigatePrison();
 
-
 } // End of draw
 
 
 /* - - - - - - - - - - - TRADING - - - - - - - - - - - - - - - - - - - - - -  */
 
 // Function to manage trades
-
 function makeTrade(event, ui) {
 
   // Succesful trades for Scene One Cafeteria
   if (state === `sceneOneCafeteria` && tradeActive === true) {
     if (ui.draggable.attr(`id`) === `ramen-player`) {
-      alert(`Huh? Alright I'll take it but find me some smokes! Here's some gum.`);
+
+
+     $("#smokey-trade-1").dialog({
+         modal: true,
+         close: function(event, ui) {}
+     });
+
+     $("#smokey-trade-1").on( "dialogclose", function(event, ui) {
+
+     });
 
       // Register completed trade
       tradesCompleteSceneOneCafeteria = true;
@@ -342,7 +373,7 @@ function makeTrade(event, ui) {
     }
   }
 
-
+// Manage trade for sceneTwoCafeteria
 if (state === `sceneTwoCafeteria`) {
 
     if (ui.draggable.attr(`id`) === `smokes-player`) {
@@ -352,6 +383,10 @@ if (state === `sceneTwoCafeteria`) {
       // Successful trade!
       // Add something cool to the player's inventory
       // Display a message(s) from the cellmate
+      alert(`Trade accepted!`);
+
+      // Disable items draggability
+      $(".my-items").draggable("disable");
     }
     else {
       // Unsuccessful trade!
@@ -361,6 +396,30 @@ if (state === `sceneTwoCafeteria`) {
       // Maybe give the player a hint about what they need
     }
   }
+
+// Manage trade for sceneTwoRec
+  if (state === `sceneTwoRec`) {
+    // Hide former trade
+
+    if (ui.draggable.attr(`id`) === `chess-player`) {
+      // Register completed trade
+
+      // Successful trade!
+      // Add something cool to the player's inventory
+      // Display a message(s) from the cellmate
+        alert(`Trade accepted!`);
+        // Disable draggability
+        $(".my-items").draggable("disable");
+    }
+    else {
+      // Unsuccessful trade!
+      alert(`Trade rejected! Hey fool, how am I supposed to play chess with this?`);
+      // Unsuccessful trade!
+      // Say something generic about how this isn't the object
+      // Maybe give the player a hint about what they need
+    }
+  }
+
 } // End of makeTrade function
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
@@ -383,7 +442,6 @@ function animation() {
   // }
 
 if (scene === `sceneOne`) {
-
 
   if (state === `sceneOnePrelude`) {
     push();
@@ -420,7 +478,6 @@ if (scene === `sceneOne`) {
     imageMode(CENTER);
     image(ramenImg, width / ramen.x, height / ramen.y, ramen.width, ramen.height)
     pop();
-
     }
 
       // Scene Trade
@@ -441,19 +498,19 @@ if (scene === `sceneOne`) {
 
     if (ramenCollected && tradesCompleteSceneOneCafeteria) {
 
-        // Choose character dialogue
-        activeNpcDialog = gameTextData.sceneOne.cafeteria[3].guard;
-        // Display dialogue
-        dialogText(activeNpcDialog);
-        // Choose character image
-        activeCharImg = guardCharImg;
-        // Display scene character
-        characterDisplay(activeCharImg);
-      }
-}
+      // Choose character dialogue
+      activeNpcDialog = gameTextData.sceneOne.cafeteria[2].guard;
+      // Display dialogue
+      dialogText(activeNpcDialog);
+      // Choose character image
+      activeCharImg = guardCharImg;
+      // Display scene character
+      characterDisplay(activeCharImg);
+    }
+  }
 
   if (state === `sceneOneWarden`) {
-
+    // Hide past trade
     $("#ramen-player").hide();
 
       // Display scene venue
@@ -482,25 +539,8 @@ if (scene === `sceneOne`) {
         dialogText(activeNpcDialog);
       }
     }
+} // End of Scene One
 
-    // if (state === `sceneOneCell`) {
-    //   // Display scene venue
-    //   sceneVenue(cellBgImg);
-    //   // Display inmate dialogue
-    //   activePlayerDialog = gameTextData.sceneOne.cell[0].player;
-    //   // Display dialogue
-    //   playerDialogText(activePlayerDialog);
-    // }
-
-  } // End of Scene One
-
-
-  // Animation for second scene
-
-// if(tradesCompleteSceneOne) {
-//     scene = `sceneTwo`;
-//     state =`sceneTwoCell;`
-// }
 
 if (scene === `sceneTwo`) {
     if (state === `sceneTwoCell`) {
@@ -520,8 +560,16 @@ if (scene === `sceneTwo`) {
       activeCharImg = smokeyCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
+    if(!tradesCompleteSceneTwoCafeteria) {
       // Select scene dialogue
       activeNpcDialog = gameTextData.sceneTwo.cafeteria[0].inmateSmokey;
+    }
+
+    if(tradesCompleteSceneTwoCafeteria) {
+      // Select scene dialogue
+      activeNpcDialog = gameTextData.sceneTwo.cafeteria[1].inmateSmokey;
+      }
+
       // Display dialogue
       dialogText(activeNpcDialog);
     }
@@ -531,11 +579,11 @@ if (scene === `sceneTwo`) {
       // Display scene venue
       sceneVenue(recBgImg);
       // Select inmate image
-      activeCharImg = wardenCharImg;
+      activeCharImg = devonCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
       // Select scene dialogue
-      activePlayerDialog = gameTextData.sceneOne.wardensOffice[0].warden;
+      activeNpcDialog = gameTextData.sceneTwo.recYard[0].devon;
       // Display dialogue
       dialogText(activeNpcDialog);
     }
@@ -543,32 +591,37 @@ if (scene === `sceneTwo`) {
     // Scene one Hall animation
     if (state === `sceneTwoHall`) {
       // Display scene venue
-      sceneVenue(cellBgImg);
+      sceneVenue(hallBgImg);
       // Select inmate image
-      activeCharImg = wardenCharImg;
+      // activeCharImg = wardenCharImg;
       // Display scene character
-      characterDisplay(activeCharImg);
+      // characterDisplay(activeCharImg);
       // Select scene dialogue
-      activePlayerDialog = gameTextData.sceneOne.wardensOffice[0].warden;
+      activePlayerDialog = gameTextData.sceneTwo.hall.player;
       // Display dialogue
-      dialogText(activeNpcDialog);
+      playerDialogText(activePlayerDialog);
     }
 
-    if (state === `sceneTwoWarden`) {
+    if (state === `sceneTwoCommon`) {
+
+      // Chess piece image
+      push();
+      imageMode(CENTER);
+      image(chessImg, width / chess.x, height / chess.y, chess.width, chess.height)
+      pop();
+
       // Display scene venue
-      sceneVenue(wardenBgImg);
+      sceneVenue(commonBgImg);
       // Select inmate image
-      activeCharImg = wardenCharImg;
+      activeCharImg = duaneCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
       // Select scene dialogue
-      activePlayerDialog = gameTextData.sceneTwo.cafeteria[0].inmateSmokey;
+      activeNpcDialog = gameTextData.sceneTwo.commonArea.duane;
       // Display dialogue
       dialogText(activeNpcDialog);
     }
   } // End of Scene Two
-
-
 
 } // End of animation function
 
@@ -602,8 +655,10 @@ function mouseClicked(item, collectedStatus) {
   }
 }
 
+// Function to manage inventory absed on game state
 function inventory() {
 
+// Manage inventory for sceneOneWarden
 if(state === `sceneOneWarden`) {
 
   $(".my-items").draggable("enable");
@@ -611,10 +666,9 @@ if(state === `sceneOneWarden`) {
   $(".my-items").draggable({
      containment: "#trade-screen-1"
     });
-
 }
 
-
+// Manage inventory for sceneTwoCafeteria
 if(state === `sceneTwoCafeteria`) {
 
   $(".my-items").draggable("enable");
@@ -622,10 +676,21 @@ if(state === `sceneTwoCafeteria`) {
   $(".my-items").draggable({
      containment: "#trade-container"
     });
+  }
 
+// Manage inventory for sceneTwoRec
+if(state === `sceneTwoRec`) {
 
+  // Hide former trade
+  $("#smokes-player").hide();
+  // Enable dragability
+  $(".my-items").draggable("enable");
 
-}
+  $(".my-items").draggable({
+     containment: "#trade-container"
+    });
+  }
+
 
   // if (inventoryActive === true && inventoryDisplay === true) {
   //
@@ -710,42 +775,74 @@ function playerDialogText(playerDialog) {
   pop();
 }
 
+// Function to manage prison navigation based on game state
 function navigatePrison() {
+
+// Reset button associations
+$(`.button-nav`).off(`click`);
 
 // Escape button
 if(!escape) {
   $(`#escape-attempt`).on(`click`, function() {
-     $("#escape-fail-alert").dialog();
+     $("#escape-fail-alert").dialog({
+         modal: true
+     });
   });
 } else {
   scene = `finalScene`;
   state = `escapeScene`;
 }
 
-// Limit navigation areas based on trade completition
+// Navigation for scene one
 if (scene === `sceneOne`) {
 
-    // Trigger scene change
-    if (tradesCompleteSceneOneCafeteria) {
-      $(`#warden`).on(`click`, function() {
-        state = `sceneOneWarden`;
-      });
-    }
-
-    if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
-      $(`#cell`).on(`click`, function() {
-        state = `sceneTwoCell`;
-        scene = `sceneTwo`;
-      });
-    }
-
+  // Trigger scene change
+  if (tradesCompleteSceneOneCafeteria) {
+    $(`#warden`).on(`click`, function() {
+      state = `sceneOneWarden`;
+    });
   }
 
-if (scene === `sceneTwo`) {
-  $(`#cafeteria`).on(`click`, function() {
-      state = `sceneTwoCafeteria`;
-  });
+  // Trigger scene change
+  if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
+    $(`#cell`).on(`click`, function() {
+      state = `sceneTwoCell`;
+      scene = `sceneTwo`;
+    });
+  }
 }
+
+// Navigation for scene two
+
+if (scene === `sceneTwo`) {
+
+  if(state === `sceneTwoCell` && !tradesCompleteSceneTwoCafeteria)
+    $(`#cafeteria`).on(`click`, function() {
+        state = `sceneTwoCafeteria`;
+    });
+
+  if(state === `sceneTwoCafeteria` && tradesCompleteSceneTwoCafeteria) {
+    $(`#recreation-yard`).on(`click`, function() {
+        state = `sceneTwoRec`;
+    });
+  }
+
+  if(state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon`) {
+    $(`#common-area`).on(`click`, function() {
+        state = `sceneTwoCommon`;
+    });
+
+    $(`#recreation-yard`).on(`click`, function() {
+        state = `sceneTwoRec`;
+    });
+
+    $(`#hall`).on(`click`, function() {
+        state = `sceneTwoHall`;
+    });
+  }
+}
+
+
 
   // if (scene === `sceneOne` || scene === `sceneTwo` || scene === `sceneThree`) {
   //   $(`#cell`).on(`click`, function() {

@@ -22,6 +22,7 @@
   <h1> Project 2 - Escape from Cell-14</h1>
 
   <body>
+<div id="main-container">
     <!-- P.5 Canvas -->
     <div id="game-canvas"></div>
 
@@ -77,21 +78,32 @@
       <!-- Venues  -->
 
       <div class="btn-group" id="btn-active">
-      <button id="cafeteria">Cafteria</button>
-      <button id="warden">Warden</button>
-      <button id="cell">Cell</button>
-      <button id="hall">Hall</button>
-      <button id="recreation-yard">Yard</button>
-      <button id="escape-attempt">ATTEMPT ESCAPE</button>
+      <button  class="button-nav"  id="cafeteria">Cafteria</button>
+      <button  class="button-nav" id="warden">Warden</button>
+      <button  class="button-nav" id="cell">Cell</button>
+      <button  class="button-nav" id="hall">Hall</button>
+      <button class="button-nav"  id="recreation-yard">Rec Yard</button>
+      <button  class="button-nav" id="common-area">Common Area</button>
+      <button  class="button-nav" id="escape-attempt">ATTEMPT ESCAPE</button>
 
     </div>
   </div>
 
 
-    <!-- Alert dialog -->
+    <!-- Jquery alert dialog -->
+
+  <!-- SceneOneCafeteria trade alert -->
+  <div class="alert-dialog" id="smokey-trade-1">
+    <img src="../assets/images/smokey_inmate_night.jpg" alt="smokey-image">
+    <p>Huh? Alright I'll take it but find me some smokes! Here's some gum.</p>
+  </div>
+
+
   <div class="alert-dialog" id="escape-fail-alert">
+    <img src="../assets/images/player-no-escape.jpg" alt="no-escape-image">
     <p>ESCAPE ATTEMPT FAILED. Collect better items.</p>
   </div>
+</div>  <!-- End of main container -->
 
 
     <!-- My script(s) -->
