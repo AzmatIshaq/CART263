@@ -42,14 +42,22 @@
         "devon": "If you want clippers, go find my missing chess piece. I mighta' lost it in the hall or the common area"
       },
       {
-        "devon": "It's a deal. Just know if you're breaking out for real, you gotta get good with the guards."
+        "devon": "It'll cost you more than a chess piece to finish this trade. I got some information for you about tonight."
+      },
+      {
+        "devon": "The lights are going out after chow. Another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I heard there aren't any guards near fence B tonight.\n\nWatchout for that guard tower though"
       }
     ],
     "hall": {
       "player": "Hmm, seems pretty empty. Not much to find..."
     },
-    "commonArea": {
+    "commonArea": [
+            {
       "duane": "Duane:\n\nChess piece? I may have seen a knight laying around by the stairs..."
-    }
+      },
+      {
+      "duane": "Nice find... I'll see you back at the cell tonight. I hear the lights are going out"
+      }
+    ]
   }
 }

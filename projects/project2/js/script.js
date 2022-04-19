@@ -123,12 +123,12 @@ let ramen = {
 // Chess item properties
 
 let chess = {
-  x: 1.3,
-  y: 2,
+  x: 2.5,
+  y: 2.7,
   xInventory: 2,
   yInventory: 2,
-  width: 50,
-  height: 50,
+  width: 20,
+  height: 20,
   size:  50
 };
 
@@ -148,12 +148,12 @@ let smokes = {
 // let state = `title`;
 // let state = ``;
 // let state = `sceneOnePrelude`;
-let state = `sceneOneCafeteria`;
+// let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
-// let state =  `sceneTwoRec`;
-let scene = `sceneOne`;
-// let scene = `sceneTwo`;
+let state = `sceneTwoRec`;
+// let scene = `sceneOne`;
+let scene = `sceneTwo`;
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -197,11 +197,6 @@ let bgDisplay = {
   height: 400
 }
 
-// Character image variable to change which character is displayed
-//
-// let sceneOneCharImg;
-// let sceneTwoCharImg;
-
 // Variable to manage JSON for the npc dialogue that is active
 let activeNpcDialog;
 // Variable to manage JSON for player dialogue that is active
@@ -216,19 +211,24 @@ let tradeActive = true;
 
 let tradesCompleteSceneOne = false;
 let tradesCompleteSceneOneCafeteria = false;
+
 let tradesCompleteSceneTwo = false;
 let tradesCompleteSceneTwoCafeteria = false;
+let tradesCompleteSceneTwoRec = false;
+
 let tradesCompleteSceneThree = false;
 
 // Variables to manage item collection
 let ramenCollected = false;
 let gumCollected = false;
 let smokesCollected = false;
+let chessCollected = false;
 let smokesTraded = false;
 
 // Variables to register trades
 let ramenTraded = false;
 let gumTraded = false;
+let chessTraded = false;
 
 let escape = false;
 
@@ -274,12 +274,11 @@ function preload() {
 /* - - - - - - - - - - - SETUP & DRAW- - - - - - - - - - - - - - - - - - - -  */
 
 /**
-To setup the canvas and other game events.
+Function to setup the canvas and trade events.
 */
 function setup() {
   let canvas = createCanvas(850, 400);
   canvas.parent(`#game-canvas`);
-
 
 // Setup trade
   // jQuery
@@ -291,9 +290,6 @@ function setup() {
   $(`#trade-screen-2`).droppable({
     drop: makeTrade
   });
-
-  // Starting Scene
-  // scene = `sceneOne`;
 
   // items = new Items();
 }
@@ -407,9 +403,18 @@ if (state === `sceneTwoCafeteria`) {
       // Successful trade!
       // Add something cool to the player's inventory
       // Display a message(s) from the cellmate
+
+      // $("#devon-trade-1").dialog({
+      //     modal: true,
+      //     close: function(event, ui) {}
+      // });
+      chessTraded = true;
+      $("#chess-trader").show();
+      $("#chess-player").hide();
+
         alert(`Trade accepted!`);
         // Disable draggability
-        $(".my-items").draggable("disable");
+        // $(".my-items").draggable("disable");
     }
     else {
       // Unsuccessful trade!
@@ -436,11 +441,7 @@ function sceneOne() {
 
 function animation() {
 
-
-  // if(!tradesCompleteSceneOne) {
-  //
-  // }
-
+// Animation for sceneOne Trades
 if (scene === `sceneOne`) {
 
   if (state === `sceneOnePrelude`) {
@@ -455,7 +456,6 @@ if (scene === `sceneOne`) {
     text(gameTextData.sceneOne.prelude, width / 1.45, height / 9.5, 250, 350 );
     pop();
   }
-
 
   // Animation for sceneOne
   if (state === `sceneOneCafeteria`) {
@@ -582,8 +582,22 @@ if (scene === `sceneTwo`) {
       activeCharImg = devonCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
+    if (!chessTraded) {
       // Select scene dialogue
       activeNpcDialog = gameTextData.sceneTwo.recYard[0].devon;
+    }
+
+    if (chessTraded && !tradesCompleteSceneTwo) {
+      // Select scene dialogue
+      activeNpcDialog = gameTextData.sceneTwo.recYard[1].devon;
+    }
+
+    if (chessTraded && tradesCompleteSceneTwo)
+      {
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.recYard[2].devon;
+      }
+
       // Display dialogue
       dialogText(activeNpcDialog);
     }
@@ -604,11 +618,6 @@ if (scene === `sceneTwo`) {
 
     if (state === `sceneTwoCommon`) {
 
-      // Chess piece image
-      push();
-      imageMode(CENTER);
-      image(chessImg, width / chess.x, height / chess.y, chess.width, chess.height)
-      pop();
 
       // Display scene venue
       sceneVenue(commonBgImg);
@@ -616,10 +625,24 @@ if (scene === `sceneTwo`) {
       activeCharImg = duaneCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
-      // Select scene dialogue
-      activeNpcDialog = gameTextData.sceneTwo.commonArea.duane;
-      // Display dialogue
-      dialogText(activeNpcDialog);
+        // Display chess piece if it isn't collected
+        if (chessCollected === false) {
+        // Chess piece image
+        push();
+        imageMode(CENTER);
+        image(chessImg, width / chess.x, height / chess.y, chess.width, chess.height)
+        pop();
+
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.commonArea[0].duane;
+        // Display dialogue
+        dialogText(activeNpcDialog);
+      } else {
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.commonArea[1].duane;
+        // Display dialogue
+        dialogText(activeNpcDialog);
+      }
     }
   } // End of Scene Two
 
@@ -636,7 +659,7 @@ function mouseClicked(item, collectedStatus) {
     if (dist(mouseX, mouseY, width / ramen.x, height / ramen.y) <= ramen.size / 2) {
       // alert(`hello`);
       ramenCollected = true;
-      // $( `#ramen` ).switchClass( "hidden-item", "active-item");
+      // Display ramen in inventory
       $(`#ramen-player`).removeClass("hidden-item")
       $(`#ramen-player`).addClass("active-item")
     }
@@ -651,6 +674,17 @@ function mouseClicked(item, collectedStatus) {
       // $( `#ramen` ).switchClass( "hidden-item", "active-item");
       $(`#smokes-player`).removeClass("hidden-item")
       $(`#smokes-player`).addClass("active-item")
+    }
+  }
+
+  if (state === `sceneTwoCommon` && chessCollected === false) {
+
+    if (dist(mouseX, mouseY, width / chess.x, height / chess.y) <= chess.size / 2) {
+      // alert(`hello`);
+      chessCollected = true;
+      // tradesCompleteSceneTwo = true;
+
+      $(`#chess-player`).addClass("active-item")
     }
   }
 }
@@ -688,6 +722,14 @@ if(state === `sceneTwoRec`) {
 
   $(".my-items").draggable({
      containment: "#trade-container"
+    });
+  }
+
+// Manage inventory for sceneTwoCommon
+if(state === `sceneTwoCommon`) {
+
+  $(".my-items").draggable({
+     containment: "#trade-screen-1"
     });
   }
 
