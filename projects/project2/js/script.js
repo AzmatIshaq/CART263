@@ -159,13 +159,13 @@ let swissArmyKnife = {
 // let state = `title`;
 // let state = ``;
 // let state = `sceneOnePrelude`;
-// let state = `sceneOneCafeteria`;
+let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
-let state = `sceneTwoCell`;
+// let state = `sceneTwoCell`;
 // let state = `sceneTwoRec`;
-// let scene = `sceneOne`;
-let scene = `sceneTwo`;
+let scene = `sceneOne`;
+// let scene = `sceneTwo`;
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -235,6 +235,7 @@ let gumCollected = false;
 let smokesCollected = false;
 let chessCollected = false;
 let smokesTraded = false;
+let swissArmyKnifeTraded = false;
 
 // Variables to register trades
 let ramenTraded = false;
@@ -394,10 +395,15 @@ if (state === `sceneTwoCafeteria`) {
 
       // Disable items draggability
       $(".my-items").draggable("disable");
+
     }
     else {
       // Unsuccessful trade!
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
+
+      $("#gum-player").draggable({
+         revert: true
+        });
       // Unsuccessful trade!
       // Say something generic about how this isn't the object
       // Maybe give the player a hint about what they need
@@ -408,7 +414,7 @@ if (state === `sceneTwoCafeteria`) {
   if (state === `sceneTwoRec`) {
     // Hide former trade
 
-    if (ui.draggable.attr(`id`) === `chess-player`) {
+    if (ui.draggable.attr(`id`) === `chess-player` && !swissArmyKnifeTraded) {
       // Register completed trade
 
       // Successful trade!
@@ -426,6 +432,35 @@ if (state === `sceneTwoCafeteria`) {
         alert(`Trade accepted!`);
         // Disable draggability
         // $(".my-items").draggable("disable");
+    } else if  (ui.draggable.attr(`id`) === `chess-player` && swissArmyKnifeTraded === true) {
+      tradesCompleteSceneTwo = true;
+      // Unsuccessful trade!
+      alert(`Trade Accepted. Aight, this works`);
+      // Unsuccessful trade!
+      // Say something generic about how this isn't the object
+      // Maybe give the player a hint about what they need
+    } else {
+        alert(`Trade rejected!`);
+    }
+
+    if (ui.draggable.attr(`id`) === `swiss-knife-player`) {
+      // Register completed trade
+
+      // Successful trade!
+      // Add something cool to the player's inventory
+      // Display a message(s) from the cellmate
+
+      // $("#devon-trade-1").dialog({
+      //     modal: true,
+      //     close: function(event, ui) {}
+      // });
+      swissArmyKnifeTraded = true;
+      $("#chess-trader").show();
+      $("#chess-player").hide();
+
+        alert(`Trade accepted! Hey fool, how am I supposed to play chess with this? I'll take it but this deal aint finished.`);
+        // Disable draggability
+        // $(".my-items").draggable("disable");
     }
     else {
       // Unsuccessful trade!
@@ -436,6 +471,11 @@ if (state === `sceneTwoCafeteria`) {
     }
   }
 
+if (ui.draggable.attr(`id`) === `gum-player`) {
+  $("#gum-player").draggable({
+     revert: true
+    });
+  }
 } // End of makeTrade function
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
@@ -604,12 +644,12 @@ if (scene === `sceneTwo`) {
       activeNpcDialog = gameTextData.sceneTwo.recYard[0].devon;
     }
 
-    if (chessTraded && !tradesCompleteSceneTwo) {
+    if (chessTraded && !swissArmyKnifeTraded) {
       // Select scene dialogue
       activeNpcDialog = gameTextData.sceneTwo.recYard[1].devon;
     }
 
-    if (chessTraded && tradesCompleteSceneTwo)
+    if (chessTraded && swissArmyKnifeTraded)
       {
         // Select scene dialogue
         activeNpcDialog = gameTextData.sceneTwo.recYard[2].devon;
@@ -684,19 +724,16 @@ function mouseClicked() {
 
   if (state === `sceneTwoCell`) {
 
-  if(!chessTraded) {
+  if(!smokesTraded) {
     if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
       alert(`I don't need this just yet`);
       }
-    }
-
-  if(chessTraded) {
-    if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
-        $(`#swiss-knife-player`).addClass("active-item")
-      }
+    } else if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
+      $(`#swiss-knife-player`).addClass("active-item")
     }
   }
 
+// Manage mouseclick for smokes
   if (state === `sceneOneWarden` && smokesCollected === false) {
     if (dist(mouseX, mouseY, width / smokes.x, height / smokes.y) <= smokes.size / 2) {
       // alert(`hello`);
@@ -751,12 +788,22 @@ if(state === `sceneTwoRec`) {
 
   // Hide former trade
   $("#smokes-player").hide();
+  // Show traders wire cutters
+  $("#wire-cutters-trader").show();
   // Enable dragability
   $(".my-items").draggable("enable");
-
+  // Limit trade to trade container
   $(".my-items").draggable({
      containment: "#trade-container"
     });
+
+
+    if(chessTraded) {
+
+    }
+
+  } else {
+      $("#wire-cutters-trader").hide();
   }
 
 // Manage inventory for sceneTwoCommon
@@ -902,12 +949,20 @@ if (scene === `sceneTwo`) {
   if(state === `sceneTwoCafeteria` && tradesCompleteSceneTwoCafeteria) {
     $(`#recreation-yard`).on(`click`, function() {
         state = `sceneTwoRec`;
+        // Reset gum to no reversion
+        $("#gum-player").draggable({
+           revert: false
+          });
     });
   }
 
   if(state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon`) {
     $(`#common-area`).on(`click`, function() {
         state = `sceneTwoCommon`;
+        // Make gum tradable again
+        $("#gum-player").draggable({
+           revert: false
+          });
     });
 
     $(`#recreation-yard`).on(`click`, function() {
