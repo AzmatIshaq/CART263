@@ -59,5 +59,10 @@
       "duane": "Teddy, I hear the lights are gonna be sabotaged tonight. Inmates are gonna fight..."
       }
     ]
+  },
+  "sceneThree": {
+    "cell": {
+      "player": "This is it. Lights are out, I better leave before I get jumped."
+    }
   }
 }

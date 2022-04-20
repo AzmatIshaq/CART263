@@ -73,9 +73,9 @@ let holePreludeImg;
 let wardenBgImg;
 let recBgImg;
 let commonBgImg;
+let fenceBgImg;
 
 // Dialog box images
-
 let noEscapeImg;
 
 // Character image variables
@@ -92,9 +92,9 @@ let swissArmyImg;
 let smokesImg;
 let chessImg;
 
-
 // Misc image variables
 let inventoryImg;
+let towerImg;
 
 // Variables to navigate venues
 let venue;
@@ -159,13 +159,15 @@ let swissArmyKnife = {
 // let state = `title`;
 // let state = ``;
 // let state = `sceneOnePrelude`;
-let state = `sceneOneCafeteria`;
+// let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
 // let state = `sceneTwoCell`;
 // let state = `sceneTwoRec`;
-let scene = `sceneOne`;
+let state = `sceneThreeCell`
+// let scene = `sceneOne`;
 // let scene = `sceneTwo`;
+let scene = `sceneThree`;
 
 // Inventory variables
 // Tracks if inventory interface is open
@@ -230,12 +232,12 @@ let tradeActive = true;
 
 let tradesCompleteSceneOne = false;
 let tradesCompleteSceneOneCafeteria = false;
-
 let tradesCompleteSceneTwo = false;
 let tradesCompleteSceneTwoCafeteria = false;
 let tradesCompleteSceneTwoRec = false;
-
 let tradesCompleteSceneThree = false;
+
+let allTradesComplete = false;
 
 // Variables to manage item collection
 let ramenCollected = false;
@@ -267,6 +269,7 @@ function preload() {
   wardenBgImg = loadImage(`assets/images/warden-office-night.jpg`)
   recBgImg = loadImage(`assets/images/rec-area-2-b.jpg`)
   commonBgImg = loadImage(`assets/images/common-area-edited.jpg`)
+  fenceBgImg = loadImage(`assets/images/fence-2.jpg`)
 
 
   // Preload character images
@@ -285,11 +288,12 @@ function preload() {
 
   // Preload misc images
   noEscapeImg = loadImage(`assets/images/player-no-escape.jpg`);
+  towerImg = loadImage(`assets/images/guard-tower-2.jpg`);
 
   // Preload JSON game text
-  //
   gameTextData = loadJSON(`assets/data/game-text.JSON`);
-}
+
+} // End of preload function
 
 
 /* - - - - - - - - - - - SETUP & DRAW- - - - - - - - - - - - - - - - - - - -  */
@@ -316,7 +320,7 @@ function setup() {
 }
 
 /**
-To display and run the scene events and animations.
+Draw function to display scene events and animations.
 */
 function draw() {
   background(0);
@@ -325,7 +329,7 @@ function draw() {
   //     sceneOne();
   //   }
 
-    // Animation effects
+    // Animation effects for scenes
     animation();
 
     // Inventory management
@@ -445,7 +449,7 @@ if (state === `sceneTwoCafeteria`) {
       $("#swiss-knife-trader").show();
       $("#swiss-knife-player").hide();
 
-        alert(`Trade accepted! Hey fool, how am I supposed to play chess with this? I'll take it but this deal aint finished.`);
+        alert(`Trade accepted! How am I supposed to play chess with this? I'll take it but this deal aint finished.`);
         // Disable draggability
         // $(".my-items").draggable("disable");
     } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && chessTraded) {
@@ -467,11 +471,13 @@ if (state === `sceneTwoCafeteria`) {
         // Disable draggability
         // $(".my-items").draggable("disable");
     } else {
-      // Unsuccessful trade!
-      alert(`Trade rejected! Hey fool, how am I supposed to play chess with this?`);
-      // Unsuccessful trade!
-      // Say something generic about how this isn't the object
-      // Maybe give the player a hint about what they need
+      if(chessTraded) {
+        alert(`Trade rejected!`);
+      }     // Unsuccessful trade!
+       else {
+         alert(`Trade rejected! Hey fool, how am I supposed to play chess with this?`);
+       }
+
     }
   }
 
@@ -618,10 +624,7 @@ if (scene === `sceneTwo`) {
     if (state === `sceneTwoCellB`) {
       // Display scene venue
       sceneVenue(cellBgImg);
-      // Display inmate dialogue
-      // activePlayerDialog = gameTextData.sceneOne.cell[0].player;
-      // Display dialogue
-      // playerDialogText(activePlayerDialog);
+
     if(!swissArmyKnifeCollected) {
         // Display swiss army knife in cell
         push();
@@ -723,14 +726,19 @@ if (scene === `sceneTwo`) {
 
   if (scene === `sceneThree`) {
     if (state === `sceneThreeCell`) {
+      // Display scene venue
+      sceneVenue(cellBgImg);
+      // Display inmate dialogue
+      activePlayerDialog = gameTextData.sceneThree.cell.player;
+      // Display dialogue
+      playerDialogText(activePlayerDialog);
 
       countdownTimer();
     }
   }
 } // End of animation function
 
-// Mouseclicked events
-
+// Function to handle mouseclick events
 function mouseClicked() {
 
   // if item && itemcollected = false <- set this up
@@ -806,58 +814,86 @@ if(state === `sceneTwoCafeteria`) {
 
   // Allow dragability if deal is not complete
   if (!tradesCompleteSceneTwoCafeteria) {
-  $(".my-items").draggable("enable");
+    $(".my-items").draggable("enable");
+    }
+
+    $(".my-items").draggable({
+       containment: "#trade-container"
+      });
   }
 
-  $(".my-items").draggable({
-     containment: "#trade-container"
-    });
-  }
+  // Manage inventory for sceneTwoRec
+  if(state === `sceneTwoRec`) {
 
-// Manage inventory for sceneTwoRec
-if(state === `sceneTwoRec`) {
+    // Hide former trade
+    $("#smokes-player").hide();
+    // Enable dragability
+    $(".my-items").draggable("enable");
+    // Limit trade to trade container
+    $(".my-items").draggable({
+       containment: "#trade-container"
+      });
 
-  // Hide former trade
-  $("#smokes-player").hide();
-  // Enable dragability
-  $(".my-items").draggable("enable");
-  // Limit trade to trade container
-  $(".my-items").draggable({
-     containment: "#trade-container"
-    });
+    // If trades aren't complete for scene two display the cutters
+    if (!tradesCompleteSceneTwo) {
+          // Show traders wire cutters
+        $("#wire-cutters-trader").show();
+      } else {
+        $("#wire-cutters-trader").hide();
+      }
 
-// If trades aren't complete for scene two display the cutters
-if (!tradesCompleteSceneTwo) {
-    // Show traders wire cutters
-    $("#wire-cutters-trader").show();
-  }
 
-  } else {
-      $("#wire-cutters-trader").hide();
-  }
-
-// Manage inventory for sceneTwoCommon
-if(state === `sceneTwoCommon`) {
-
-  $(".my-items").draggable({
-     containment: "#trade-screen-1"
-    });
-  }
+  // Show knife only at rec yard
+  if (swissArmyKnifeTraded) {
+        // Show traders wire cutters
+        $("#swiss-knife-trader").show();
+    } else {
+        $("#swiss-knife-trader").hide();
+    }
 }
 
+
+  // Manage inventory for sceneTwoCommon
+  if(state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
+
+    $(".my-items").draggable({
+       containment: "#trade-screen-1"
+      });
+
+    // Don't display these trade items in other scenes
+
+    $("#wire-cutters-trader").hide();
+    $("#swiss-knife-trader").hide();
+    $("#chess-trader").hide();
+    }
+
+  if(state === `sceneTwoHall` || state === `sceneTwoCellB`) {
+  // Don't display these trade items in other scenes
+    $("#wire-cutters-trader").hide();
+    $("#swiss-knife-trader").hide();
+    $("#chess-trader").hide();
+  }
+
+  if(scene === `sceneThree`) {
+    // Hide former trader items
+    $("#chess-trader").hide();
+    $("#swiss-knife-trader").hide();
+
+    //Continue to show your inventory
+    $("#wire-cutters-player").show();
+    $("#gum-player").show();
+
+    // Contain items from being traded
+    $(".my-items").draggable({
+       containment: "#trade-screen-1"
+      });
+  }
+}
 // Keypressed to manage inventory and trigger game events
 function keyPressed() {
-
   //Key press to get out of prelude state
   if (state === `sceneOnePrelude` && keyCode === ENTER) {
     state = `sceneOneCafeteria`;
-  }
-
-  // Display inventory
-  if (inventoryActive && keyCode === 73 && inventoryDisplay === false) {
-    inventoryDisplay = true;
-  } else {
-    inventoryDisplay = false;
   }
 }
 
@@ -986,6 +1022,14 @@ if (scene === `sceneTwo`) {
           state = `sceneThreeCell`;
       });
     }
+  }
+
+  // Manage navigation for scene three
+  if (scene = `sceneThree`) {
+    // All trades are complete
+    allTradesComplete = true;
+    //allow user to attempt escape
+    escape = true;
   }
 } // End of Navigate Prison
 
