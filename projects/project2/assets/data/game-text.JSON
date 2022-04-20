@@ -45,7 +45,7 @@
         "devon": "It'll cost you more than a chess piece to finish this trade. If you get me something worthwhile I'll give you the cutters. I also got some information for you about tonight..."
       },
       {
-        "devon": "Aight, I'll take it. The lights are going out after chow, the cell blocks are gonna fight. Also, another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I would do it tonight. There aren't any guards near fence B after dark.\n\nWatchout for that guard tower though"
+        "devon": "Aight, I'll take it. When the lights are going out after chow, the cell blocks are gonna fight. Another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I would do it tonight. There aren't any guards near fence B after dark.\n\nWatchout for that guard tower though"
       }
     ],
     "hall": {
@@ -53,10 +53,10 @@
     },
     "commonArea": [
             {
-      "duane": "Duane:\n\n A chess piece? I may have seen it but something sweet can refresh my memory..."
+      "duane": "Duane:\n\nA chess piece? I think there's a knight laying around by the stairs...\n\nI also heard Devon wanted a swiss army knife."
       },
       {
-      "duane": "There's a knight laying around by the stairs... I also heard Devon wanted a swiss army knife.\n\n Also Teddy. Heads up for tonight, the lights are gonna be sabotaged. Inmates are gonna fight..."
+      "duane": "Teddy, I hear the lights are gonna be sabotaged tonight. Inmates are gonna fight..."
       }
     ]
   }

@@ -208,6 +208,14 @@ let bgDisplay = {
   height: 400
 }
 
+// Timer variable for countdown timer
+let timer = {
+  countdown: 30,
+  x: 40,
+  y: 40,
+  textFont: 60
+}
+
 // Variable to manage JSON for the npc dialogue that is active
 let activeNpcDialog;
 // Variable to manage JSON for player dialogue that is active
@@ -234,13 +242,14 @@ let ramenCollected = false;
 let gumCollected = false;
 let smokesCollected = false;
 let chessCollected = false;
-let smokesTraded = false;
-let swissArmyKnifeTraded = false;
+let swissArmyKnifeCollected = false;
 
 // Variables to register trades
 let ramenTraded = false;
 let gumTraded = false;
 let chessTraded = false;
+let smokesTraded = false;
+let swissArmyKnifeTraded = false;
 
 let escape = false;
 
@@ -315,14 +324,6 @@ function draw() {
   // if (state === `sceneOne`) {
   //     sceneOne();
   //   }
-  //
-  // if (state === `sceneTwo`) {
-  //     sceneTwo();
-  //   }
-  //
-  // if (state === `sceneThree`) {
-  //     sceneThree();
-  //   }
 
     // Animation effects
     animation();
@@ -362,10 +363,6 @@ function makeTrade(event, ui) {
       ramenTraded = true;
       gumCollected = true;
 
-      // Successful trade!
-      // Add something cool to the player's inventory
-      // Display a message(s) from the cellmate
-
       // $("#gum-player").removeClass("hidden-item");
       // $("#gum-player").addClass("active-item");
       // $("#gum-trader").removeClass("active-item");
@@ -388,9 +385,8 @@ if (state === `sceneTwoCafeteria`) {
       // Register completed trade
       tradesCompleteSceneTwoCafeteria = true;
       smokesTraded = true;
-      // Successful trade!
-      // Add something cool to the player's inventory
-      // Display a message(s) from the cellmate
+
+      // Trade accepted alert
       alert(`Trade accepted!`);
 
       // Disable items draggability
@@ -402,11 +398,9 @@ if (state === `sceneTwoCafeteria`) {
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
 
       $("#gum-player").draggable({
-         revert: true
+         revert: true,
         });
-      // Unsuccessful trade!
-      // Say something generic about how this isn't the object
-      // Maybe give the player a hint about what they need
+
     }
   }
 
@@ -416,10 +410,6 @@ if (state === `sceneTwoCafeteria`) {
 
     if (ui.draggable.attr(`id`) === `chess-player` && !swissArmyKnifeTraded) {
       // Register completed trade
-
-      // Successful trade!
-      // Add something cool to the player's inventory
-      // Display a message(s) from the cellmate
 
       // $("#devon-trade-1").dialog({
       //     modal: true,
@@ -432,37 +422,51 @@ if (state === `sceneTwoCafeteria`) {
         alert(`Trade accepted!`);
         // Disable draggability
         // $(".my-items").draggable("disable");
-    } else if  (ui.draggable.attr(`id`) === `chess-player` && swissArmyKnifeTraded === true) {
+    } else if  (ui.draggable.attr(`id`) === `chess-player` && swissArmyKnifeTraded) {
+      chessTraded = true;
       tradesCompleteSceneTwo = true;
       // Unsuccessful trade!
-      alert(`Trade Accepted. Aight, this works`);
-      // Unsuccessful trade!
-      // Say something generic about how this isn't the object
-      // Maybe give the player a hint about what they need
-    } else {
-        alert(`Trade rejected!`);
-    }
+      $("#chess-trader").show();
+      $("#chess-player").hide();
 
-    if (ui.draggable.attr(`id`) === `swiss-knife-player`) {
+      $("#wire-cutters-player").show();
+      $("#wire-cutters-trader").hide();
+
+      alert(`Trade Accepted.`);
+
+    } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && !chessTraded) {
       // Register completed trade
-
-      // Successful trade!
-      // Add something cool to the player's inventory
-      // Display a message(s) from the cellmate
 
       // $("#devon-trade-1").dialog({
       //     modal: true,
       //     close: function(event, ui) {}
       // });
       swissArmyKnifeTraded = true;
-      $("#chess-trader").show();
-      $("#chess-player").hide();
+      $("#swiss-knife-trader").show();
+      $("#swiss-knife-player").hide();
 
         alert(`Trade accepted! Hey fool, how am I supposed to play chess with this? I'll take it but this deal aint finished.`);
         // Disable draggability
         // $(".my-items").draggable("disable");
-    }
-    else {
+    } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && chessTraded) {
+      // Register completed trade
+
+      // $("#devon-trade-1").dialog({
+      //     modal: true,
+      //     close: function(event, ui) {}
+      // });
+      swissArmyKnifeTraded = true;
+      tradesCompleteSceneTwo = true;
+      $("#swiss-knife-trader").show();
+      $("#swiss-knife-player").hide();
+
+      $("#wire-cutters-player").show();
+      $("#wire-cutters-trader").hide();
+
+        alert(`Trade accepted!`);
+        // Disable draggability
+        // $(".my-items").draggable("disable");
+    } else {
       // Unsuccessful trade!
       alert(`Trade rejected! Hey fool, how am I supposed to play chess with this?`);
       // Unsuccessful trade!
@@ -602,11 +606,29 @@ if (scene === `sceneTwo`) {
       // Display dialogue
       playerDialogText(activePlayerDialog);
 
-      // Display swiss army knife in cell
-      push();
-      imageMode(CENTER);
-      image(swissArmyImg, width / swissArmyKnife.x, height / swissArmyKnife.y, swissArmyKnife.width, swissArmyKnife.height)
-      pop();
+      if(!swissArmyKnifeCollected) {
+        // Display swiss army knife in cell
+        push();
+        imageMode(CENTER);
+        image(swissArmyImg, width / swissArmyKnife.x, height / swissArmyKnife.y, swissArmyKnife.width, swissArmyKnife.height)
+        pop();
+      }
+    }
+
+    if (state === `sceneTwoCellB`) {
+      // Display scene venue
+      sceneVenue(cellBgImg);
+      // Display inmate dialogue
+      // activePlayerDialog = gameTextData.sceneOne.cell[0].player;
+      // Display dialogue
+      // playerDialogText(activePlayerDialog);
+    if(!swissArmyKnifeCollected) {
+        // Display swiss army knife in cell
+        push();
+        imageMode(CENTER);
+        image(swissArmyImg, width / swissArmyKnife.x, height / swissArmyKnife.y, swissArmyKnife.width, swissArmyKnife.height)
+        pop();
+      }
     }
 
     // Scene one Hall animation
@@ -663,11 +685,7 @@ if (scene === `sceneTwo`) {
     if (state === `sceneTwoHall`) {
       // Display scene venue
       sceneVenue(hallBgImg);
-      // Select inmate image
-      // activeCharImg = wardenCharImg;
-      // Display scene character
-      // characterDisplay(activeCharImg);
-      // Select scene dialogue
+      // Player dialoge
       activePlayerDialog = gameTextData.sceneTwo.hall.player;
       // Display dialogue
       playerDialogText(activePlayerDialog);
@@ -703,6 +721,12 @@ if (scene === `sceneTwo`) {
     }
   } // End of Scene Two
 
+  if (scene === `sceneThree`) {
+    if (state === `sceneThreeCell`) {
+
+      countdownTimer();
+    }
+  }
 } // End of animation function
 
 // Mouseclicked events
@@ -724,14 +748,21 @@ function mouseClicked() {
 
   if (state === `sceneTwoCell`) {
 
+  // If smokes haven't been traded
   if(!smokesTraded) {
     if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
       alert(`I don't need this just yet`);
       }
-    } else if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
-      $(`#swiss-knife-player`).addClass("active-item")
     }
   }
+
+  if (state === `sceneTwoCellB`) {
+    if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
+   // Display knife in inventory
+   $(`#swiss-knife-player`).addClass("active-item")
+   swissArmyKnifeCollected = true;
+  }
+ }
 
 // Manage mouseclick for smokes
   if (state === `sceneOneWarden` && smokesCollected === false) {
@@ -788,8 +819,6 @@ if(state === `sceneTwoRec`) {
 
   // Hide former trade
   $("#smokes-player").hide();
-  // Show traders wire cutters
-  $("#wire-cutters-trader").show();
   // Enable dragability
   $(".my-items").draggable("enable");
   // Limit trade to trade container
@@ -797,10 +826,11 @@ if(state === `sceneTwoRec`) {
      containment: "#trade-container"
     });
 
-
-    if(chessTraded) {
-
-    }
+// If trades aren't complete for scene two display the cutters
+if (!tradesCompleteSceneTwo) {
+    // Show traders wire cutters
+    $("#wire-cutters-trader").show();
+  }
 
   } else {
       $("#wire-cutters-trader").hide();
@@ -813,34 +843,6 @@ if(state === `sceneTwoCommon`) {
      containment: "#trade-screen-1"
     });
   }
-
-
-  // if (inventoryActive === true && inventoryDisplay === true) {
-  //
-  //     // Inventory interface
-  //     push();
-  //     rectMode(CENTER);
-  //     noStroke();
-  //     fill(colorPalette.r3, colorPalette.g3, colorPalette.b3, inventoryGui.alpha);
-  //     rect(width / inventoryGui.x, height / inventoryGui.y, inventoryGui.width, inventoryGui.height);
-  //     pop();
-  //
-  //   // Items to display in inventory
-  //   if (ramenCollected === true && ramenTraded === false) {
-  //     push();
-  //     imageMode(CENTER);
-  //     image(ramenImg, width / ramen.xInventory, height / ramen.yInventory, ramen.width, ramen.height)
-  //     pop();
-  //     }
-
-      // if (gumCollected === true && gumTraded === false) {
-      //   push();
-      //   imageMode(CENTER);
-      //   image(gumImg, width / gum.xInventory, height /gum.yInventory, gum.width, gum.height)
-      //   pop();
-      //   }
-
-
 }
 
 // Keypressed to manage inventory and trigger game events
@@ -941,7 +943,7 @@ if (scene === `sceneOne`) {
 
 if (scene === `sceneTwo`) {
 
-  if(state === `sceneTwoCell` && !tradesCompleteSceneTwoCafeteria)
+  if(state === `sceneTwoCell` && !tradesCompleteSceneTwoCafeteria && !smokesTraded)
     $(`#cafeteria`).on(`click`, function() {
         state = `sceneTwoCafeteria`;
     });
@@ -956,36 +958,65 @@ if (scene === `sceneTwo`) {
     });
   }
 
-  if(state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon`) {
-    $(`#common-area`).on(`click`, function() {
-        state = `sceneTwoCommon`;
-        // Make gum tradable again
-        $("#gum-player").draggable({
-           revert: false
-          });
-    });
+    if(state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
+      $(`#common-area`).on(`click`, function() {
+          state = `sceneTwoCommon`;
+          // Make gum tradable again
+          $("#gum-player").draggable({
+             revert: false
+            });
+      });
 
-    $(`#recreation-yard`).on(`click`, function() {
-        state = `sceneTwoRec`;
-    });
+      $(`#recreation-yard`).on(`click`, function() {
+          state = `sceneTwoRec`;
+      });
 
-    $(`#hall`).on(`click`, function() {
-        state = `sceneTwoHall`;
-    });
+      $(`#hall`).on(`click`, function() {
+          state = `sceneTwoHall`;
+      });
+
+      $(`#cell`).on(`click`, function() {
+          state = `sceneTwoCellB`;
+      });
+    }
+
+    if (tradesCompleteSceneTwo) {
+      $(`#cell`).on(`click`, function() {
+          scene ===`sceneThree`;
+          state = `sceneThreeCell`;
+      });
+    }
   }
-}
+} // End of Navigate Prison
 
 
+// Function to set up a countdown timer
+function countdownTimer() {
 
-  // if (scene === `sceneOne` || scene === `sceneTwo` || scene === `sceneThree`) {
-  //   $(`#cell`).on(`click`, function() {
-  //     sceneVenue(cellBgImg, `Nothing seems to be happening right now`);
-  //   });
+  // Give the countdown Timer a background
 
-  // $(`#cell`).on(`click`, function() {
-  //   state = `sceneOneCell`
-  // });
-  // }
+  push();
+  fill(0);
+  rectMode(CENTER);
+  rect(timer.x, timer.y, 90, 70);
+  pop();
 
 
+  // To display the countdown text
+  push();
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(timer.textFont);
+  text(timer.countdown, timer.x, timer.y);
+  pop();
+
+  // Logic to make the countdown timer operate based on famecount.
+  if (frameCount % 60 == 0 && timer.countdown > 0) {
+    timer.countdown--;
+  }
+
+  // Game over text when countdown reaches 0
+  if (timer.countdown == 0) {
+    state = `endLose`
+  }
 }
