@@ -1,67 +1,30 @@
 /**
-Project 2
+Project 2 -
 Azmat Ishaq
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
-
-Color Palette:
-
-1: #0D0D0D     (13, 13, 13)
-2: #262626     (38, 38, 38)
-3: #A6826D     (166, 130, 109)
-4: #BF895A     (191, 137, 90)
-5: #D99A4E     (217, 154, 78)
-6: #F2D5A0     (242, 213, 160)
-7: #1e90ff     (30, 144, 255)
-
-Characters:
-
-image(wardenCharImg, 620, 10, 150, 150);
-image(smokeyCharImg, 620, 10, 150, 150);
-
+This program creatively simulates parts of the movie I-Robot.
+It operates based on scenes which are alternated between using states.
+The dialogue and user interaction occurs by utilizing annyang and responsive voice.
+Furthermore, JSON is used to store the dialogue data. Events are often triggered
+using setTimeout.
 
 */
 
 "use strict";
 
-// Color Palette with rgb properties
+// set Canvas properties
+let canvasSize = {
+  width: 850,
+  height: 400
+};
+
+// Color with rgb properties
 let colorPalette = {
-
-// #0D0D0D     (13, 13, 13)
-  r1: 13,
-  g1: 13,
-  b1: 13,
-
-// #262626     (38, 38, 38)
-  r2: 38,
-  g2: 38,
-  b2: 38,
 
 // #A6826D     (166, 130, 109)
   r3: 166,
   g3: 130,
   b3: 109,
-
-// #BF895A     (191, 137, 90)
-  r4: 191,
-  g4: 137,
-  b4: 90,
-
-// #D99A4E     (217, 154, 78)
-  r5: 217,
-  g5: 154,
-  b5: 78,
-
-// #F2D5A0     (242, 213, 160)
-  r6: 242,
-  g6: 213,
-  b6: 160,
-
-// #1e90ff     (30, 144, 255)
-  r7: 30,
-  g7: 144,
-  b7: 255,
 };
 
 // Venue image variables
@@ -108,9 +71,14 @@ let fenceSound;
 let preludeMusic;
 // Ending music
 let endingWinMusic
+// Tension music;
+let tensionMusic;
+
+// Speaker voice
+let speakInterval;
 
 // Variables to navigate venues
-let venue;
+// let venue;
 
 // Inventory Gui properties
 
@@ -171,21 +139,21 @@ let swissArmyKnife = {
 let wireCutters = {
   width: 140,
   height: 140
-}
+};
 
 // states
 // let state = `title`;
 // let state = ``;
-// let state = `sceneOnePrelude`;
+let state = `sceneOnePrelude`;
 // let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
 // let state = `sceneTwoCell`;
 // let state = `sceneTwoRec`;
-let state = `sceneThreeCell`
-// let scene = `sceneOne`;
+// let state = `sceneThreeCell`
+let scene = `sceneOne`;
 // let scene = `sceneTwo`;
-let scene = `sceneThree`;
+// let scene = `sceneThree`;
 
 // Variable to manage item class
 let items;
@@ -210,7 +178,7 @@ let dialogDisplay = {
   npcY: 2,
   npcWidth: 250,
   npcHeight: 350
-}
+};
 
 // Variable to manage display character properties
 let charDisplay = {
@@ -226,7 +194,7 @@ let bgDisplay = {
   y: 0,
   width: 550,
   height: 400
-}
+};
 
 // Timer variable for countdown timer
 let timer = {
@@ -234,7 +202,15 @@ let timer = {
   x: 40,
   y: 40,
   textFont: 60
-}
+};
+
+// Variable to manage venue text
+let venueText = {
+  dialog: 0,
+  x: 850 / 2,
+  y: 400 / 2,
+  size: 16
+};
 
 // Variable to manage JSON for the npc dialogue that is active
 let activeNpcDialog;
@@ -315,6 +291,8 @@ function preload() {
   preludeMusic = loadSound(`assets/sounds/prelude-music.mp3`);
   // Ending win music
   endingWinMusic  = loadSound(`assets/sounds/win-music.mp3`);
+  // Ending win music
+  tensionMusic  = loadSound(`assets/sounds/tension-music.wav`);
 
   // Preload JSON game text
   gameTextData = loadJSON(`assets/data/game-text.JSON`);
@@ -328,7 +306,7 @@ function preload() {
 Function to setup the canvas and trade events.
 */
 function setup() {
-  let canvas = createCanvas(850, 400);
+  let canvas = createCanvas(canvasSize.width, canvasSize.height);
   canvas.parent(`#game-canvas`);
 
 // Setup trade
@@ -759,7 +737,7 @@ if (scene === `sceneTwo`) {
           // Display dialogue
           playerDialogText(activePlayerDialog);
         } else if (timer.countdown <= 10) {
-          lightsAreOut = true;
+
           // Overlay to give darkness effect
           push();
           rectMode(CENTER);
@@ -768,13 +746,18 @@ if (scene === `sceneTwo`) {
           rect(width / 2, height / 2, width, height)
           pop();
 
+        playerDialogText(activePlayerDialog);
+
         let lightsOutDelayDialog = function() {
           // Display inmate dialogue
           activePlayerDialog = gameTextData.sceneThree.cell[1].player;
           // Display dialogue
-          playerDialogText(activePlayerDialog);
         };
+
+    if (lightsAreOut === false)  {
         setTimeout(lightsOutDelayDialog, 1000);
+        lightsAreOut = true;
+          }
         }
 
     countdownTimer();
@@ -810,7 +793,7 @@ if (scene === `sceneTwo`) {
               $("#lose-a").dialog('close');
               scene = `sceneThree`;
               state = `sceneThreeCell`;
-              // timer.countdown = 15; <- shouldn't be in animation
+              timer.countdown = 15;
             });
 
             // Jquery button event to restart the game
@@ -834,8 +817,11 @@ if (scene === `sceneTwo`) {
       // Display dialogue
       playerDialogText(activePlayerDialog);
     } else if (fenceStrength.width < 0) {
+
+      venueText.dialog = gameTextData.sceneThree.userDirection.fenceCut;
+
       // Display scene venue
-      sceneVenue(fenceCutBgImg);
+      sceneVenue(fenceCutBgImg, venueText.dialog);
       // Display inmate dialogue
       activePlayerDialog = gameTextData.sceneThree.fence[1].player;
       // Display dialogue
@@ -864,14 +850,18 @@ if (scene === `sceneTwo`) {
       // Health bar animation
       fenceStrength.display();
     } else if (state ===`sceneThreeLose_B`) {
-      //add jquery dialog event here
+
+      // Stop responsive voice
+      clearInterval(speakInterval);
+
+      // Add jquery dialog event here
       $("#lose-b").dialog({
           modal: true,
           close: function(event, ui) {},
           open: function() { $(".ui-dialog-titlebar-close").hide();},
           resizable: false
       });
-    }
+
 
     // Jquery button event to restart scene 3 escape sequence
     $("#restart-scene-3").on(`click`, function() {
@@ -887,11 +877,13 @@ if (scene === `sceneTwo`) {
       location.reload();
       $('#lose-b').dialog('close');
     });
-
   }
+}
 
   // Animation events for scene four
   if (scene === `sceneFour` && state === `sceneFourWin`) {
+
+    clearInterval(speakInterval);
 
     // Display victory image
     push();
@@ -958,16 +950,13 @@ function mouseClicked() {
 
 // Track mouseclick when it is over fence area
   if (state === `sceneThreeEscape` && wireCuttersEquipped) {
-    let d = dist(mouseX, mouseY, bgDisplay.x / 2, bgDisplay.y / 2)
-    if (d < 500) {
+
+    if (mouseX > bgDisplay.x && mouseX < bgDisplay.x + bgDisplay.width && mouseY > bgDisplay.y && mouseY < bgDisplay.y + bgDisplay.height) {
       fenceStrength.width -= 5;
       fenceSound.play();
+      console.log(`success`);
     }
-
   }
-
-
-
 } // End of mouseClicked function
 
 // Function to manage inventory absed on game state
@@ -1088,14 +1077,18 @@ if(state === `sceneTwoCafeteria`) {
 
 // Keypressed to manage inventory and trigger game events
 function keyPressed() {
-  //Key press to get out of prelude state
+  // Key press to get out of prelude state
   if (state === `sceneOnePrelude` && keyCode === ENTER) {
     state = `sceneOneCafeteria`;
   }
 
+// Key press for scene three escape state
   if (state === `sceneThreeEscape` && fenceStrength.width < 0 && keyCode === ENTER) {
 
-    endingWinMusic.setVolume(2);
+    // Stop tension music
+    tensionMusic.stop();
+    // Start win music
+    endingWinMusic.setVolume(0.5);
     endingWinMusic.play();
     scene = `sceneFour`
     state = `sceneFourWin`;
@@ -1104,15 +1097,16 @@ function keyPressed() {
 } // End of keyPressed function
 
 // Function manage displaying venues
-function sceneVenue(venueBgImg, venueText) {
+function sceneVenue(venueBgImg, venueTextDialog) {
 
   // Scene venue image
   image(venueBgImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
 
+  // Text to display in venue
   push();
   fill(255);
-  textSize(12);
-  text(venueText, 645, 200);
+  textSize(venueText.size);
+  text(venueTextDialog, venueText.x, venueText.y);
   pop();
 
 }
@@ -1156,6 +1150,8 @@ if(!escape) {
      $("#escape-fail-alert").dialog({
          modal: true
      });
+
+
   });
 } else if ( scene === `sceneThree` && state === `sceneThreeCell` && escape) {
   $(`#escape-attempt`).on(`click`, function() {
@@ -1164,7 +1160,19 @@ if(!escape) {
      });
        state = `sceneThreeEscape`;
        timer.countdown = 20;
-  });
+
+
+         speakInterval =  setInterval( function() {
+         responsiveVoice.speak("Inmates! Return to your cells. The prison is in lockdown", "UK English Male", {
+           pitch: 1,
+           rate: 1,
+         });
+
+       },
+        5000
+       );
+     });
+
 
 }
 
@@ -1230,8 +1238,12 @@ if (scene === `sceneTwo`) {
 
     if (tradesCompleteSceneTwo) {
       $(`#cell`).on(`click`, function() {
+          // Start tension music
+          tensionMusic.play();
+          // Change scene and state
           scene = `sceneThree`;
           state = `sceneThreeCell`;
+
       });
     }
   }

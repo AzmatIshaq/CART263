@@ -74,8 +74,11 @@
       "player": "I need to cut these metal wires. I should be quick. The guard tower might catch me"
     },
     {
-      "player": "I did it! Let's get out of here!\n\nPRESS ENTER TO ESCAPE"
+      "player": "I did it! Let's get out of here!"
       }
-    ]
+    ],
+    "userDirection": {
+      "fenceCut": "PRESS ENTER TO ESCAPE"
+    }
   }
 }
