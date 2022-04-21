@@ -2,10 +2,9 @@
 Project 2 -
 Azmat Ishaq
 
-This program simulate a prison escape through interactive trading.
-It operates based on scenes and states within those scenes. The user can alternative between scenes and states based on game events or the navigation bar.
+This program simulates a prison escape game which involves interactive trading. It operates based on states which are refered to as scenes. The user alternates between scenes and states through game events or the navigation bar. JQuery is used to manage the interactive trading elements and a p.5 canvas displays the games visual animations and handles other minor mouseclick and keypress events. The dialogue is stored in a JSON document and displayed based on the game state or triggers. Separate functions are used to handle the game trades, navigation, inventory, and venues.
 
-The dialogue is stored in a JSON document and displayed based on the game state or triggers. Since this is a .
+See README for more details.
 
 */
 
@@ -76,9 +75,6 @@ let tensionMusic;
 // Speaker voice
 let speakInterval;
 
-// Variables to navigate venues
-// let venue;
-
 // Inventory Gui properties
 
 let inventoryGui = {
@@ -143,16 +139,17 @@ let wireCutters = {
 // states
 // let state = `title`;
 // let state = ``;
-let state = `sceneOnePrelude`;
+// let state = `sceneOnePrelude`;
 // let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
 // let state = `sceneTwoCell`;
 // let state = `sceneTwoRec`;
-// let state = `sceneThreeCell`
-let scene = `sceneOne`;
+let state = `sceneThreeCell`;
+// let state = `sceneThreeEscape`;
+// let scene = `sceneOne`;
 // let scene = `sceneTwo`;
-// let scene = `sceneThree`;
+let scene = `sceneThree`;
 
 // Variable to manage item class
 let items;
@@ -206,8 +203,8 @@ let timer = {
 // Variable to manage venue text
 let venueText = {
   dialog: 0,
-  x: 850 / 2,
-  y: 400 / 2,
+  x: 850 / 1.45,
+  y: 400 / 1.25,
   size: 16
 };
 
@@ -324,17 +321,15 @@ function setup() {
 
   // Initialize audio
   userStartAudio();
+
+
 }
 
 /**
-Draw function to display scene events and animations.
+Draw function to manage navigation, inventory, and animations.
 */
 function draw() {
   background(0);
-
-  // if (state === `sceneOne`) {
-  //     sceneOne();
-  //   }
 
     // Animation effects for scenes
     animation();
@@ -350,6 +345,7 @@ function draw() {
 
 /* - - - - - - - - - - - TRADING - - - - - - - - - - - - - - - - - - - - - -  */
 
+// Code contribution from Pippin Barr
 // Function to manage trades
 function makeTrade(event, ui) {
 
@@ -363,9 +359,9 @@ function makeTrade(event, ui) {
          close: function(event, ui) {}
      });
 
-     $("#smokey-trade-1").on( "dialogclose", function(event, ui) {
-
-     });
+     // $("#smokey-trade-1").on( "dialogclose", function(event, ui) {
+     //
+     // });
 
       // Register completed trade
       tradesCompleteSceneOneCafeteria = true;
@@ -380,7 +376,7 @@ function makeTrade(event, ui) {
       $(".my-items").draggable("disable");
     }
     else {
-      // Unsuccessful trade!
+      // Unsuccessful trade alert
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
     }
   }
@@ -401,46 +397,44 @@ if (state === `sceneTwoCafeteria`) {
 
     }
     else {
-      // Unsuccessful trade!
+      // Unsuccessful trade alert
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
-
+      // Revert gum position
       $("#gum-player").draggable({
          revert: true,
         });
-
     }
   }
 
 // Manage trade for sceneTwoRec
   if (state === `sceneTwoRec`) {
-    // Hide former trade
 
+    // If chess piece is traded but swiss knife isn't
     if (ui.draggable.attr(`id`) === `chess-player` && !swissArmyKnifeTraded) {
-      // Register completed trade
 
-      // $("#devon-trade-1").dialog({
-      //     modal: true,
-      //     close: function(event, ui) {}
-      // });
+      // Register completed trade
       chessTraded = true;
       $("#chess-trader").show();
       $("#chess-player").hide();
 
+      // Trade accepted alert
         alert(`Trade accepted!`);
-        // Disable draggability
-        // $(".my-items").draggable("disable");
+        // If swiss army knife is already traded
     } else if  (ui.draggable.attr(`id`) === `chess-player` && swissArmyKnifeTraded) {
+      // Register the trades
       chessTraded = true;
       tradesCompleteSceneTwo = true;
-      // Unsuccessful trade!
+
+      // Display traded events correctly
       $("#chess-trader").show();
       $("#chess-player").hide();
 
       $("#wire-cutters-player").show();
       $("#wire-cutters-trader").hide();
 
+      // Trade accepted alert
       alert(`Trade Accepted.`);
-
+      // If chess piece hasn't been traded
     } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && !chessTraded) {
 
       // Show the trade dialog
@@ -451,21 +445,16 @@ if (state === `sceneTwoCafeteria`) {
 
       // Register completed trade
       swissArmyKnifeTraded = true;
+      // Display traded events correctly
       $("#swiss-knife-trader").show();
       $("#swiss-knife-player").hide();
 
-        alert(`Trade accepted! How am I supposed to play chess with this? I'll take it but this deal aint finished.`);
-        // Disable draggability
-        // $(".my-items").draggable("disable");
+      // If chess piece is  alreadytraded
     } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && chessTraded) {
       // Register completed trade
-
-      // $("#devon-trade-1").dialog({
-      //     modal: true,
-      //     close: function(event, ui) {}
-      // });
       swissArmyKnifeTraded = true;
       tradesCompleteSceneTwo = true;
+      // Display traded events correctly
       $("#swiss-knife-trader").show();
       $("#swiss-knife-player").hide();
 
@@ -473,19 +462,20 @@ if (state === `sceneTwoCafeteria`) {
       $("#wire-cutters-trader").hide();
 
         alert(`Trade accepted!`);
-        // Disable draggability
-        // $(".my-items").draggable("disable");
+        // If trading other events
     } else {
       if(chessTraded) {
+        // Trade rejected alert
         alert(`Trade rejected!`);
-      }     // Unsuccessful trade!
+      }
        else {
+         // Trade Rejected alert
          alert(`Trade rejected! Hey fool, how am I supposed to play chess with this?`);
        }
-
     }
   }
 
+// If you trade gum
 if (ui.draggable.attr(`id`) === `gum-player`) {
   $("#gum-player").draggable({
      revert: true
@@ -499,9 +489,6 @@ function titleState() {
   image(prisonBgImg, 0, 0, 550, 400);
 }
 
-// Function to manage trades for each scene
-function sceneOne() {
-}
 
 /* - - - - - - - - - - - ANIMIATION  - - - - - - - - - - - - - - - - - - - -  */
 
@@ -764,7 +751,7 @@ if (scene === `sceneTwo`) {
     // Start countdown timer
     countdownTimer();
 
-    } else if (state === `sceneThreeLose_A`) {
+    } if (state === `sceneThreeLose_A`) {
 
       //add jquery dialog event here
         $("#lose-a").dialog({
@@ -773,28 +760,37 @@ if (scene === `sceneTwo`) {
           open: function() { $(".ui-dialog-titlebar-close").hide();},
           resizable: false
             });
-            // Jquery button event to restart scene 3 escape sequence
-            $("#restart-scene-3").on(`click`, function() {
 
-              $("#lose-a").dialog('close');
-              scene = `sceneThree`;
-              state = `sceneThreeCell`;
-              timer.countdown = 15;
-            });
-
-            // Jquery button event to restart the game
-            $("#restart-game").on(`click`, function() {
-              $("#lose-a").dialog('close');
-              location.reload();
-
-            });
           }
+
+
+        // Jquery button event to restart scene 3 escape sequence
+        $("#restart-scene-3").on(`click`, function() {
+
+          $("#lose-a").dialog('close');
+
+          // Reset all the scene 3 elements
+          lightsAreOut = false;
+          escape = false;
+          wireCuttersEquipped = false;
+          fenceStrength.width = 99;
+          timer.countdown = 15;
+          scene = `sceneThree`;
+          state = `sceneThreeCell`;
+        });
+
+        // Jquery button event to restart the game
+        $("#restart-game").on(`click`, function() {
+          $("#lose-a").dialog('close');
+          location.reload();
+        });
+
 
     if (state === `sceneThreeEscape`) {
       // Change player dialog position
       dialogDisplay.playerY = height / 2;
 
-
+      // Trigger events if fence strength drops bellow 0
       if (fenceStrength.width > 0) {
       // Display scene venue
       sceneVenue(fenceBgImg);
@@ -848,23 +844,31 @@ if (scene === `sceneTwo`) {
           resizable: false
       });
 
-
-    // Jquery button event to restart scene 3 escape sequence
-    $("#restart-scene-3").on(`click`, function() {
-      scene = `sceneThree`;
-      state = `sceneThreeCell`;
-      timer.countdown = 15;
-      $('#lose-b').dialog('close');
-
-    });
-
-    // Jquery button event to restart the game
-    $("#restart-game").on(`click`, function() {
-      location.reload();
-      $('#lose-b').dialog('close');
-    });
   }
+
+
+      // Jquery button event to restart scene 3 escape sequence
+      $("#restart-scene-3-b").on(`click`, function() {
+        $('#lose-b').dialog('close');
+
+        // Reset all the scene 3 elements
+        lightsAreOut = false;
+        escape = false;
+        wireCuttersEquipped = false;
+        fenceStrength.width = 99;
+        timer.countdown = 15;
+        scene = `sceneThree`;
+        state = `sceneThreeCell`;
+      });
+
+      // Jquery button event to restart the game
+      $("#restart-game-b").on(`click`, function() {
+        $('#lose-b').dialog('close');
+        location.reload();
+      });
 }
+
+
 
   // Animation events for scene four
   if (scene === `sceneFour` && state === `sceneFourWin`) {
@@ -939,8 +943,8 @@ function mouseClicked() {
 
     if (mouseX > bgDisplay.x && mouseX < bgDisplay.x + bgDisplay.width && mouseY > bgDisplay.y && mouseY < bgDisplay.y + bgDisplay.height) {
       fenceStrength.width -= 5;
+      fenceSound.setVolume(0.6);
       fenceSound.play();
-      console.log(`success`);
     }
   }
 } // End of mouseClicked function
@@ -1047,7 +1051,7 @@ if(state === `sceneTwoCafeteria`) {
       });
   }
 
-// Invetory events for sceneThreeEscape
+// Inventory events for sceneThreeEscape
   if (state === `sceneThreeEscape`) {
     // Remove dragability from cutters to improve click detection
     $(`#wire-cutters-player`).draggable("disable");
@@ -1070,7 +1074,7 @@ function keyPressed() {
   }
 
 // Key press for scene three escape state
-  if (state === `sceneThreeEscape` && fenceStrength.width < 0 && keyCode === ENTER) {
+  if (state === `sceneThreeEscape` && fenceStrength.width < 0 && keyCode === 27) {
 
     // Stop tension music
     tensionMusic.stop();
@@ -1135,7 +1139,8 @@ $(`.button-nav`).off(`click`);
 if(!escape) {
   $(`#escape-attempt`).on(`click`, function() {
      $("#escape-fail-alert").dialog({
-         modal: true
+         modal: true,
+         open: function() { $(".ui-dialog-titlebar-close").show();}
      });
 
 
@@ -1143,12 +1148,15 @@ if(!escape) {
 } else if ( scene === `sceneThree` && state === `sceneThreeCell` && escape) {
   $(`#escape-attempt`).on(`click`, function() {
      $("#escape-start").dialog({
-         modal: true
+         modal: true,
+         open: function() { $(".ui-dialog-titlebar-close").show();},
      });
+     // Set the state to SceneThreeEscape
        state = `sceneThreeEscape`;
+    //  Reset the countdown
        timer.countdown = 20;
 
-
+       // Start the responsive voice automated prison message
          speakInterval =  setInterval( function() {
          responsiveVoice.speak("Inmates! Return to your cells. The prison is in lockdown", "UK English Male", {
            pitch: 1,

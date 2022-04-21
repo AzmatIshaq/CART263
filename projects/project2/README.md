@@ -10,7 +10,7 @@ The idea for this project was to explore the use of jQuery and the p5 canvas tog
 
 This was my second attempt at a narrative style game and I believe I managed to avoid making it too linear. I wanted to instigate the user into thinking about how to perform the necessary trades, rather than simply advancing between scenes without much thought. JSON was very useful in helping me store and call necessary dialog for the scenes.
 
-Some of the issues with this project involved dealing with a significant amount of conditionals. I will likely try to address this in future projects involving narratives. Perhaps the use of more object oriented programming principles would be useful in this regard. Furthermore, triggering certain events, such as closing jQuery dialog boxes, with p5 events wasn't always straight forward. Nevertheless the conditionals gave the code a usable structure.
+Some of the issues with this project involved dealing with a significant amount of conditionals. I will likely try to address this in future projects involving narratives. Perhaps the use of more object oriented programming principles would be useful in this regard. Furthermore, triggering certain events, such as closing jQuery dialog boxes, with p5 events wasn't always straight forward. Nevertheless, the two libraries worked well together without major issues.
 
 Functions allowed me to split certain elements of the code. For example, the makeTrade function was crucial in registering trades and integrating them with p5. The navigation buttons, scene venues, and inventory were also managed by their own functions. These all proved to be very useful in creating a workable code structure that was organized and allowed me to time events and triggers.
 
