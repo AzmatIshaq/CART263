@@ -61,8 +61,21 @@
     ]
   },
   "sceneThree": {
-    "cell": {
-      "player": "This is it. Lights are out, I better leave before I get jumped."
+    "cell": [
+    {
+      "player": "If the lights go out I have to go for it!"
+    },
+    {
+      "player": "This is it. Lights are out and cells are still open for chow. I better leave before I get jumped or they lockdown the prison."
     }
+  ],
+    "fence": [
+      {
+      "player": "I need to cut these metal wires. I should be quick. The guard tower might catch me"
+    },
+    {
+      "player": "I did it! Let's get out of here!\n\nPRESS ENTER TO ESCAPE"
+      }
+    ]
   }
 }

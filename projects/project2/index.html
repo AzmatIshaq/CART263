@@ -116,18 +116,51 @@
     <p>Huh? Alright I'll take it but find me some smokes! Here's some gum.</p>
   </div>
 
-
+  <!-- Escape Attempt Failed Dialog -->
   <div class="alert-dialog" id="escape-fail-alert">
     <img src="../assets/images/player-no-escape.jpg" alt="no-escape-image">
     <p>ESCAPE ATTEMPT FAILED!</p>
-    <p></p>
+    <p>You're not ready!</p>
   </div>
+
+  <!--  Escape Attempt Started Dialog -->
+  <div class="alert-dialog" id="escape-start">
+    <img src="../assets/images/escape-attempt-dialog-2.jpg" alt="no-escape-image">
+    <p>The lights are out, there is chaos in the prison! Cut through the fence before the guard sees you!</p>
+  </div>
+
+  <!-- First losing dialog for Scene Three -->
+  <div class="alert-dialog" id="lose-a">
+    <img src="../assets/images/inmate-confrontation-1.jpg" alt="">
+    <p>You've been trading Teddy... We can't let that continue.</p>
+    <p style="font-size: 2.5em;"> GAME OVER</p>
+    <button id="restart-scene-3">Restart Escape</button>
+    <button id="restart-game">Restart Game</button>
+  </div>
+
+  <!-- Second losing dialog for Scene Three -->
+  <div class="alert-dialog" id="lose-b">
+    <img src="../assets/images/guard-tower-2.jpg" alt="">
+    <p>HALT PRISONER!</p>
+    <p style="font-size: 2.5em;"> GAME OVER</p>
+  </div>
+
+  <!-- Winning dialog -->
+  <div class="alert-dialog" id="win">
+    <img src="../assets/images/victory-escape.jpg" alt="">
+    <p>YOU ESCAPED!</p>
+    <p style="font-size: 2.5em;">CONGRATULATIONS!</p>
+  </div>
+
 </div>  <!-- End of main container -->
 
 
     <!-- My script(s) -->
+    <script src="js/ProgressBar.js"></script>
     <script src="js/script.js"></script>
 
   </body>
+
+
 
 </html>

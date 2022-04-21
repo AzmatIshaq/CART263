@@ -122,3 +122,17 @@ h1 {
 .alert-dialog {
   display: none;
 }
+
+#lose-a button {
+  width: 100px;
+  height: 50px;
+  /* margin-left: 50px; */
+  /* padding-left:200px; */
+}
+
+
+#lose-b button {
+  /* margin-left: 50px; */
+  width: 100px;
+  height: 50px;
+}
