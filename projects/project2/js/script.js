@@ -101,6 +101,13 @@ let victoryImg;
 
 // Variable to track fence strength
 let fenceStrength;
+// Variable for the sound of the fence
+let fenceSound;
+
+// Prelude music
+let preludeMusic;
+// Ending music
+let endingWinMusic
 
 // Variables to navigate venues
 let venue;
@@ -180,12 +187,6 @@ let state = `sceneThreeCell`
 // let scene = `sceneTwo`;
 let scene = `sceneThree`;
 
-// Inventory variables
-// Tracks if inventory interface is open
-let inventoryActive = true;
-// Limites access to display inventory based on scene
-let inventoryDisplay = false;
-
 // Variable to manage item class
 let items;
 
@@ -241,9 +242,6 @@ let activeNpcDialog;
 let activePlayerDialog;
 // Variable to manage active character image
 let activeCharImg;
-
-// Variables to activate trade moments
-let tradeActive = true;
 
 // Variables to verify trade completion between scenes
 
@@ -309,6 +307,15 @@ function preload() {
   towerImg = loadImage(`assets/images/guard-tower-2.jpg`);
   victoryImg = loadImage(`assets/images/victory-escape-2.jpg`);
 
+  // Preload sound
+
+  // Fence snapping sound
+  fenceSound  = loadSound(`assets/sounds/fence-snap.wav`);
+  // Prelude music
+  preludeMusic = loadSound(`assets/sounds/prelude-music.mp3`);
+  // Ending win music
+  endingWinMusic  = loadSound(`assets/sounds/win-music.mp3`);
+
   // Preload JSON game text
   gameTextData = loadJSON(`assets/data/game-text.JSON`);
 
@@ -370,7 +377,7 @@ function draw() {
 function makeTrade(event, ui) {
 
   // Succesful trades for Scene One Cafeteria
-  if (state === `sceneOneCafeteria` && tradeActive === true) {
+  if (state === `sceneOneCafeteria`) {
     if (ui.draggable.attr(`id`) === `ramen-player`) {
 
       // Pop up jquery dialog after trade event
@@ -745,19 +752,7 @@ if (scene === `sceneTwo`) {
     if (state === `sceneThreeCell`) {
       // Display scene venue
       sceneVenue(cellBgImg);
-
-
-
-      // Delay before starting lightsOut
-          // Anonymouse function to manage delay elements
-          // let lightsOutDelay = function() {
-            // Make lights go out
-
-
-          // };
-          // // Delay the scene change
-          // setTimeout(lightsOutDelay, 100);
-
+      // Dialog before timer is low
           if (timer.countdown > 10) {
           // Display inmate dialogue
           activePlayerDialog = gameTextData.sceneThree.cell[0].player;
@@ -772,10 +767,14 @@ if (scene === `sceneTwo`) {
           noStroke();
           rect(width / 2, height / 2, width, height)
           pop();
+
+        let lightsOutDelayDialog = function() {
           // Display inmate dialogue
           activePlayerDialog = gameTextData.sceneThree.cell[1].player;
           // Display dialogue
           playerDialogText(activePlayerDialog);
+        };
+        setTimeout(lightsOutDelayDialog, 1000);
         }
 
     countdownTimer();
@@ -957,11 +956,12 @@ function mouseClicked() {
     }
   }
 
-//
+// Track mouseclick when it is over fence area
   if (state === `sceneThreeEscape` && wireCuttersEquipped) {
     let d = dist(mouseX, mouseY, bgDisplay.x / 2, bgDisplay.y / 2)
     if (d < 500) {
       fenceStrength.width -= 5;
+      fenceSound.play();
     }
 
   }
@@ -1094,13 +1094,12 @@ function keyPressed() {
   }
 
   if (state === `sceneThreeEscape` && fenceStrength.width < 0 && keyCode === ENTER) {
-    // Display win dialog box
-    $("#win").dialog({
-      close: function(event, ui) {},
-      modal: true,
-    });
+
+    endingWinMusic.setVolume(2);
+    endingWinMusic.play();
     scene = `sceneFour`
     state = `sceneFourWin`;
+
   }
 } // End of keyPressed function
 
