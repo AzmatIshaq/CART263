@@ -1,28 +1,19 @@
 /*********************************************
-
-Here is a description of any special CSS used.
-In this case it's just padding and margin to 0
-and then centring the canvas (and anything else)
-using the CSS Grid.
-
-Also hides overflow.
+CSS for Project 2: Teddy's Escape
 
 **********************************************/
 
-/* *:hover {
-  outline: 5px solid dodgerblue;
-} */
-
-
+/* Body Styling */
 body {
   padding: 0;
   margin: 0;
-  display: grid; /* Set up the grid and justify/align to center */
+  display: grid;
   justify-content: center;
   align-content: center;
-  /* height: 100vh;  */
   background: beige;
 }
+
+/* Header Styling */
 
 h1 {
   font-family: 'Roboto', sans-serif;
@@ -30,6 +21,8 @@ h1 {
   align-text: center;
   justify-content: center;
 }
+
+/* Items styling */
 
 .my-items {
   width: 40%;
@@ -49,10 +42,6 @@ h1 {
   height: auto;
 }
 
-#trade-container {
-  display: flex;
-}
-
 .hidden-item {
   display: none;
 }
@@ -61,26 +50,27 @@ h1 {
   display: block;
 }
 
-#trade-screen-1 {
-  width: 25vw;
-  height: 20vw;
+/* Trade screen styling */
 
+#trade-container {
+  display: flex;
+}
+
+#trade-screen-1 {
+  width: 20vw;
+  height: 15vw;
   border: 5px dashed black;
   margin-right: 5px;
-  /* display: flex;
-  justify-content: center;
-  align-content: center; */
 }
 
 #trade-screen-2 {
-  width: 25vw;
-  height: 20vw;
+  width: 20vw;
+  height: 15vw;
   margin-left: 20px;
   border: 5px dashed black;
-  /* display: grid;
-  justify-content: center;
-  align-content: center; */
 }
+
+/* Navigation buttons styling */
 
 .btn-group button {
   background-color: #262626;
@@ -88,9 +78,9 @@ h1 {
   color: #262626;
   padding: 1px 60px 1px 20px;
   margin-left: 10px;
-  cursor: hand; /* Pointer/hand icon */
-  width: 10%; /* Set a width if needed */
-  display: block; /* Make the buttons appear below each other */
+  cursor: hand;
+  width: 10%;
+  display: block;
 }
 
 #btn-active button {
@@ -100,11 +90,6 @@ h1 {
 
 /* Items individual styling */
 
-#smokes-player, #smokes-trader {
-  /* width: 100%;
-  height: auto; */
-  /* margin-right: -400px; */
-}
 
 #smokes-player img, #smokes-trader img {
   width: 40%;
@@ -123,16 +108,20 @@ h1 {
   display: none;
 }
 
+/* Losing buttons styling */
 #lose-a button {
   width: 100px;
   height: 50px;
-  /* margin- left: 50px; */
-  /* padding-left:200px; */
 }
 
 
 #lose-b button {
-  /* margin-left: 50px; */
   width: 100px;
   height: 50px;
+}
+
+
+/* p5 Canvas styling */
+#game-canvas {
+  margin-top: 5px;
 }

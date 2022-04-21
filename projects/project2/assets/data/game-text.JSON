@@ -1,5 +1,5 @@
 {
-  "title": "Prison Escape",
+  "title": "Teddy's Escape",
   "sceneOne": {
     "prelude": "I've been in this prison for 4 years. I'm done here. It's time for a change. Either I break out, or die trying. Ever since I got here, I stuck to myself writing in my cell. It reminded the other inmates of Ted Kaczynski, so they started calling me 'Teddy'. I'm done with that. No more holes, no more writing, no more Teddy. If I want to get out of here, it's time to make some moves. I've started a trading business so I can get the tools I need to break out of this hell. When they let me out of the hole today, I'm never looking back.",
     "cafeteria": [
@@ -45,7 +45,7 @@
         "devon": "It'll cost you more than a chess piece to finish this trade. If you get me something worthwhile I'll give you the cutters. I also got some information for you about tonight..."
       },
       {
-        "devon": "Aight, I'll take it. When the lights are going out after chow, the cell blocks are gonna fight. Another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I would do it tonight. There aren't any guards near fence B after dark.\n\nWatchout for that guard tower though"
+        "devon": "Aight, I'll take it. When the lights are sabotaged after chow, the cell blocks are gonna fight. Another trading crew wants to take you out. You're messing with their business. If you're serious about breaking out, I would do it tonight. There aren't any guards near fence B after dark.\n\nWatchout for that guard tower though"
       }
     ],
     "hall": {

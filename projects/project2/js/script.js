@@ -2,11 +2,10 @@
 Project 2 -
 Azmat Ishaq
 
-This program creatively simulates parts of the movie I-Robot.
-It operates based on scenes which are alternated between using states.
-The dialogue and user interaction occurs by utilizing annyang and responsive voice.
-Furthermore, JSON is used to store the dialogue data. Events are often triggered
-using setTimeout.
+This program simulate a prison escape through interactive trading.
+It operates based on scenes and states within those scenes. The user can alternative between scenes and states based on game events or the navigation bar.
+
+The dialogue is stored in a JSON document and displayed based on the game state or triggers. Since this is a .
 
 */
 
@@ -443,12 +442,14 @@ if (state === `sceneTwoCafeteria`) {
       alert(`Trade Accepted.`);
 
     } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && !chessTraded) {
-      // Register completed trade
 
-      // $("#devon-trade-1").dialog({
-      //     modal: true,
-      //     close: function(event, ui) {}
-      // });
+      // Show the trade dialog
+      $("#devon-trade-1").dialog({
+          modal: true,
+          close: function(event, ui) {}
+      });
+
+      // Register completed trade
       swissArmyKnifeTraded = true;
       $("#swiss-knife-trader").show();
       $("#swiss-knife-player").hide();
@@ -760,6 +761,7 @@ if (scene === `sceneTwo`) {
           }
         }
 
+    // Start countdown timer
     countdownTimer();
 
     } else if (state === `sceneThreeLose_A`) {
@@ -770,22 +772,6 @@ if (scene === `sceneTwo`) {
           close: function(event, ui) {},
           open: function() { $(".ui-dialog-titlebar-close").hide();},
           resizable: false
-          // buttons: [
-          //   {
-          //       id: "restart-scene-3",
-          //       text: "Delete",
-          //       click: function () {
-          //           alert("Delete clicked.");
-          //       }
-          //   },
-          //   {
-          //       id: "restart-game",
-          //       text: "Cancel",
-          //       click: function () {
-          //           alert("Delete clicked.");
-          //       }
-          //   }
-          //   ]
             });
             // Jquery button event to restart scene 3 escape sequence
             $("#restart-scene-3").on(`click`, function() {
@@ -974,6 +960,7 @@ if(state === `sceneOneWarden`) {
 
 // Manage inventory for sceneTwoCafeteria
 if(state === `sceneTwoCafeteria`) {
+
 
   // Allow dragability if deal is not complete
   if (!tradesCompleteSceneTwoCafeteria) {
@@ -1239,7 +1226,7 @@ if (scene === `sceneTwo`) {
     if (tradesCompleteSceneTwo) {
       $(`#cell`).on(`click`, function() {
           // Start tension music
-          tensionMusic.play();
+          tensionMusic.loop();
           // Change scene and state
           scene = `sceneThree`;
           state = `sceneThreeCell`;
