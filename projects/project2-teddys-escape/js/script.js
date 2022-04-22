@@ -2,7 +2,7 @@
 Project 2 -
 Azmat Ishaq
 
-This program simulates a prison escape game which involves interactive trading. It operates based on states which are refered to as scenes. The user alternates between scenes and states with game event triggers or the navigation bar. JQuery is used to manage the interactive trading elements and a p.5 canvas displays the games visual animations and handles other minor mouseclick and keypress events. The dialogue is stored in a JSON document and displays based on the game state or triggers. Separate functions are used to handle the game trades, navigation, inventory, and venues.
+This program simulates a prison escape experience which involves interactive trading. It operates based on states which are refered to as scenes. The user alternates between scenes and states with game event triggers or the navigation bar. JQuery is used to manage the interactive trading elements and a p.5 canvas displays the games visual animations and handles other minor mouseclick and keypress events. The dialogue is stored in a JSON document and displays based on the game state or triggers. Separate functions are used to handle the game trades, navigation, inventory, and venues.
 
 See README for more details.
 
@@ -75,7 +75,7 @@ let gameMusic;
 let speakInterval;
 
 
-/* Item variables and properties */
+/** Item variables and properties */
 
 // Inventory Gui properties
 let inventoryGui = {
@@ -177,22 +177,8 @@ let fadeOut = {
 
 
 // states
-// let state = `title`;
-// let state = ``;
 let state = `sceneOnePrelude`;
-// let state = `sceneOneCafeteria`;
-// let state = `sceneOneWarden`;
-// let state = `sceneTwoCafeteria`;
-// let state = `sceneTwoCell`;
-// let state = `sceneTwoRec`;
-// let state = `sceneThreeCell`;
-// let state = `sceneThreeEscape`;
 let scene = `sceneOne`;
-// let scene = `sceneTwo`;
-// let scene = `sceneThree`;
-
-// Variable to manage item class
-let items;
 
 // Variable To track if wire cutters are equipped
 let wireCuttersEquipped = false;
@@ -237,7 +223,9 @@ let timer = {
   countdown: 15,
   x: 40,
   y: 40,
-  textFont: 60
+  textFont: 60,
+  width: 90,
+  height: 70
 };
 
 // Variable to manage venue text
@@ -280,6 +268,7 @@ let chessTraded = false;
 let smokesTraded = false;
 let swissArmyKnifeTraded = false;
 
+// Set ability to escape as false
 let escape = false;
 
 /**
@@ -336,7 +325,7 @@ function preload() {
 } // End of preload function
 
 
-/* - - - - - - - - - - - SETUP & DRAW- - - - - - - - - - - - - - - - - - - -  */
+/** - - - - - - - - - - SETUP & DRAW- - - - - - - - - - - - - - - - - - - -  */
 
 /**
 Function to setup the canvas to embed it within divs. Also to initialize user audio, setup trade events, and to reload game on click events.
@@ -364,15 +353,15 @@ function setup() {
 
   // Click events to restart the game if you lose
   // Jquery button event to restart the game
-    $("#restart-game-a").on(`click`, function() {
-      $("#lose-a").dialog('close');
-      location.reload();
-    });
+  $("#restart-game-a").on(`click`, function() {
+    $("#lose-a").dialog('close');
+    location.reload();
+  });
 
-    $("#restart-game-b").on(`click`, function() {
-      $('#lose-b').dialog('close');
-      location.reload();
-    });
+  $("#restart-game-b").on(`click`, function() {
+    $('#lose-b').dialog('close');
+    location.reload();
+  });
 }
 
 /**
@@ -393,7 +382,7 @@ function draw() {
 } // End of draw
 
 
-/* - - - - - - - - - - - TRADING - - - - - - - - - - - - - - - - - - - - - -  */
+/** - - - - - - - - - - TRADING - - - - - - - - - - - - - - - - - - - - - -  */
 
 // Code contribution from Pippin Barr
 // Function to manage trades
@@ -536,7 +525,7 @@ function makeTrade(event, ui) {
           modal: true,
           close: function(event, ui) {}
         });
-        } else {
+      } else {
         // Reject trade dialog
         $("#devon-trade-reject-gum").dialog({
           modal: true,
@@ -554,7 +543,7 @@ function makeTrade(event, ui) {
   }
 } // End of makeTrade function
 
-/* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
+/** - - - - - - - - - - - PRELUDE TEXT - - - - - - - - - - - - - - - - - - -  */
 
 // Function to manage fading text during prelude scene.
 function preludeText() {
@@ -583,7 +572,7 @@ function preludeText() {
 }
 
 
-/* - - - - - - - - - - - ANIMIATION  - - - - - - - - - - - - - - - - - - - -  */
+/** - - - - - - - - - - ANIMIATION  - - - - - - - - - - - - - - - - - - - -  */
 
 // Function to manage animations based on scene states.
 function animation() {
@@ -816,7 +805,7 @@ function animation() {
   } // End of Scene Two
 
 
-// Animations for sceneThree
+  // Animations for sceneThree
   if (scene === `sceneThree`) {
     // Animation for sceneThreeCell
     if (state === `sceneThreeCell`) {
@@ -978,6 +967,8 @@ function animation() {
   }
 } // End of animation function
 
+/** - - - - - - - - - - MOUSE-CLICKED - - - - - - - - - - - - - - - - - - -  */
+
 // Function to handle mouseclick events
 function mouseClicked() {
 
@@ -1020,7 +1011,7 @@ function mouseClicked() {
 
   // Manage mouseclick for smokes interaction
   if (state === `sceneOneWarden` && smokesCollected === false) {
-      // Track mouse in relation to smokes
+    // Track mouse in relation to smokes
     if (dist(mouseX, mouseY, width / smokes.x, height / smokes.y) <= smokes.size / 2) {
 
       // Register the event with booleans
@@ -1044,7 +1035,7 @@ function mouseClicked() {
 
   // Track mouseclick when it is over fence area
   if (state === `sceneThreeEscape` && wireCuttersEquipped) {
-      // Track mouse in relation to fence background image
+    // Track mouse in relation to fence background image
     if (mouseX > bgDisplay.x && mouseX < bgDisplay.x + bgDisplay.width && mouseY > bgDisplay.y && mouseY < bgDisplay.y + bgDisplay.height) {
       // Update fence progress bar and initiate relevant audio
       fenceStrength.width -= 5;
@@ -1053,6 +1044,8 @@ function mouseClicked() {
     }
   }
 } // End of mouseClicked function
+
+/** - - - - - - - - - - INVENTORY -  - - - - - - - - - - - - - - - - - - - -  */
 
 // Function to manage inventory bassed on game state
 function inventory() {
@@ -1173,6 +1166,8 @@ function inventory() {
 
 } // End of Inventory
 
+/** - - - - - - - - - - KEY-PRESSED  - - - - - - - - - - - - - - - - - - - -  */
+
 // Keypressed function to manage inventory and trigger game events
 function keyPressed() {
 
@@ -1210,7 +1205,6 @@ function sceneVenue(venueBgImg, venueTextDialog) {
   textSize(venueText.size);
   text(venueTextDialog, venueText.x, venueText.y);
   pop();
-
 }
 
 // Function to manage displaying character images
@@ -1223,6 +1217,7 @@ function characterDisplay(character) {
 
 // Function to manage npc dialog
 function dialogText(dialog) {
+  //Text code for npc dialog
   push();
   fill(255);
   textSize(dialogDisplay.size);
@@ -1246,7 +1241,7 @@ function navigatePrison() {
   // Reset button associations
   $(`.button-nav`).off(`click`);
 
-  // Escape button
+  // Escape button alert when escape isn't possible
   if (!escape) {
     $(`#escape-attempt`).on(`click`, function() {
       $("#escape-fail-alert").dialog({
@@ -1257,8 +1252,9 @@ function navigatePrison() {
       });
 
 
-    }); // If state is scene three show start escape dialog
+    });
   } else if (scene === `sceneThree` && state === `sceneThreeCell` && escape) {
+    // If state is scene three show start escape dialog alert
     $(`#escape-attempt`).on(`click`, function() {
       $("#escape-start").dialog({
         modal: true,
@@ -1282,14 +1278,12 @@ function navigatePrison() {
         5000
       );
     });
-
-
   }
 
   // Navigation for scene one
   if (scene === `sceneOne`) {
 
-    // Trigger scene change
+    // Trigger scene change if cafeteria trades are complete
     if (tradesCompleteSceneOneCafeteria) {
       $(`#warden`).on(`click`, function() {
         state = `sceneOneWarden`;
@@ -1297,7 +1291,7 @@ function navigatePrison() {
       });
     }
 
-    // Trigger scene change
+    // Trigger scene change if scene trades are complete
     if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
       $(`#cell`).on(`click`, function() {
         state = `sceneTwoCell`;
@@ -1308,11 +1302,13 @@ function navigatePrison() {
 
   // Navigation for scene two
   if (scene === `sceneTwo`) {
+    // Limit navigation access if trades are not complete
     if (state === `sceneTwoCell` && !tradesCompleteSceneTwoCafeteria && !smokesTraded) {
       $(`#cafeteria`).on(`click`, function() {
         state = `sceneTwoCafeteria`;
       });
     }
+    // Allow scene change if trades are complete
     if (state === `sceneTwoCafeteria` && tradesCompleteSceneTwoCafeteria) {
       $(`#recreation-yard`).on(`click`, function() {
         state = `sceneTwoRec`;
@@ -1323,6 +1319,7 @@ function navigatePrison() {
       });
     }
 
+    // Navigation between sceneTwoRec, sceneTwoHall, sceneTwoCellB, and sceneTwoCommon
     if (state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
       $(`#common-area`).on(`click`, function() {
         state = `sceneTwoCommon`;
@@ -1332,19 +1329,21 @@ function navigatePrison() {
         });
       });
 
+      // Button click sets state to sceneTwoRec
       $(`#recreation-yard`).on(`click`, function() {
         state = `sceneTwoRec`;
       });
-
+      // Button click sets state to sceneTwoHall
       $(`#hall`).on(`click`, function() {
         state = `sceneTwoHall`;
       });
-
+      // Button click sets state to sceneTwoCellB
       $(`#cell`).on(`click`, function() {
         state = `sceneTwoCellB`;
       });
     }
 
+    // Allow scene change based on button click if trades are complete
     if (tradesCompleteSceneTwo) {
       $(`#cell`).on(`click`, function() {
         // Stop regular game music
@@ -1354,32 +1353,32 @@ function navigatePrison() {
         // Change scene and state
         scene = `sceneThree`;
         state = `sceneThreeCell`;
-
       });
     }
   }
 
   // Manage navigation for scene three
   if (scene === `sceneThree`) {
-    // All trades are complete
+    // All trades are set to complete
     allTradesComplete = true;
     if (lightsAreOut) {
-      //allow user to attempt escape
+      //allow user to attempt escape if lights are out
       escape = true;
     }
   }
 } // End of Navigate Prison
 
 
+/** - - - - - - - - - - COUNTDOWN TIMER- - - - - - - - - - - - - - - - - - -  */
+
 // Function to set up a countdown timer
 function countdownTimer() {
 
   // Give the countdown Timer a background
-
   push();
   fill(0);
   rectMode(CENTER);
-  rect(timer.x, timer.y, 90, 70);
+  rect(timer.x, timer.y, timer.width, timer.height);
   pop();
 
 
@@ -1396,6 +1395,7 @@ function countdownTimer() {
     timer.countdown--;
   }
 
+  // Timer conditionals for sceneThreeCell
   if (state === `sceneThreeCell`) {
     // Game over text when countdown reaches 0
     if (timer.countdown == 0) {
@@ -1403,6 +1403,7 @@ function countdownTimer() {
     }
   }
 
+  // Timer conditionals for sceneThreeEscape
   if (state === `sceneThreeEscape`) {
     // Game over text when countdown reaches 0
     if (timer.countdown == 0) {
@@ -1410,3 +1411,5 @@ function countdownTimer() {
     }
   }
 }
+
+/** -END- */
