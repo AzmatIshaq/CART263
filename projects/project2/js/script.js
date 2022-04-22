@@ -66,17 +66,20 @@ let fenceStrength;
 let fenceSound;
 
 // Prelude music
-let preludeMusic;
+// let preludeMusic;
 // Ending music
-let endingWinMusic
+let endingWinMusic;
 // Tension music;
 let tensionMusic;
+// Game music
+let gameMusic;
 
 // Speaker voice
 let speakInterval;
 
-// Inventory Gui properties
 
+// Item variables properties
+// Inventory Gui properties
 let inventoryGui = {
   x: 2,
   y: 2,
@@ -131,25 +134,64 @@ let swissArmyKnife = {
   size:  30
 };
 
+// Wire cutters properties
 let wireCutters = {
   width: 140,
   height: 140
 };
 
+// Title text properties
+// Variable to style title text displayed
+let titleText = {
+  fill: 255,
+  r: 80,
+  g: 180,
+  b: 255,
+  alpha: 20,
+  alpha2: 0,
+  size: 30,
+  size2: 22,
+  x1: 2,
+  y1: 3,
+  x2: 2,
+  y2: 1.2
+};
+
+// Fade effect for text
+
+// Variable for fade effect
+let fadeOut = {
+  // Limit for how high the alpha fade effect will go
+  upperLimit: 256,
+  upperLimit2: 0,
+  // Limit for how low the alpha fade effect will go
+  lowerLimit: 20,
+  lowerLimit2: 0,
+  // Rate at which fade increases
+  increaseRate: 1.5,
+  increaseRate2: 0,
+  // Rate at which fade decreases
+  decreaseRate: 2,
+  decreaseRate2: 0,
+  rate: 0,
+  rate2: 0,
+}
+
+
 // states
 // let state = `title`;
 // let state = ``;
-// let state = `sceneOnePrelude`;
+let state = `sceneOnePrelude`;
 // let state = `sceneOneCafeteria`;
 // let state = `sceneOneWarden`;
 // let state = `sceneTwoCafeteria`;
 // let state = `sceneTwoCell`;
 // let state = `sceneTwoRec`;
-let state = `sceneThreeCell`;
+// let state = `sceneThreeCell`;
 // let state = `sceneThreeEscape`;
-// let scene = `sceneOne`;
+let scene = `sceneOne`;
 // let scene = `sceneTwo`;
-let scene = `sceneThree`;
+// let scene = `sceneThree`;
 
 // Variable to manage item class
 let items;
@@ -284,7 +326,7 @@ function preload() {
   // Fence snapping sound
   fenceSound  = loadSound(`assets/sounds/fence-snap.wav`);
   // Prelude music
-  preludeMusic = loadSound(`assets/sounds/prelude-music.mp3`);
+  gameMusic = loadSound(`assets/sounds/prelude-music.mp3`);
   // Ending win music
   endingWinMusic  = loadSound(`assets/sounds/win-music.mp3`);
   // Ending win music
@@ -485,8 +527,26 @@ if (ui.draggable.attr(`id`) === `gum-player`) {
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
 
-function titleState() {
-  image(prisonBgImg, 0, 0, 550, 400);
+function preludeText() {
+
+  push();
+  textAlign(CENTER, CENTER);
+  textStyle(NORMAL);
+  textSize(titleText.size2);
+  fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
+  text(`Press ENTER to Continue`, width / titleText.x2, height / titleText.y2);
+  pop();
+
+  // Fade effect for title text
+    if (titleText.alpha2 <= fadeOut.lowerLimit) {
+      fadeOut.rate = fadeOut.increaseRate;
+    }
+
+    if (titleText.alpha2 >= fadeOut.upperLimit) {
+      fadeOut.rate = -fadeOut.decreaseRate;
+    }
+
+    titleText.alpha2 += fadeOut.rate;
 }
 
 
@@ -497,7 +557,12 @@ function animation() {
 // Animation for sceneOne Trades
 if (scene === `sceneOne`) {
 
+
+
   if (state === `sceneOnePrelude`) {
+
+
+
     push();
     image(holePreludeImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
     pop();
@@ -508,6 +573,8 @@ if (scene === `sceneOne`) {
     textSize(16);
     text(gameTextData.sceneOne.prelude, width / 1.45, height / 9.5, 250, 350 );
     pop();
+
+    preludeText();
   }
 
   // Animation for sceneOne
@@ -1068,9 +1135,12 @@ if(state === `sceneTwoCafeteria`) {
 
 // Keypressed to manage inventory and trigger game events
 function keyPressed() {
+
   // Key press to get out of prelude state
   if (state === `sceneOnePrelude` && keyCode === ENTER) {
     state = `sceneOneCafeteria`;
+    gameMusic.setVolume(0.2);
+    gameMusic.loop();
   }
 
 // Key press for scene three escape state
@@ -1233,6 +1303,8 @@ if (scene === `sceneTwo`) {
 
     if (tradesCompleteSceneTwo) {
       $(`#cell`).on(`click`, function() {
+          // Stop regular game music
+          gameMusic.stop();
           // Start tension music
           tensionMusic.loop();
           // Change scene and state
