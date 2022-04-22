@@ -77,6 +77,9 @@ https://www.inc.com/scott-elser/3-keys-to-leaving-lasting-legacy-you-want.html
 Warden  
 https://shawshank.fandom.com/wiki/Samuel_Norton  
 
+
+Image Filters and Manipulation: https://www2.lunapic.com/editor/
+
 **Audio Sources**:  
 
 Tension Music  
