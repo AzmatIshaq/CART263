@@ -19,7 +19,7 @@ let canvasSize = {
 // Color with rgb properties
 let colorPalette = {
 
-// #A6826D     (166, 130, 109)
+  // #A6826D     (166, 130, 109)
   r3: 166,
   g3: 130,
   b3: 109,
@@ -96,7 +96,7 @@ let ramen = {
   yInventory: 2,
   width: 40,
   height: 40,
-  size:  40
+  size: 40
 };
 
 // Chess item properties
@@ -108,7 +108,7 @@ let chess = {
   yInventory: 2,
   width: 20,
   height: 20,
-  size:  20
+  size: 20
 };
 
 // Smokes item properties
@@ -119,7 +119,7 @@ let smokes = {
   yInventory: 2,
   width: 30,
   height: 30,
-  size:  30
+  size: 30
 };
 
 // Swiss army knife item properties
@@ -131,7 +131,7 @@ let swissArmyKnife = {
   yInventory: 2,
   width: 30,
   height: 30,
-  size:  30
+  size: 30
 };
 
 // Wire cutters properties
@@ -285,7 +285,7 @@ let swissArmyKnifeTraded = false;
 let escape = false;
 
 /**
-Preload game images and audio
+Function to preload game images, audio, and JSON data.
 */
 function preload() {
 
@@ -324,13 +324,13 @@ function preload() {
   // Preload sound
 
   // Fence snapping sound
-  fenceSound  = loadSound(`assets/sounds/fence-snap.wav`);
+  fenceSound = loadSound(`assets/sounds/fence-snap.wav`);
   // Prelude music
   gameMusic = loadSound(`assets/sounds/prelude-music.mp3`);
   // Ending win music
-  endingWinMusic  = loadSound(`assets/sounds/win-music.mp3`);
+  endingWinMusic = loadSound(`assets/sounds/win-music.mp3`);
   // Ending win music
-  tensionMusic  = loadSound(`assets/sounds/tension-music.wav`);
+  tensionMusic = loadSound(`assets/sounds/tension-music.wav`);
 
   // Preload JSON game text
   gameTextData = loadJSON(`assets/data/game-text.JSON`);
@@ -341,18 +341,18 @@ function preload() {
 /* - - - - - - - - - - - SETUP & DRAW- - - - - - - - - - - - - - - - - - - -  */
 
 /**
-Function to setup the canvas and trade events.
+Function to setup the canvas to embed it within divs. Also to initialize user audio, setup trade events, and to reload game on click events.
 */
 function setup() {
   let canvas = createCanvas(canvasSize.width, canvasSize.height);
   canvas.parent(`#game-canvas`);
 
-// Setup trade
+  // Setup trade
   // jQuery
   // Make the trade items draggable and droppable in traders inventory.
   $(".my-items").draggable({
-     containment: "#trade-container"
-    });
+    containment: "#trade-container"
+  });
 
   $(`#trade-screen-2`).droppable({
     drop: makeTrade
@@ -364,23 +364,33 @@ function setup() {
   // Initialize audio
   userStartAudio();
 
+  // Click events to restart the game if you lose
+  // Jquery button event to restart the game
+    $("#restart-game-a").on(`click`, function() {
+      $("#lose-a").dialog('close');
+      location.reload();
+    });
 
+    $("#restart-game-b").on(`click`, function() {
+      $('#lose-b').dialog('close');
+      location.reload();
+    });
 }
 
 /**
-Draw function to manage navigation, inventory, and animations.
+Draw function to display and manage navigation, inventory, and animations.
 */
 function draw() {
   background(0);
 
-    // Animation effects for scenes
-    animation();
+  // Animation effects for scenes
+  animation();
 
-    // Inventory management
-    inventory();
+  // Inventory management
+  inventory();
 
-    // Navigate prison
-    navigatePrison();
+  // Navigate prison with navbar
+  navigatePrison();
 
 } // End of draw
 
@@ -396,14 +406,10 @@ function makeTrade(event, ui) {
     if (ui.draggable.attr(`id`) === `ramen-player`) {
 
       // Pop up jquery dialog after trade event
-     $("#smokey-trade-1").dialog({
-         modal: true,
-         close: function(event, ui) {}
-     });
-
-     // $("#smokey-trade-1").on( "dialogclose", function(event, ui) {
-     //
-     // });
+      $("#smokey-trade-1").dialog({
+        modal: true,
+        close: function(event, ui) {}
+      });
 
       // Register completed trade
       tradesCompleteSceneOneCafeteria = true;
@@ -415,40 +421,50 @@ function makeTrade(event, ui) {
       // Display traded items in correct inventory
       $("#gum-trader").hide();
       $("#gum-player").show();
+      $("#ramen-trader").show();
+      $("#ramen-player").hide();
+
+      // Disable items draggability
       $(".my-items").draggable("disable");
-    }
-    else {
+    } else {
+
       // Unsuccessful trade alert
       alert(`Trade rejected! Hey fool, how about something I actually need?`);
     }
   }
 
-// Manage trade for sceneTwoCafeteria
-if (state === `sceneTwoCafeteria`) {
-
+  // Manage trade for sceneTwoCafeteria
+  if (state === `sceneTwoCafeteria`) {
+    // Event for specific trade item interaction
     if (ui.draggable.attr(`id`) === `smokes-player`) {
       // Register completed trade
       tradesCompleteSceneTwoCafeteria = true;
       smokesTraded = true;
 
-      // Trade accepted alert
-      alert(`Trade accepted!`);
+      // Accept trade dialog
+      $("#trade-accepted").dialog({
+        modal: true,
+        close: function(event, ui) {}
+      });
 
       // Disable items draggability
       $(".my-items").draggable("disable");
 
-    }
-    else {
-      // Unsuccessful trade alert
-      alert(`Trade rejected! Hey fool, how about something I actually need?`);
+    } else {
+      // Pop up jquery dialog after trade event
+      $("#smokey-trade-rejected").dialog({
+        modal: true,
+        close: function(event, ui) {}
+      });
+
       // Revert gum position
       $("#gum-player").draggable({
-         revert: true,
-        });
+        revert: true,
+      });
     }
   }
 
-// Manage trade for sceneTwoRec
+  // Manage trade for sceneTwoRec
   if (state === `sceneTwoRec`) {
 
     // If chess piece is traded but swiss knife isn't
@@ -459,10 +475,14 @@ if (state === `sceneTwoCafeteria`) {
       $("#chess-trader").show();
       $("#chess-player").hide();
 
-      // Trade accepted alert
-        alert(`Trade accepted!`);
-        // If swiss army knife is already traded
-    } else if  (ui.draggable.attr(`id`) === `chess-player` && swissArmyKnifeTraded) {
+      // Accept trade dialog
+      $("#trade-accepted").dialog({
+        modal: true,
+        close: function(event, ui) {}
+      });
+
+      // If swiss army knife is already traded
+    } else if (ui.draggable.attr(`id`) === `chess-player` && swissArmyKnifeTraded) {
       // Register the trades
       chessTraded = true;
       tradesCompleteSceneTwo = true;
@@ -470,19 +490,21 @@ if (state === `sceneTwoCafeteria`) {
       // Display traded events correctly
       $("#chess-trader").show();
       $("#chess-player").hide();
-
       $("#wire-cutters-player").show();
       $("#wire-cutters-trader").hide();
 
-      // Trade accepted alert
-      alert(`Trade Accepted.`);
+      // Accept trade dialog
+      $("#trade-accepted").dialog({
+        modal: true,
+        close: function(event, ui) {}
+      });
       // If chess piece hasn't been traded
     } else if (ui.draggable.attr(`id`) === `swiss-knife-player` && !chessTraded) {
 
       // Show the trade dialog
       $("#devon-trade-1").dialog({
-          modal: true,
-          close: function(event, ui) {}
+        modal: true,
+        close: function(event, ui) {}
       });
 
       // Register completed trade
@@ -499,34 +521,44 @@ if (state === `sceneTwoCafeteria`) {
       // Display traded events correctly
       $("#swiss-knife-trader").show();
       $("#swiss-knife-player").hide();
-
       $("#wire-cutters-player").show();
       $("#wire-cutters-trader").hide();
 
-        alert(`Trade accepted!`);
-        // If trading other events
+      // Accept trade dialog
+      $("#trade-accepted").dialog({
+        modal: true,
+        close: function(event, ui) {}
+      });
+
+      // If trading other events
     } else {
-      if(chessTraded) {
+      if (chessTraded) {
         // Trade rejected alert
-        alert(`Trade rejected!`);
+        $("#trade-rejected").dialog({
+          modal: true,
+          close: function(event, ui) {}
+        });
+        } else {
+        // Reject trade dialog
+        $("#devon-trade-reject-gum").dialog({
+          modal: true,
+          close: function(event, ui) {}
+        });
       }
-       else {
-         // Trade Rejected alert
-         alert(`Trade rejected! Hey fool, how am I supposed to play chess with this?`);
-       }
     }
   }
 
-// If you trade gum
-if (ui.draggable.attr(`id`) === `gum-player`) {
-  $("#gum-player").draggable({
-     revert: true
+  // If user trades gum make it revert to original position
+  if (ui.draggable.attr(`id`) === `gum-player`) {
+    $("#gum-player").draggable({
+      revert: true
     });
   }
 } // End of makeTrade function
 
 /* - - - - - - - - - - - STATES - - - - - - - - - - - - - - - - - - - - - -  */
 
+// Function to manage fading text during prelude scene.
 function preludeText() {
 
   push();
@@ -538,98 +570,97 @@ function preludeText() {
   pop();
 
   // Fade effect for title text
-    if (titleText.alpha2 <= fadeOut.lowerLimit) {
-      fadeOut.rate = fadeOut.increaseRate;
-    }
+  if (titleText.alpha2 <= fadeOut.lowerLimit) {
+    fadeOut.rate = fadeOut.increaseRate;
+  }
 
-    if (titleText.alpha2 >= fadeOut.upperLimit) {
-      fadeOut.rate = -fadeOut.decreaseRate;
-    }
+  if (titleText.alpha2 >= fadeOut.upperLimit) {
+    fadeOut.rate = -fadeOut.decreaseRate;
+  }
 
-    titleText.alpha2 += fadeOut.rate;
+  titleText.alpha2 += fadeOut.rate;
 }
 
 
 /* - - - - - - - - - - - ANIMIATION  - - - - - - - - - - - - - - - - - - - -  */
 
+// Function to manage animations based on scene states.
 function animation() {
 
-// Animation for sceneOne Trades
-if (scene === `sceneOne`) {
+  // Animations for sceneOne
+  if (scene === `sceneOne`) {
+    // Animations for Prelude state
+    if (state === `sceneOnePrelude`) {
 
+      // Prelude background image
+      push();
+      image(holePreludeImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
+      pop();
 
+      // Display game prelude text
+      push();
+      fill(colorPalette.r3, colorPalette.g3, colorPalette.b3);
+      textSize(16);
+      text(gameTextData.sceneOne.prelude, width / 1.45, height / 9.5, 250, 350);
+      pop();
 
-  if (state === `sceneOnePrelude`) {
-
-
-
-    push();
-    image(holePreludeImg, bgDisplay.x, bgDisplay.y, bgDisplay.width, bgDisplay.height);
-    pop();
-
-    // Display game prelude text
-    push();
-    fill(colorPalette.r3, colorPalette.g3, colorPalette.b3);
-    textSize(16);
-    text(gameTextData.sceneOne.prelude, width / 1.45, height / 9.5, 250, 350 );
-    pop();
-
-    preludeText();
-  }
-
-  // Animation for sceneOne
-  if (state === `sceneOneCafeteria`) {
-
-    // Scene Venue image
-    sceneVenue(cafeteriaBgImg);
-
-    // Ramen trade event
-    if (ramenCollected === false ) {
-
-    // Starting player dialogue
-    activePlayerDialog = gameTextData.sceneOne.cafeteria[0].player
-    // Display player dialog text
-    playerDialogText(activePlayerDialog);
-
-    // Display ramen
-    push();
-    imageMode(CENTER);
-    image(ramenImg, width / ramen.x, height / ramen.y, ramen.width, ramen.height)
-    pop();
+      // Display prelude fading text
+      preludeText();
     }
+
+    // Animation for sceneOne
+    if (state === `sceneOneCafeteria`) {
+
+      // Scene Venue image
+      sceneVenue(cafeteriaBgImg);
+
+      // Ramen trade event
+      if (ramenCollected === false) {
+
+        // Starting player dialogue
+        activePlayerDialog = gameTextData.sceneOne.cafeteria[0].player
+        // Display player dialog text
+        playerDialogText(activePlayerDialog);
+
+        // Display ramen
+        push();
+        imageMode(CENTER);
+        image(ramenImg, width / ramen.x, height / ramen.y, ramen.width, ramen.height)
+        pop();
+      }
 
       // Scene Trade
-    if (ramenCollected && !tradesCompleteSceneOneCafeteria) {
+      if (ramenCollected && !tradesCompleteSceneOneCafeteria) {
 
-      // Show traders items
-      $("#gum-trader").show();
+        // Show traders items
+        $("#gum-trader").show();
 
-      // Choose character image
-      activeCharImg = smokeyCharImg;
-      // Display inmate dialogue
-      activeNpcDialog = gameTextData.sceneOne.cafeteria[1].inmateSmokey;
-      // Display dialogue
-      dialogText(activeNpcDialog);
-      // Display scene character
-      characterDisplay(activeCharImg);
+        // Choose character image
+        activeCharImg = smokeyCharImg;
+        // Display inmate dialogue
+        activeNpcDialog = gameTextData.sceneOne.cafeteria[1].inmateSmokey;
+        // Display dialogue
+        dialogText(activeNpcDialog);
+        // Display scene character
+        characterDisplay(activeCharImg);
+      }
+
+      if (ramenCollected && tradesCompleteSceneOneCafeteria) {
+
+        // Choose character dialogue
+        activeNpcDialog = gameTextData.sceneOne.cafeteria[2].guard;
+        // Display dialogue
+        dialogText(activeNpcDialog);
+        // Choose character image
+        activeCharImg = guardCharImg;
+        // Display scene character
+        characterDisplay(activeCharImg);
+      }
     }
-
-    if (ramenCollected && tradesCompleteSceneOneCafeteria) {
-
-      // Choose character dialogue
-      activeNpcDialog = gameTextData.sceneOne.cafeteria[2].guard;
-      // Display dialogue
-      dialogText(activeNpcDialog);
-      // Choose character image
-      activeCharImg = guardCharImg;
-      // Display scene character
-      characterDisplay(activeCharImg);
-    }
-  }
-
-  if (state === `sceneOneWarden`) {
-    // Hide past trade
-    $("#ramen-player").hide();
+    // Animations for warden state
+    if (state === `sceneOneWarden`) {
+      // Hide past trade
+      $("#ramen-player").hide();
 
       // Display scene venue
       sceneVenue(wardenBgImg);
@@ -637,9 +668,9 @@ if (scene === `sceneOne`) {
       activeCharImg = wardenCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
-
-    if (smokesCollected === false) {
-        // Smokes Img
+      // Dependent animation event
+      if (smokesCollected === false) {
+        // Display smokes image
         push();
         imageMode(CENTER);
         image(smokesImg, width / smokes.x, height / smokes.y, smokes.width, smokes.height)
@@ -650,17 +681,18 @@ if (scene === `sceneOne`) {
         // Display dialogue
         dialogText(activeNpcDialog);
       }
-
+      // Dependent animation event
       if (smokesCollected === true) {
         activeNpcDialog = gameTextData.sceneOne.wardensOffice[1].warden;
         // Display dialogue
         dialogText(activeNpcDialog);
       }
     }
-} // End of Scene One
+  } // End of Scene One
 
-
-if (scene === `sceneTwo`) {
+  // Scene two animations
+  if (scene === `sceneTwo`) {
+    // Animations for sceneTwoCell state
     if (state === `sceneTwoCell`) {
       // Display scene venue
       sceneVenue(cellBgImg);
@@ -668,8 +700,8 @@ if (scene === `sceneTwo`) {
       activePlayerDialog = gameTextData.sceneOne.cell[0].player;
       // Display dialogue
       playerDialogText(activePlayerDialog);
-
-      if(!swissArmyKnifeCollected) {
+      // Dependent animation event
+      if (!swissArmyKnifeCollected) {
         // Display swiss army knife in cell
         push();
         imageMode(CENTER);
@@ -677,12 +709,12 @@ if (scene === `sceneTwo`) {
         pop();
       }
     }
-
+    // Animations for sceneTwoCellB state
     if (state === `sceneTwoCellB`) {
       // Display scene venue
       sceneVenue(cellBgImg);
-
-    if(!swissArmyKnifeCollected) {
+      // Dependent animation event
+      if (!swissArmyKnifeCollected) {
         // Display swiss army knife in cell
         push();
         imageMode(CENTER);
@@ -691,7 +723,7 @@ if (scene === `sceneTwo`) {
       }
     }
 
-    // Scene one Hall animation
+    // Animations for sceneTwoCafeteria states
     if (state === `sceneTwoCafeteria`) {
       // Display scene venue
       sceneVenue(cafeteriaBgImg);
@@ -699,21 +731,22 @@ if (scene === `sceneTwo`) {
       activeCharImg = smokeyCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
-    if(!tradesCompleteSceneTwoCafeteria) {
-      // Select scene dialogue
-      activeNpcDialog = gameTextData.sceneTwo.cafeteria[0].inmateSmokey;
-    }
+      // Dependent animation events
+      if (!tradesCompleteSceneTwoCafeteria) {
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.cafeteria[0].inmateSmokey;
+      }
 
-    if(tradesCompleteSceneTwoCafeteria) {
-      // Select scene dialogue
-      activeNpcDialog = gameTextData.sceneTwo.cafeteria[1].inmateSmokey;
+      if (tradesCompleteSceneTwoCafeteria) {
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.cafeteria[1].inmateSmokey;
       }
 
       // Display dialogue
       dialogText(activeNpcDialog);
     }
 
-    // Scene one Hall animation
+    // Animation for sceneTwoRec
     if (state === `sceneTwoRec`) {
       // Display scene venue
       sceneVenue(recBgImg);
@@ -721,18 +754,18 @@ if (scene === `sceneTwo`) {
       activeCharImg = devonCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
-    if (!chessTraded) {
-      // Select scene dialogue
-      activeNpcDialog = gameTextData.sceneTwo.recYard[0].devon;
-    }
-
-    if (chessTraded && !swissArmyKnifeTraded) {
-      // Select scene dialogue
-      activeNpcDialog = gameTextData.sceneTwo.recYard[1].devon;
-    }
-
-    if (chessTraded && swissArmyKnifeTraded)
-      {
+      // Dependent animation event
+      if (!chessTraded) {
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.recYard[0].devon;
+      }
+      // Dependent animation event
+      if (chessTraded && !swissArmyKnifeTraded) {
+        // Select scene dialogue
+        activeNpcDialog = gameTextData.sceneTwo.recYard[1].devon;
+      }
+      // Dependent animation event
+      if (chessTraded && swissArmyKnifeTraded) {
         // Select scene dialogue
         activeNpcDialog = gameTextData.sceneTwo.recYard[2].devon;
       }
@@ -741,7 +774,7 @@ if (scene === `sceneTwo`) {
       dialogText(activeNpcDialog);
     }
 
-    // Scene one Hall animation
+    // Animation for sceneTwoHall state
     if (state === `sceneTwoHall`) {
       // Display scene venue
       sceneVenue(hallBgImg);
@@ -751,8 +784,8 @@ if (scene === `sceneTwo`) {
       playerDialogText(activePlayerDialog);
     }
 
+    //Animation for sceneTwoCommon state
     if (state === `sceneTwoCommon`) {
-
 
       // Display scene venue
       sceneVenue(commonBgImg);
@@ -760,8 +793,8 @@ if (scene === `sceneTwo`) {
       activeCharImg = duaneCharImg;
       // Display scene character
       characterDisplay(activeCharImg);
-        // Display chess piece if it isn't collected
-        if (chessCollected === false) {
+      // Display chess piece if it isn't collected
+      if (chessCollected === false) {
         // Chess piece image
         push();
         imageMode(CENTER);
@@ -781,101 +814,101 @@ if (scene === `sceneTwo`) {
     }
   } // End of Scene Two
 
+
+// Animations for sceneThree
   if (scene === `sceneThree`) {
+    // Animation for sceneThreeCell
     if (state === `sceneThreeCell`) {
       // Display scene venue
       sceneVenue(cellBgImg);
       // Dialog before timer is low
-          if (timer.countdown > 10) {
-          // Display inmate dialogue
-          activePlayerDialog = gameTextData.sceneThree.cell[0].player;
-          // Display dialogue
-          playerDialogText(activePlayerDialog);
-        } else if (timer.countdown <= 10) {
-
-          // Overlay to give darkness effect
-          push();
-          rectMode(CENTER);
-          fill(0, 0, 0, 225);
-          noStroke();
-          rect(width / 2, height / 2, width, height)
-          pop();
-
+      if (timer.countdown > 10) {
+        // Display inmate dialogue
+        activePlayerDialog = gameTextData.sceneThree.cell[0].player;
+        // Display dialogue
         playerDialogText(activePlayerDialog);
+      } else if (timer.countdown <= 10) {
 
+        // Overlay to give darkness effect
+        push();
+        rectMode(CENTER);
+        fill(0, 0, 0, 225);
+        noStroke();
+        rect(width / 2, height / 2, width, height)
+        pop();
+
+        // Animation dialog
+        playerDialogText(activePlayerDialog);
+        // Time the light dimming event
         let lightsOutDelayDialog = function() {
-          // Display inmate dialogue
+          // Display dialog
           activePlayerDialog = gameTextData.sceneThree.cell[1].player;
-          // Display dialogue
         };
-
-    if (lightsAreOut === false)  {
-        setTimeout(lightsOutDelayDialog, 1000);
-        lightsAreOut = true;
-          }
+        // Dependent animation event for lights
+        if (lightsAreOut === false) {
+          setTimeout(lightsOutDelayDialog, 1000);
+          lightsAreOut = true;
         }
+      }
 
-    // Start countdown timer
-    countdownTimer();
+      // Start countdown timer
+      countdownTimer();
 
-    } if (state === `sceneThreeLose_A`) {
+    }
+
+    // Animation for sceneThreeLose_A state
+    if (state === `sceneThreeLose_A`) {
 
       //add jquery dialog event here
-        $("#lose-a").dialog({
-          modal: true,
-          close: function(event, ui) {},
-          open: function() { $(".ui-dialog-titlebar-close").hide();},
-          resizable: false
-            });
+      $("#lose-a").dialog({
+        modal: true,
+        close: function(event, ui) {},
+        open: function() {
+          $(".ui-dialog-titlebar-close").hide();
+        },
+        resizable: false
+      });
+    }
 
-          }
+    // Unfinished Jquery button event to restart scene 3 escape sequence.
+    // $("#restart-scene-3").on(`click`, function() {
+    //
+    //   $("#lose-a").dialog('close');
+    //
+    //   // Reset all the scene 3 elements
+    //   lightsAreOut = false;
+    //   escape = false;
+    //   wireCuttersEquipped = false;
+    //   fenceStrength.width = 99;
+    //   timer.countdown = 15;
+    //   scene = `sceneThree`;
+    //   state = `sceneThreeCell`;
+    // });
 
-
-        // Jquery button event to restart scene 3 escape sequence
-        $("#restart-scene-3").on(`click`, function() {
-
-          $("#lose-a").dialog('close');
-
-          // Reset all the scene 3 elements
-          lightsAreOut = false;
-          escape = false;
-          wireCuttersEquipped = false;
-          fenceStrength.width = 99;
-          timer.countdown = 15;
-          scene = `sceneThree`;
-          state = `sceneThreeCell`;
-        });
-
-        // Jquery button event to restart the game
-        $("#restart-game").on(`click`, function() {
-          $("#lose-a").dialog('close');
-          location.reload();
-        });
-
-
+    // Animation for sceneThree Escape
     if (state === `sceneThreeEscape`) {
       // Change player dialog position
       dialogDisplay.playerY = height / 2;
 
       // Trigger events if fence strength drops bellow 0
       if (fenceStrength.width > 0) {
-      // Display scene venue
-      sceneVenue(fenceBgImg);
-      // Display inmate dialogue
-      activePlayerDialog = gameTextData.sceneThree.fence[0].player;
-      // Display dialogue
-      playerDialogText(activePlayerDialog);
-    } else if (fenceStrength.width < 0) {
+        // Display scene venue
+        sceneVenue(fenceBgImg);
+        // Display inmate dialogue
+        activePlayerDialog = gameTextData.sceneThree.fence[0].player;
+        // Display dialogue
+        playerDialogText(activePlayerDialog);
+      } else if (fenceStrength.width < 0) {
+        // Display venue text
+        venueText.dialog = gameTextData.sceneThree.userDirection.fenceCut;
 
-      venueText.dialog = gameTextData.sceneThree.userDirection.fenceCut;
-
-      // Display scene venue
-      sceneVenue(fenceCutBgImg, venueText.dialog);
-      // Display inmate dialogue
-      activePlayerDialog = gameTextData.sceneThree.fence[1].player;
-      // Display dialogue
-      playerDialogText(activePlayerDialog);
-    }
+        // Display scene venue
+        sceneVenue(fenceCutBgImg, venueText.dialog);
+        // Display inmate dialogue
+        activePlayerDialog = gameTextData.sceneThree.fence[1].player;
+        // Display dialogue
+        playerDialogText(activePlayerDialog);
+      }
 
 
       // Select guard tower image
@@ -884,10 +917,10 @@ if (scene === `sceneTwo`) {
       characterDisplay(activeCharImg);
 
       // Display equipped wirecutters
-      if(wireCuttersEquipped){
+      if (wireCuttersEquipped) {
         // Hide cursor
         noCursor();
-
+        // Display wire cutters on p5 canvas at mouse location
         push();
         imageMode(CENTER);
         image(wireCuttersImg, mouseX, mouseY, wireCutters.width, wireCutters.height)
@@ -898,48 +931,42 @@ if (scene === `sceneTwo`) {
       countdownTimer();
       // Health bar animation
       fenceStrength.display();
-    } else if (state ===`sceneThreeLose_B`) {
+      // Animation if state is sceneThreeLose_B
+    } else if (state === `sceneThreeLose_B`) {
 
       // Stop responsive voice
       clearInterval(speakInterval);
 
       // Add jquery dialog event here
       $("#lose-b").dialog({
-          modal: true,
-          close: function(event, ui) {},
-          open: function() { $(".ui-dialog-titlebar-close").hide();},
-          resizable: false
+        modal: true,
+        close: function(event, ui) {},
+        open: function() {
+          $(".ui-dialog-titlebar-close").hide();
+        },
+        resizable: false
       });
+    }
 
-  }
+    // Unfinished - Jquery button event to restart scene 3 escape sequence.
+    // $("#restart-scene-3-b").on(`click`, function() {
+    //   $('#lose-b').dialog('close');
+    //
+    //   // Reset all the scene 3 elements
+    //   lightsAreOut = false;
+    //   escape = false;
+    //   wireCuttersEquipped = false;
+    //   fenceStrength.width = 99;
+    //   timer.countdown = 15;
+    //   scene = `sceneThree`;
+    //   state = `sceneThreeCell`;
+    // });
 
+  } // End of sceneThree
 
-      // Jquery button event to restart scene 3 escape sequence
-      $("#restart-scene-3-b").on(`click`, function() {
-        $('#lose-b').dialog('close');
-
-        // Reset all the scene 3 elements
-        lightsAreOut = false;
-        escape = false;
-        wireCuttersEquipped = false;
-        fenceStrength.width = 99;
-        timer.countdown = 15;
-        scene = `sceneThree`;
-        state = `sceneThreeCell`;
-      });
-
-      // Jquery button event to restart the game
-      $("#restart-game-b").on(`click`, function() {
-        $('#lose-b').dialog('close');
-        location.reload();
-      });
-}
-
-
-
-  // Animation events for scene four
+  // Animation events for scene four and scene four win state
   if (scene === `sceneFour` && state === `sceneFourWin`) {
-
+    // Clear responsive voice from repeating
     clearInterval(speakInterval);
 
     // Display victory image
@@ -953,12 +980,11 @@ if (scene === `sceneTwo`) {
 // Function to handle mouseclick events
 function mouseClicked() {
 
-  // if item && itemcollected = false <- set this up
-
+  // Manage mouseclick for scene one cafeteria
   if (state === `sceneOneCafeteria` && ramenCollected === false) {
-
+    // Track mouse in relation to ramen
     if (dist(mouseX, mouseY, width / ramen.x, height / ramen.y) <= ramen.size / 2) {
-      // alert(`hello`);
+      // Register the event
       ramenCollected = true;
       // Display ramen in inventory
       $(`#ramen-player`).removeClass("hidden-item")
@@ -966,49 +992,60 @@ function mouseClicked() {
     }
   }
 
+  // Manage mouseclick for sceneTwoCell
   if (state === `sceneTwoCell`) {
 
-  // If smokes haven't been traded
-  if(!smokesTraded) {
-    if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
-      alert(`I don't need this just yet`);
+    // If smokes haven't been traded allow interaction with swiss army knife
+    if (!smokesTraded) {
+      if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
+        // Dialog for mousecick event
+        $("#self-swiss").dialog({
+          modal: true,
+          close: function(event, ui) {}
+        });
       }
     }
   }
 
+  // Manage mouseclick for sceneTwoCellB
   if (state === `sceneTwoCellB`) {
+    // Track mouse in relation to swiss knife
     if (dist(mouseX, mouseY, width / swissArmyKnife.x, height / swissArmyKnife.y) <= swissArmyKnife.size / 2) {
-   // Display knife in inventory
-   $(`#swiss-knife-player`).addClass("active-item")
-   swissArmyKnifeCollected = true;
+      // Display knife in inventory
+      $(`#swiss-knife-player`).addClass("active-item")
+      swissArmyKnifeCollected = true;
+    }
   }
- }
 
-// Manage mouseclick for smokes
+  // Manage mouseclick for smokes interaction
   if (state === `sceneOneWarden` && smokesCollected === false) {
+      // Track mouse in relation to smokes
     if (dist(mouseX, mouseY, width / smokes.x, height / smokes.y) <= smokes.size / 2) {
-      // alert(`hello`);
+
+      // Register the event with booleans
       smokesCollected = true;
       tradesCompleteSceneOne = true;
-      // $( `#ramen` ).switchClass( "hidden-item", "active-item");
+      // Update inventory
       $(`#smokes-player`).removeClass("hidden-item")
       $(`#smokes-player`).addClass("active-item")
     }
   }
 
-// Use mouseclicked to collect chess piece
+  // Use mouseclicked to collect chess piece
   if (state === `sceneTwoCommon` && chessCollected === false) {
-
+    // Track mouse in relation to chess piece
     if (dist(mouseX, mouseY, width / chess.x, height / chess.y) <= chess.size / 2) {
       chessCollected = true;
+      // Update inventory
       $(`#chess-player`).addClass("active-item")
     }
   }
 
-// Track mouseclick when it is over fence area
+  // Track mouseclick when it is over fence area
   if (state === `sceneThreeEscape` && wireCuttersEquipped) {
-
+      // Track mouse in relation to fence background image
     if (mouseX > bgDisplay.x && mouseX < bgDisplay.x + bgDisplay.width && mouseY > bgDisplay.y && mouseY < bgDisplay.y + bgDisplay.height) {
+      // Update fence progress bar and initiate relevant audio
       fenceStrength.width -= 5;
       fenceSound.setVolume(0.6);
       fenceSound.play();
@@ -1016,35 +1053,35 @@ function mouseClicked() {
   }
 } // End of mouseClicked function
 
-// Function to manage inventory absed on game state
+// Function to manage inventory bassed on game state
 function inventory() {
 
-// Manage inventory for sceneOneWarden
-if(state === `sceneOneWarden`) {
-
-  $(".my-items").draggable("enable");
-
-  $(".my-items").draggable({
-     containment: "#trade-screen-1"
-    });
-}
-
-// Manage inventory for sceneTwoCafeteria
-if(state === `sceneTwoCafeteria`) {
-
-
-  // Allow dragability if deal is not complete
-  if (!tradesCompleteSceneTwoCafeteria) {
+  // Manage inventory for sceneOneWarden
+  if (state === `sceneOneWarden`) {
+    // Allow items to be dragged
     $(".my-items").draggable("enable");
-    }
-
+    // Limite items draggability to trade screen
     $(".my-items").draggable({
-       containment: "#trade-container"
-      });
+      containment: "#trade-screen-1"
+    });
+  }
+
+  // Manage inventory for sceneTwoCafeteria
+  if (state === `sceneTwoCafeteria`) {
+
+
+    // Allow dragability if scene two cafeteria deal is not complete
+    if (!tradesCompleteSceneTwoCafeteria) {
+      $(".my-items").draggable("enable");
+    }
+    // Contain items to trade screen
+    $(".my-items").draggable({
+      containment: "#trade-container"
+    });
   }
 
   // Manage inventory for sceneTwoRec
-  if(state === `sceneTwoRec`) {
+  if (state === `sceneTwoRec`) {
 
     // Hide former trade
     $("#smokes-player").hide();
@@ -1052,86 +1089,88 @@ if(state === `sceneTwoCafeteria`) {
     $(".my-items").draggable("enable");
     // Limit trade to trade container
     $(".my-items").draggable({
-       containment: "#trade-container"
-      });
+      containment: "#trade-container"
+    });
 
     // If trades aren't complete for scene two display the cutters
     if (!tradesCompleteSceneTwo) {
-          // Show traders wire cutters
-        $("#wire-cutters-trader").show();
-      } else {
-        $("#wire-cutters-trader").hide();
-      }
+      // Show traders wire cutters
+      $("#wire-cutters-trader").show();
+    } else {
+      $("#wire-cutters-trader").hide();
+    }
 
 
     // Show knife only at rec yard
     if (swissArmyKnifeTraded) {
-          // Show traders wire cutters
-          $("#swiss-knife-trader").show();
-      } else {
-          $("#swiss-knife-trader").hide();
-      }
-
-      if(chessTraded) {
-          $("#chess-trader").show();
-      } else {
-          $("#chess-trader").hide();
-      }
-}
-
-
-  // Manage inventory for sceneTwoCommon
-  if(state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
-
-    $(".my-items").draggable({
-       containment: "#trade-screen-1"
-      });
-
-    // Don't display these trade items in other scenes
-
-    $("#wire-cutters-trader").hide();
-    $("#swiss-knife-trader").hide();
-    $("#chess-trader").hide();
+      // Show traders wire cutters
+      $("#swiss-knife-trader").show();
+    } else {
+      $("#swiss-knife-trader").hide();
     }
 
-  if(state === `sceneTwoHall` || state === `sceneTwoCellB`) {
-  // Don't display these trade items in other scenes
+    // Update inventory if chess item is traded
+    if (chessTraded) {
+      $("#chess-trader").show();
+    } else {
+      $("#chess-trader").hide();
+    }
+  }
+
+  // Manage inventory for sceneTwoCommon
+  if (state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
+    // Make items draggable
+    $(".my-items").draggable({
+      containment: "#trade-screen-1"
+    });
+
+    // Update trade inventory
     $("#wire-cutters-trader").hide();
     $("#swiss-knife-trader").hide();
     $("#chess-trader").hide();
   }
 
-  if(scene === `sceneThree`) {
-    // Hide former trader items
+  // Invetory for states sceneTwohall and sceneTwoCellB
+  if (state === `sceneTwoHall` || state === `sceneTwoCellB`) {
+    // Update trade inventory
+    $("#wire-cutters-trader").hide();
+    $("#swiss-knife-trader").hide();
+    $("#chess-trader").hide();
+  }
+
+  // Inventory for sceneThree
+  if (scene === `sceneThree`) {
+    // Update trade inventory
     $("#chess-trader").hide();
     $("#swiss-knife-trader").hide();
-
-    if(!wireCuttersEquipped) {
-    //Continue to show your inventory
-    $("#wire-cutters-player").show();
+    // Update inventory based on dependent variable
+    if (!wireCuttersEquipped) {
+      // Continue to show inventory item if it isn't equipped
+      $("#wire-cutters-player").show();
     }
 
+    // Update trade inventory
     $("#gum-player").show();
     // Contain items from being traded
     $(".my-items").draggable({
-       containment: "#trade-screen-1"
-      });
+      containment: "#trade-screen-1"
+    });
   }
 
-// Inventory events for sceneThreeEscape
+  // Inventory events for sceneThreeEscape
   if (state === `sceneThreeEscape`) {
     // Remove dragability from cutters to improve click detection
     $(`#wire-cutters-player`).draggable("disable");
 
     $(`#wire-cutters-player`).on(`click`, function() {
-        // Wire cutters become equipped
-        wireCuttersEquipped = true;
-        // Hide wire cutters from inventory
-        $(`#wire-cutters-player`).hide();
+      // Wire cutters become equipped
+      wireCuttersEquipped = true;
+      // Hide wire cutters from inventory
+      $(`#wire-cutters-player`).hide();
     });
   }
 
-}// End of Inventory
+} // End of Inventory
 
 // Keypressed to manage inventory and trigger game events
 function keyPressed() {
@@ -1143,7 +1182,7 @@ function keyPressed() {
     gameMusic.loop();
   }
 
-// Key press for scene three escape state
+  // Key press for scene three escape state
   if (state === `sceneThreeEscape` && fenceStrength.width < 0 && keyCode === 27) {
 
     // Stop tension music
@@ -1202,114 +1241,117 @@ function playerDialogText(playerDialog) {
 // Function to manage prison navigation based on game state
 function navigatePrison() {
 
-// Reset button associations
-$(`.button-nav`).off(`click`);
+  // Reset button associations
+  $(`.button-nav`).off(`click`);
 
-// Escape button
-if(!escape) {
-  $(`#escape-attempt`).on(`click`, function() {
-     $("#escape-fail-alert").dialog({
-         modal: true,
-         open: function() { $(".ui-dialog-titlebar-close").show();}
-     });
+  // Escape button
+  if (!escape) {
+    $(`#escape-attempt`).on(`click`, function() {
+      $("#escape-fail-alert").dialog({
+        modal: true,
+        open: function() {
+          $(".ui-dialog-titlebar-close").show();
+        }
+      });
 
 
-  });
-} else if ( scene === `sceneThree` && state === `sceneThreeCell` && escape) {
-  $(`#escape-attempt`).on(`click`, function() {
-     $("#escape-start").dialog({
-         modal: true,
-         open: function() { $(".ui-dialog-titlebar-close").show();},
-     });
-     // Set the state to SceneThreeEscape
-       state = `sceneThreeEscape`;
-    //  Reset the countdown
-       timer.countdown = 20;
+    }); // If state is scene three show start escape dialog
+  } else if (scene === `sceneThree` && state === `sceneThreeCell` && escape) {
+    $(`#escape-attempt`).on(`click`, function() {
+      $("#escape-start").dialog({
+        modal: true,
+        open: function() {
+          $(".ui-dialog-titlebar-close").show();
+        },
+      });
+      // Set the state to SceneThreeEscape
+      state = `sceneThreeEscape`;
+      //  Reset the countdown
+      timer.countdown = 20;
 
-       // Start the responsive voice automated prison message
-         speakInterval =  setInterval( function() {
-         responsiveVoice.speak("Inmates! Return to your cells. The prison is in lockdown", "UK English Male", {
-           pitch: 1,
-           rate: 1,
-         });
+      // Start the responsive voice automated prison message
+      speakInterval = setInterval(function() {
+          responsiveVoice.speak("Inmates! Return to your cells. The prison is in lockdown", "UK English Male", {
+            pitch: 1,
+            rate: 1,
+          });
 
-       },
+        },
         5000
-       );
-     });
-
-
-}
-
-// Navigation for scene one
-if (scene === `sceneOne`) {
-
-  // Trigger scene change
-  if (tradesCompleteSceneOneCafeteria) {
-    $(`#warden`).on(`click`, function() {
-      state = `sceneOneWarden`;
+      );
     });
+
+
   }
 
-  // Trigger scene change
-  if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
-    $(`#cell`).on(`click`, function() {
-      state = `sceneTwoCell`;
-      scene = `sceneTwo`;
-    });
+  // Navigation for scene one
+  if (scene === `sceneOne`) {
+
+    // Trigger scene change
+    if (tradesCompleteSceneOneCafeteria) {
+      $(`#warden`).on(`click`, function() {
+        state = `sceneOneWarden`;
+        $("#ramen-trader").hide();
+      });
+    }
+
+    // Trigger scene change
+    if (state === `sceneOneWarden` && tradesCompleteSceneOne) {
+      $(`#cell`).on(`click`, function() {
+        state = `sceneTwoCell`;
+        scene = `sceneTwo`;
+      });
+    }
   }
-}
 
-// Navigation for scene two
-
-if (scene === `sceneTwo`) {
-
-  if(state === `sceneTwoCell` && !tradesCompleteSceneTwoCafeteria && !smokesTraded)
-    $(`#cafeteria`).on(`click`, function() {
+  // Navigation for scene two
+  if (scene === `sceneTwo`) {
+    if (state === `sceneTwoCell` && !tradesCompleteSceneTwoCafeteria && !smokesTraded) {
+      $(`#cafeteria`).on(`click`, function() {
         state = `sceneTwoCafeteria`;
-    });
-
-  if(state === `sceneTwoCafeteria` && tradesCompleteSceneTwoCafeteria) {
-    $(`#recreation-yard`).on(`click`, function() {
+      });
+    }
+    if (state === `sceneTwoCafeteria` && tradesCompleteSceneTwoCafeteria) {
+      $(`#recreation-yard`).on(`click`, function() {
         state = `sceneTwoRec`;
         // Reset gum to no reversion
         $("#gum-player").draggable({
-           revert: false
-          });
-    });
-  }
+          revert: false
+        });
+      });
+    }
 
-    if(state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
+    if (state === `sceneTwoRec` || state === `sceneTwoHall` || state === `sceneTwoCommon` || state === `sceneTwoCellB`) {
       $(`#common-area`).on(`click`, function() {
-          state = `sceneTwoCommon`;
-          // Make gum tradable again
-          $("#gum-player").draggable({
-             revert: false
-            });
+        state = `sceneTwoCommon`;
+        // Make gum tradable again
+        $("#gum-player").draggable({
+          revert: false
+        });
       });
 
       $(`#recreation-yard`).on(`click`, function() {
-          state = `sceneTwoRec`;
+        state = `sceneTwoRec`;
       });
 
       $(`#hall`).on(`click`, function() {
-          state = `sceneTwoHall`;
+        state = `sceneTwoHall`;
       });
 
       $(`#cell`).on(`click`, function() {
-          state = `sceneTwoCellB`;
+        state = `sceneTwoCellB`;
       });
     }
 
     if (tradesCompleteSceneTwo) {
       $(`#cell`).on(`click`, function() {
-          // Stop regular game music
-          gameMusic.stop();
-          // Start tension music
-          tensionMusic.loop();
-          // Change scene and state
-          scene = `sceneThree`;
-          state = `sceneThreeCell`;
+        // Stop regular game music
+        gameMusic.stop();
+        // Start tension music
+        tensionMusic.loop();
+        // Change scene and state
+        scene = `sceneThree`;
+        state = `sceneThreeCell`;
 
       });
     }
@@ -1317,8 +1359,8 @@ if (scene === `sceneTwo`) {
 
   // Manage navigation for scene three
   if (scene === `sceneThree`) {
-      // All trades are complete
-      allTradesComplete = true;
+    // All trades are complete
+    allTradesComplete = true;
     if (lightsAreOut) {
       //allow user to attempt escape
       escape = true;
@@ -1352,14 +1394,14 @@ function countdownTimer() {
     timer.countdown--;
   }
 
-  if(state === `sceneThreeCell`) {
+  if (state === `sceneThreeCell`) {
     // Game over text when countdown reaches 0
     if (timer.countdown == 0) {
       state = `sceneThreeLose_A`
     }
   }
 
-  if(state === `sceneThreeEscape`) {
+  if (state === `sceneThreeEscape`) {
     // Game over text when countdown reaches 0
     if (timer.countdown == 0) {
       state = `sceneThreeLose_B`

@@ -2,7 +2,6 @@
 CSS for Project 2: Teddy's Escape
 
 **********************************************/
-
 /* Body Styling */
 body {
   padding: 0;
@@ -14,7 +13,6 @@ body {
 }
 
 /* Header Styling */
-
 h1 {
   font-family: 'Roboto', sans-serif;
   display: flex;
@@ -23,7 +21,6 @@ h1 {
 }
 
 /* Items styling */
-
 .my-items {
   width: 40%;
 }
@@ -51,7 +48,6 @@ h1 {
 }
 
 /* Trade screen styling */
-
 #trade-container {
   display: flex;
 }
@@ -71,7 +67,6 @@ h1 {
 }
 
 /* Navigation buttons styling */
-
 .btn-group button {
   background-color: #262626;
   /* border: 1px solid green;  */
@@ -87,17 +82,13 @@ h1 {
   color: #1e90ff;
 }
 
-
 /* Items individual styling */
-
-
 #smokes-player img, #smokes-trader img {
   width: 40%;
   height: 40%;
 }
 
 /* Styling for Escape Fail Alert */
-
 .alert-dialog img {
   width: 100%;
   height: auto;
@@ -114,12 +105,10 @@ h1 {
   height: 50px;
 }
 
-
 #lose-b button {
   width: 100px;
   height: 50px;
 }
-
 
 /* p5 Canvas styling */
 #game-canvas {

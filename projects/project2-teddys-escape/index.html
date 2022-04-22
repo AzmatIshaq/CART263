@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+
+  <title>Project 2 - Teddy's Escape</title>
+
+  <!-- CSS stylesheet(s) -->
+  <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <!-- Responsive Voice -->
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=joyZtAJs"></script>
+  <!-- Library script(s) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <script src="js/libraries/p5.min.js"></script>
+  <script src="js/libraries/p5.sound.min.js"></script>
+
+
+</head>
+
+<body>
+  <!-- Container for page elements -->
+  <div id="main-container">
+    <!-- P.5 Canvas -->
+    <div id="game-canvas"></div>
+
+    <!-- Trading interface -->
+    <div id="trade-container">
+      <!-- Trade Screen 1 -->
+      <div id="trade-screen-1">
+
+        <!-- Trade Screen 1: User Items -->
+
+        <!-- Swiss army knife -->
+        <div class="my-items hidden-item" id="swiss-knife-player">
+          <img src="assets/images/swiss_army.png" alt="">
+        </div>
+        <!-- Cell phone -->
+        <div class="my-items hidden-item" id="cell-phone-player">
+          <img src="assets/images/chess-knight.png" alt="">
+        </div>
+        <!-- Ramen -->
+        <div class="my-items hidden-item ramen" id="ramen-player">
+          <img src="assets/images/ramen2.png" alt="">
+        </div>
+        <!-- Gum -->
+        <div class="my-items hidden-item" id="gum-player">
+          <img src="assets/images/bubble_gum.png" alt="">
+        </div>
+        <!-- Smokes -->
+        <div class="my-items hidden-item" id="smokes-player">
+          <img src="assets/images/cigarettes.png" alt="">
+        </div>
+        <!-- Chess piece -->
+        <div class="my-items hidden-item" id="chess-player">
+          <img src="assets/images/chess-knight.png" alt="">
+        </div>
+        <!-- Wire cutters -->
+        <div class="my-items hidden-item" id="wire-cutters-player">
+          <img src="assets/images/wire-cutters.png" alt="">
+        </div>
+
+      </div>
+
+      <!-- Trade Screen 2 -->
+      <div id="trade-screen-2">
+        <!-- Trade Screen 2 Items-->
+
+        <!-- Swiss army knife -->
+        <div class="trader-items hidden-item" id="swiss-knife-trader">
+          <img src="assets/images/swiss_army.png" alt="">
+        </div>
+        <!-- Gum -->
+        <div class="trader-items hidden-item" id="gum-trader">
+          <img src="assets/images/bubble_gum.png" alt="">
+        </div>
+        <!-- Ramen -->
+        <div class="trader-items hidden-item" id="ramen-trader">
+          <img src="assets/images/ramen2.png" alt="">
+        </div>
+        <!-- Smokes -->
+        <div class="trader-items hidden-item" id="smokes-trader">
+          <img src="assets/images/cigarettes.png" alt="">
+        </div>
+        <!-- Chess piece -->
+        <div class="trader-items hidden-item" id="chess-trader">
+          <img src="assets/images/chess-knight.png" alt="">
+        </div>
+        <!-- Wire Cutters -->
+        <div class="trader-items hidden-item" id="wire-cutters-trader">
+          <img src="assets/images/wire-cutters.png" alt="">
+        </div>
+      </div>
+
+
+
+      <!-- Venues  -->
+
+      <div class="btn-group" id="btn-active">
+        <button class="button-nav" id="cafeteria">Cafteria</button>
+        <button class="button-nav" id="warden">Warden</button>
+        <button class="button-nav" id="cell">Cell</button>
+        <button class="button-nav" id="hall">Hall</button>
+        <button class="button-nav" id="recreation-yard">Rec Yard</button>
+        <button class="button-nav" id="common-area">Common Area</button>
+        <button class="button-nav" id="escape-attempt">ATTEMPT ESCAPE</button>
+
+      </div>
+    </div>
+
+
+    <!-- Jquery alert dialog -->
+
+    <!-- SceneOneCafeteria trade alert -->
+    <div class="alert-dialog" id="smokey-trade-1">
+      <img src="../assets/images/smokey_inmate_night.jpg" alt="smokey-image">
+      <p>Huh? Alright I'll take it but find me some smokes! Here's some gum.</p>
+    </div>
+
+    <!-- SceneTwoRec trade alert -->
+    <div class="alert-dialog" id="devon-trade-1">
+      <img src="../assets/images/inmate-trader-bures.jpg" alt="devon-image">
+      <p>I'll take it but this deal aint finished.</p>
+    </div>
+
+    <!-- Devon Rejects Trade -->
+
+    <div class="alert-dialog" id="devon-trade-reject-gum">
+      <img src="../assets/images/inmate-trader-bures.jpg" alt="devon-image">
+      <p>Trade rejected! "Hey fool, how am I supposed to play chess with this?</p>
+    </div>
+
+    <!-- Escape Attempt Failed Dialog -->
+    <div class="alert-dialog" id="escape-fail-alert">
+      <img src="../assets/images/player-no-escape.jpg" alt="no-escape-image">
+      <p>ESCAPE ATTEMPT FAILED!</p>
+      <p>You're not ready!</p>
+    </div>
+
+    <!--  Escape Attempt Started Dialog -->
+    <div class="alert-dialog" id="escape-start">
+      <img src="../assets/images/escape-attempt-dialog-2.jpg" alt="no-escape-image">
+      <p>The lights are out, there is chaos in the prison! Cut through the fence before the guard sees you!</p>
+    </div>
+
+    <!-- First losing dialog for Scene Three -->
+    <div class="alert-dialog" id="lose-a">
+      <img src="../assets/images/inmate-confrontation-1.jpg" alt="">
+      <p>You've been trading Teddy... We can't let that continue.</p>
+      <p style="font-size: 2.5em;"> GAME OVER</p>
+      <!-- <button id="restart-scene-3">Restart Escape</button> -->
+      <button id="restart-game-a">Restart Game</button>
+    </div>
+
+    <!-- Second losing dialog for Scene Three -->
+    <div class="alert-dialog" id="lose-b">
+      <img src="../assets/images/guard-tower-2.jpg" alt="">
+      <p>HALT PRISONER!</p>
+      <p style="font-size: 2.5em;"> GAME OVER</p>
+      <!-- <button id="restart-scene-3-b">Restart Escape</button> -->
+      <button id="restart-game-b">Restart Game</button>
+    </div>
+
+    <!-- Alert dialog for accepted trades -->
+    <div class="alert-dialog" id="trade-accepted">
+      <p>Trade Accepted!</p>
+    </div>
+
+    <!-- Alert dialog for rejected trades -->
+    <div class="alert-dialog" id="trade-rejected">
+      <p>Trade Rejected!</p>
+    </div>
+
+    <div class="alert-dialog" id="smokey-trade-rejected">
+      <p>Trade rejected! "Hey fool, how about something I actually need?"</p>
+    </div>
+
+  <!-- Self dialog for swiss knife -->
+    <div class="alert-dialog" id="self-swiss">
+      <p>I don't need this just yet</p>
+    </div>
+  </div> <!-- End of main container -->
+
+
+  <!-- My script(s) -->
+  <script src="js/ProgressBar.js"></script>
+  <script src="js/script.js"></script>
+
+</body>
+</html>
