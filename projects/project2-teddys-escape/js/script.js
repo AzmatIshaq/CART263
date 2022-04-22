@@ -1,5 +1,5 @@
 /**
-Project 2 -
+Project 2 - Teddy's Escape
 Azmat Ishaq
 
 This program simulates a prison escape experience which involves interactive trading. It operates based on states which are refered to as scenes. The user alternates between scenes and states with game event triggers or the navigation bar. JQuery is used to manage the interactive trading elements and a p.5 canvas displays the games visual animations and handles other minor mouseclick and keypress events. The dialogue is stored in a JSON document and displays based on the game state or triggers. Separate functions are used to handle the game trades, navigation, inventory, and venues.
