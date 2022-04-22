@@ -2,7 +2,7 @@
 Project 2 -
 Azmat Ishaq
 
-This program simulates a prison escape game which involves interactive trading. It operates based on states which are refered to as scenes. The user alternates between scenes and states through game events or the navigation bar. JQuery is used to manage the interactive trading elements and a p.5 canvas displays the games visual animations and handles other minor mouseclick and keypress events. The dialogue is stored in a JSON document and displayed based on the game state or triggers. Separate functions are used to handle the game trades, navigation, inventory, and venues.
+This program simulates a prison escape game which involves interactive trading. It operates based on states which are refered to as scenes. The user alternates between scenes and states with game event triggers or the navigation bar. JQuery is used to manage the interactive trading elements and a p.5 canvas displays the games visual animations and handles other minor mouseclick and keypress events. The dialogue is stored in a JSON document and displays based on the game state or triggers. Separate functions are used to handle the game trades, navigation, inventory, and venues.
 
 See README for more details.
 
@@ -10,15 +10,14 @@ See README for more details.
 
 "use strict";
 
-// set Canvas properties
+// Canvas properties variable
 let canvasSize = {
   width: 850,
   height: 400
 };
 
-// Color with rgb properties
+// Color with rgb properties variable
 let colorPalette = {
-
   // #A6826D     (166, 130, 109)
   r3: 166,
   g3: 130,
@@ -65,8 +64,6 @@ let fenceStrength;
 // Variable for the sound of the fence
 let fenceSound;
 
-// Prelude music
-// let preludeMusic;
 // Ending music
 let endingWinMusic;
 // Tension music;
@@ -78,7 +75,8 @@ let gameMusic;
 let speakInterval;
 
 
-// Item variables properties
+/* Item variables and properties */
+
 // Inventory Gui properties
 let inventoryGui = {
   x: 2,
@@ -100,7 +98,6 @@ let ramen = {
 };
 
 // Chess item properties
-
 let chess = {
   x: 2.5,
   y: 2.7,
@@ -123,7 +120,6 @@ let smokes = {
 };
 
 // Swiss army knife item properties
-
 let swissArmyKnife = {
   x: 2,
   y: 1.75,
@@ -153,8 +149,10 @@ let titleText = {
   size2: 22,
   x1: 2,
   y1: 3,
-  x2: 2,
-  y2: 1.2
+  x2: 2.6,
+  y2: 1.2,
+  stroke: 1,
+  strokeWeight: 4
 };
 
 // Fade effect for text
@@ -561,10 +559,13 @@ function makeTrade(event, ui) {
 // Function to manage fading text during prelude scene.
 function preludeText() {
 
+  // Styling for prelude title text
   push();
   textAlign(CENTER, CENTER);
   textStyle(NORMAL);
   textSize(titleText.size2);
+  strokeWeight(titleText.strokeWeight);
+  stroke(titleText.stroke);
   fill(titleText.r, titleText.g, titleText.b, titleText.alpha2);
   text(`Press ENTER to Continue`, width / titleText.x2, height / titleText.y2);
   pop();
@@ -1172,10 +1173,10 @@ function inventory() {
 
 } // End of Inventory
 
-// Keypressed to manage inventory and trigger game events
+// Keypressed function to manage inventory and trigger game events
 function keyPressed() {
 
-  // Key press to get out of prelude state
+  // Key press to enter new state and trigger game music
   if (state === `sceneOnePrelude` && keyCode === ENTER) {
     state = `sceneOneCafeteria`;
     gameMusic.setVolume(0.2);
@@ -1190,13 +1191,14 @@ function keyPressed() {
     // Start win music
     endingWinMusic.setVolume(0.5);
     endingWinMusic.play();
+    // Update to new scene and state
     scene = `sceneFour`
     state = `sceneFourWin`;
 
   }
 } // End of keyPressed function
 
-// Function manage displaying venues
+// Function to manage displaying venues
 function sceneVenue(venueBgImg, venueTextDialog) {
 
   // Scene venue image
